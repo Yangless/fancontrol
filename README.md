@@ -1,6 +1,30 @@
 # FanControl 自动化配置切换系统
 
-> **当前版本：** v3.2 | **最后更新：** 2026-04-12 | **状态：** 生产运行中 ✅
+[![Test](https://github.com/Yangless/fancontrol/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/Yangless/fancontrol/actions/workflows/test.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+> **当前版本：** v3.2 | **最后更新：** 2026-04-12 | **状态：** 生产运行中
+
+这是一个面向 Windows + FanControl 的自动化脚本仓库，用来在固定时间段和登录场景下切换风扇配置，并保留手动干预与运行期验证能力。
+
+## 快速入口
+
+- 当前维护的源码入口：`scripts/current/`
+- 当前自动化测试入口：`tests/Invoke-FanControlTests.ps1`
+- 系统实际运行副本：`C:\FanControl_Auto\`
+- 当前公开许可证：`MIT`
+
+### 本仓库适合谁
+
+- 想把 FanControl 配置切换自动化的人
+- 想参考 PowerShell + Windows 任务计划实现方式的人
+- 想直接复用当前脚本结构并按自己机器路径调整的人
+
+### 快速测试
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\tests\Invoke-FanControlTests.ps1
+```
 
 ---
 
