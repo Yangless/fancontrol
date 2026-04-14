@@ -9,7 +9,10 @@ Describe 'auto_switch.ps1 sandbox scenarios' {
             Set-FanControlStubBehavior -Sandbox $sandbox -Mode 'ImmediateSuccess' -InitialConfig 'Quiet_mode.json'
             $result = Invoke-PowerShellScript `
                 -ScriptPath (Join-Path $sandbox.RuntimeDir 'auto_switch.ps1') `
-                -Environment @{ FANCONTROL_TEST_MINUTE = '480'; FANCONTROL_TEST_PROCESS_RUNNING = 'false' }
+                -Environment (Get-SandboxEnvironment -Sandbox $sandbox -Values @{
+                    FANCONTROL_TEST_MINUTE = '480'
+                    FANCONTROL_TEST_PROCESS_RUNNING = 'false'
+                })
             $status = Get-SandboxStatus -Sandbox $sandbox
             $calls = Get-StubCallConfigs -Sandbox $sandbox
 
@@ -31,7 +34,10 @@ Describe 'auto_switch.ps1 sandbox scenarios' {
             Set-Content (Join-Path $sandbox.StateDir 'override.flag') 'quiet' -Encoding UTF8
             $result = Invoke-PowerShellScript `
                 -ScriptPath (Join-Path $sandbox.RuntimeDir 'auto_switch.ps1') `
-                -Environment @{ FANCONTROL_TEST_MINUTE = '480'; FANCONTROL_TEST_PROCESS_RUNNING = 'false' }
+                -Environment (Get-SandboxEnvironment -Sandbox $sandbox -Values @{
+                    FANCONTROL_TEST_MINUTE = '480'
+                    FANCONTROL_TEST_PROCESS_RUNNING = 'false'
+                })
             $status = Get-SandboxStatus -Sandbox $sandbox
             $calls = Get-StubCallConfigs -Sandbox $sandbox
 
@@ -51,7 +57,10 @@ Describe 'auto_switch.ps1 sandbox scenarios' {
             Set-FanControlStubBehavior -Sandbox $sandbox -Mode 'ImmediateSuccess' -InitialConfig 'Game.json'
             $result = Invoke-PowerShellScript `
                 -ScriptPath (Join-Path $sandbox.RuntimeDir 'auto_switch.ps1') `
-                -Environment @{ FANCONTROL_TEST_MINUTE = '760'; FANCONTROL_TEST_PROCESS_RUNNING = 'false' }
+                -Environment (Get-SandboxEnvironment -Sandbox $sandbox -Values @{
+                    FANCONTROL_TEST_MINUTE = '760'
+                    FANCONTROL_TEST_PROCESS_RUNNING = 'false'
+                })
             $status = Get-SandboxStatus -Sandbox $sandbox
             $calls = Get-StubCallConfigs -Sandbox $sandbox
 
@@ -66,13 +75,61 @@ Describe 'auto_switch.ps1 sandbox scenarios' {
         }
     }
 
+    It 'saves current volume and mutes when entering Quiet at the exact force point' {
+        $sandbox = New-FanControlTestSandbox
+        try {
+            Set-FanControlStubBehavior -Sandbox $sandbox -Mode 'ImmediateSuccess' -InitialConfig 'Game.json'
+            Set-SandboxVolumeState -Sandbox $sandbox -CurrentVolume 37
+            $result = Invoke-PowerShellScript `
+                -ScriptPath (Join-Path $sandbox.RuntimeDir 'auto_switch.ps1') `
+                -Environment (Get-SandboxEnvironment -Sandbox $sandbox -Values @{
+                    FANCONTROL_TEST_MINUTE = '760'
+                    FANCONTROL_TEST_PROCESS_RUNNING = 'false'
+                })
+
+            $result.ExitCode | Should -Be 0
+            (Get-SandboxCurrentVolume -Sandbox $sandbox) | Should -Be 0
+            (Get-SandboxSavedVolume -Sandbox $sandbox) | Should -Be 37
+        } finally {
+            Remove-FanControlTestSandbox -Sandbox $sandbox
+        }
+    }
+
+    It 'restores the saved volume and clears saved state at Quiet exit minute <Minute>' -ForEach @(
+        @{ Minute = '480' }
+        @{ Minute = '840' }
+    ) {
+        $sandbox = New-FanControlTestSandbox
+        try {
+            Set-FanControlStubBehavior -Sandbox $sandbox -Mode 'ImmediateSuccess' -InitialConfig 'Quiet_mode.json'
+            Set-SandboxVolumeState -Sandbox $sandbox -CurrentVolume 0 -SavedVolume 37
+            $result = Invoke-PowerShellScript `
+                -ScriptPath (Join-Path $sandbox.RuntimeDir 'auto_switch.ps1') `
+                -Environment (Get-SandboxEnvironment -Sandbox $sandbox -Values @{
+                    FANCONTROL_TEST_MINUTE = $Minute
+                    FANCONTROL_TEST_PROCESS_RUNNING = 'false'
+                })
+            $status = Get-SandboxStatus -Sandbox $sandbox
+
+            $result.ExitCode | Should -Be 0
+            $status.TargetConfig | Should -Be 'Game.json'
+            (Get-SandboxCurrentVolume -Sandbox $sandbox) | Should -Be 37
+            (Get-SandboxSavedVolume -Sandbox $sandbox) | Should -Be $null
+        } finally {
+            Remove-FanControlTestSandbox -Sandbox $sandbox
+        }
+    }
+
     It 'retries once on a cold-start verification failure and then succeeds' {
         $sandbox = New-FanControlTestSandbox
         try {
             Set-FanControlStubBehavior -Sandbox $sandbox -Mode 'SucceedOnSecondCall' -InitialConfig 'Quiet_mode.json'
             $result = Invoke-PowerShellScript `
                 -ScriptPath (Join-Path $sandbox.RuntimeDir 'auto_switch.ps1') `
-                -Environment @{ FANCONTROL_TEST_MINUTE = '480'; FANCONTROL_TEST_PROCESS_RUNNING = 'false' }
+                -Environment (Get-SandboxEnvironment -Sandbox $sandbox -Values @{
+                    FANCONTROL_TEST_MINUTE = '480'
+                    FANCONTROL_TEST_PROCESS_RUNNING = 'false'
+                })
             $status = Get-SandboxStatus -Sandbox $sandbox
             $calls = Get-StubCallConfigs -Sandbox $sandbox
 
@@ -93,7 +150,10 @@ Describe 'auto_switch.ps1 sandbox scenarios' {
             Set-FanControlStubBehavior -Sandbox $sandbox -Mode 'NoCacheUpdate' -InitialConfig 'Quiet_mode.json'
             $result = Invoke-PowerShellScript `
                 -ScriptPath (Join-Path $sandbox.RuntimeDir 'auto_switch.ps1') `
-                -Environment @{ FANCONTROL_TEST_MINUTE = '480'; FANCONTROL_TEST_PROCESS_RUNNING = 'true' }
+                -Environment (Get-SandboxEnvironment -Sandbox $sandbox -Values @{
+                    FANCONTROL_TEST_MINUTE = '480'
+                    FANCONTROL_TEST_PROCESS_RUNNING = 'true'
+                })
             $status = Get-SandboxStatus -Sandbox $sandbox
             $calls = Get-StubCallConfigs -Sandbox $sandbox
 
@@ -113,7 +173,10 @@ Describe 'auto_switch.ps1 sandbox scenarios' {
             Set-FanControlStubBehavior -Sandbox $sandbox -Mode 'InvalidCacheThenSuccess' -InitialConfig 'Quiet_mode.json'
             $result = Invoke-PowerShellScript `
                 -ScriptPath (Join-Path $sandbox.RuntimeDir 'auto_switch.ps1') `
-                -Environment @{ FANCONTROL_TEST_MINUTE = '480'; FANCONTROL_TEST_PROCESS_RUNNING = 'false' }
+                -Environment (Get-SandboxEnvironment -Sandbox $sandbox -Values @{
+                    FANCONTROL_TEST_MINUTE = '480'
+                    FANCONTROL_TEST_PROCESS_RUNNING = 'false'
+                })
             $status = Get-SandboxStatus -Sandbox $sandbox
             $calls = Get-StubCallConfigs -Sandbox $sandbox
 

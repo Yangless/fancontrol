@@ -25,3 +25,11 @@ function Test-IsForcePointMinute {
 
     return ($Minute -eq 760 -or $Minute -eq 1260)
 }
+
+function Test-IsQuietExitPointMinute {
+    param(
+        [int]$Minute
+    )
+
+    return ($Minute -eq 480 -or $Minute -eq 840)
+}

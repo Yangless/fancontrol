@@ -9,12 +9,19 @@ $StateDir = "C:\FanControl_Auto\state"
 $LogDir = "C:\FanControl_Auto\logs"
 $OverrideFlag = "$StateDir\override.flag"
 $LogFile = "$LogDir\switch.log"
+$VolumeHelperFile = Join-Path $PSScriptRoot "volume_helper.ps1"
 
 $QuietConfig = "$ConfigDir\Quiet_mode.json"
 $GameConfig = "$ConfigDir\Game.json"
 
 New-Item -ItemType Directory -Force -Path $StateDir | Out-Null
 New-Item -ItemType Directory -Force -Path $LogDir | Out-Null
+
+if (Test-Path $VolumeHelperFile) {
+    . $VolumeHelperFile
+} else {
+    throw "Helper file not found: $VolumeHelperFile"
+}
 
 function Write-Log {
     param([string]$Message)
@@ -81,6 +88,10 @@ if (-not (Test-Path $targetConfig)) {
 }
 
 Write-Log "Switching to $Mode mode: $configName"
+
+if ($Mode -eq 'quiet') {
+    Enter-QuietVolumeMode
+}
 
 & $FanControlExe -c $targetConfig
 

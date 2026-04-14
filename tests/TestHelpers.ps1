@@ -9,11 +9,14 @@ function New-FanControlTestSandbox {
     $behaviorFile = Join-Path $root 'stub_behavior.json'
     $callLog = Join-Path $root 'stub_calls.log'
     $autoSwitchCallLog = Join-Path $root 'auto_switch_calls.log'
+    $volumeFile = Join-Path $root 'test_volume.txt'
+    $volumeCallLog = Join-Path $root 'volume_calls.log'
 
     New-Item -ItemType Directory -Force -Path $runtimeDir, $configDir, $stateDir, $logDir, $monitorDir | Out-Null
 
     Set-Content (Join-Path $configDir 'Game.json') '{}' -Encoding UTF8
     Set-Content (Join-Path $configDir 'Quiet_mode.json') '{}' -Encoding UTF8
+    Set-Content -Path $volumeFile -Value '50' -Encoding ASCII
 
     $stubContent = @'
 param(
@@ -81,9 +84,13 @@ $behavior | ConvertTo-Json | Set-Content -Path $behaviorFile -Encoding UTF8
         BehaviorFile = $behaviorFile
         CallLog = $callLog
         AutoSwitchCallLog = $autoSwitchCallLog
+        VolumeFile = $volumeFile
+        VolumeCallLog = $volumeCallLog
+        SavedVolumeFile = Join-Path $stateDir 'quiet_saved_volume.json'
     }
 
     Set-FanControlStubBehavior -Sandbox $sandbox -Mode 'ImmediateSuccess' -InitialConfig 'Quiet_mode.json'
+    Set-SandboxVolumeState -Sandbox $sandbox -CurrentVolume 50
     Copy-FanControlRuntimeScriptsToSandbox -Sandbox $sandbox
 
     return $sandbox
@@ -117,6 +124,28 @@ function Set-FanControlStubBehavior {
     }
 }
 
+function Set-SandboxVolumeState {
+    param(
+        [Parameter(Mandatory = $true)]$Sandbox,
+        [Parameter(Mandatory = $true)][int]$CurrentVolume,
+        [Nullable[int]]$SavedVolume = $null
+    )
+
+    Set-Content -Path $Sandbox.VolumeFile -Value ([string]$CurrentVolume) -Encoding ASCII
+
+    if ($null -eq $SavedVolume) {
+        Remove-Item -Path $Sandbox.SavedVolumeFile -Force -ErrorAction SilentlyContinue
+    } else {
+        @{
+            Volume = [int]$SavedVolume
+        } | ConvertTo-Json | Set-Content -Path $Sandbox.SavedVolumeFile -Encoding UTF8
+    }
+
+    if (Test-Path $Sandbox.VolumeCallLog) {
+        Clear-Content -Path $Sandbox.VolumeCallLog
+    }
+}
+
 function Copy-FanControlRuntimeScriptsToSandbox {
     param(
         [Parameter(Mandatory = $true)]$Sandbox
@@ -131,8 +160,11 @@ function Copy-FanControlRuntimeScriptsToSandbox {
         'check_status.ps1',
         'monitor_simple.ps1'
     )
+    $optionalSourceFiles = @('volume_helper.ps1')
 
-    foreach ($name in $sourceFiles) {
+    foreach ($name in $sourceFiles + ($optionalSourceFiles | Where-Object {
+        Test-Path (Join-Path $repoRoot "scripts\\current\\$_")
+    })) {
         $sourcePath = Join-Path $repoRoot "scripts\\current\\$name"
         $targetPath = Join-Path $Sandbox.RuntimeDir $name
         $content = Get-Content -Path $sourcePath -Raw
@@ -211,6 +243,24 @@ function Invoke-PowerShellScript {
     }
 }
 
+function Get-SandboxEnvironment {
+    param(
+        [Parameter(Mandatory = $true)]$Sandbox,
+        [hashtable]$Values = @{}
+    )
+
+    $environment = @{
+        FANCONTROL_TEST_VOLUME_FILE = $Sandbox.VolumeFile
+        FANCONTROL_TEST_VOLUME_LOG = $Sandbox.VolumeCallLog
+    }
+
+    foreach ($key in $Values.Keys) {
+        $environment[$key] = $Values[$key]
+    }
+
+    return $environment
+}
+
 function Get-StubCallConfigs {
     param(
         [Parameter(Mandatory = $true)]$Sandbox
@@ -235,6 +285,38 @@ function Get-AutoSwitchStubCalls {
     }
 
     return ,@(Get-Content $Sandbox.AutoSwitchCallLog)
+}
+
+function Get-SandboxCurrentVolume {
+    param(
+        [Parameter(Mandatory = $true)]$Sandbox
+    )
+
+    return [int](Get-Content -Path $Sandbox.VolumeFile -Raw)
+}
+
+function Get-SandboxSavedVolume {
+    param(
+        [Parameter(Mandatory = $true)]$Sandbox
+    )
+
+    if (-not (Test-Path $Sandbox.SavedVolumeFile)) {
+        return $null
+    }
+
+    return [int]((Get-Content -Path $Sandbox.SavedVolumeFile -Raw | ConvertFrom-Json).Volume)
+}
+
+function Get-SandboxVolumeCalls {
+    param(
+        [Parameter(Mandatory = $true)]$Sandbox
+    )
+
+    if (-not (Test-Path $Sandbox.VolumeCallLog)) {
+        return @()
+    }
+
+    return ,@(Get-Content -Path $Sandbox.VolumeCallLog)
 }
 
 function Get-SandboxStatus {

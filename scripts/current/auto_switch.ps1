@@ -13,6 +13,7 @@ $GameConfig = "$ConfigDir\Game.json"
 $CacheFile = "$ConfigDir\CACHE"
 $HelperFile = Join-Path $PSScriptRoot "auto_switch_recovery.ps1"
 $TimePolicyHelper = Join-Path $PSScriptRoot "time_policy.ps1"
+$VolumeHelperFile = Join-Path $PSScriptRoot "volume_helper.ps1"
 
 New-Item -ItemType Directory -Force -Path $StateDir | Out-Null
 New-Item -ItemType Directory -Force -Path $LogDir | Out-Null
@@ -27,6 +28,12 @@ if (Test-Path $TimePolicyHelper) {
     . $TimePolicyHelper
 } else {
     throw "Helper file not found: $TimePolicyHelper"
+}
+
+if (Test-Path $VolumeHelperFile) {
+    . $VolumeHelperFile
+} else {
+    throw "Helper file not found: $VolumeHelperFile"
 }
 
 function Write-Log {
@@ -187,11 +194,13 @@ Test-ConfigFiles
 
 $currentMinute = Get-MinuteOfDay
 $isForcePoint = Test-IsForcePointMinute -Minute $currentMinute
+$isQuietExitPoint = Test-IsQuietExitPointMinute -Minute $currentMinute
 $processWasRunning = (Get-Process -Name FanControl -ErrorAction SilentlyContinue) -ne $null
 
 if ($isForcePoint -or $Force) {
     Write-Log "Force trigger detected, clearing override flag"
     Remove-Item $OverrideFlag -Force -ErrorAction SilentlyContinue
+    Enter-QuietVolumeMode
 
     $configName = Split-Path $QuietConfig -Leaf
     Write-Log "Force switch to Quiet mode: $configName"
@@ -234,6 +243,11 @@ if (Test-Path $OverrideFlag) {
 
 $targetConfig = Get-TargetConfig
 $configName = Split-Path $targetConfig -Leaf
+
+if ($isQuietExitPoint -and $configName -eq 'Game.json') {
+    Write-Log "Quiet exit trigger detected, restoring saved volume if present"
+    [void](Restore-QuietVolumeIfNeeded)
+}
 
 Write-Log "Attempting to switch config: $configName"
 

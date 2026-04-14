@@ -7,7 +7,9 @@ Describe 'switch.ps1 sandbox scenarios' {
         $sandbox = New-FanControlTestSandbox
         try {
             Set-SandboxAutoSwitchStub -Sandbox $sandbox
-            $result = Invoke-PowerShellScript -ScriptPath (Join-Path $sandbox.RuntimeDir 'switch.ps1')
+            $result = Invoke-PowerShellScript `
+                -ScriptPath (Join-Path $sandbox.RuntimeDir 'switch.ps1') `
+                -Environment (Get-SandboxEnvironment -Sandbox $sandbox)
 
             $result.ExitCode | Should -Be 0
             (($result.Output -join "`n") -match 'FanControl Manual Switch Tool') | Should -BeTrue
@@ -20,7 +22,10 @@ Describe 'switch.ps1 sandbox scenarios' {
         $sandbox = New-FanControlTestSandbox
         try {
             Set-SandboxAutoSwitchStub -Sandbox $sandbox
-            $result = Invoke-PowerShellScript -ScriptPath (Join-Path $sandbox.RuntimeDir 'switch.ps1') -Arguments @('-Mode', 'badmode')
+            $result = Invoke-PowerShellScript `
+                -ScriptPath (Join-Path $sandbox.RuntimeDir 'switch.ps1') `
+                -Arguments @('-Mode', 'badmode') `
+                -Environment (Get-SandboxEnvironment -Sandbox $sandbox)
 
             $result.ExitCode | Should -Be 1
             (($result.Output -join "`n") -match 'Invalid mode') | Should -BeTrue
@@ -32,7 +37,10 @@ Describe 'switch.ps1 sandbox scenarios' {
     It 'switches to game mode and writes the override flag' {
         $sandbox = New-FanControlTestSandbox
         try {
-            $result = Invoke-PowerShellScript -ScriptPath (Join-Path $sandbox.RuntimeDir 'switch.ps1') -Arguments @('-Mode', 'game')
+            $result = Invoke-PowerShellScript `
+                -ScriptPath (Join-Path $sandbox.RuntimeDir 'switch.ps1') `
+                -Arguments @('-Mode', 'game') `
+                -Environment (Get-SandboxEnvironment -Sandbox $sandbox)
             $overridePath = Join-Path $sandbox.StateDir 'override.flag'
 
             $result.ExitCode | Should -Be 0
@@ -46,12 +54,18 @@ Describe 'switch.ps1 sandbox scenarios' {
     It 'switches to quiet mode and writes the override flag' {
         $sandbox = New-FanControlTestSandbox
         try {
-            $result = Invoke-PowerShellScript -ScriptPath (Join-Path $sandbox.RuntimeDir 'switch.ps1') -Arguments @('-Mode', 'quiet')
+            Set-SandboxVolumeState -Sandbox $sandbox -CurrentVolume 55
+            $result = Invoke-PowerShellScript `
+                -ScriptPath (Join-Path $sandbox.RuntimeDir 'switch.ps1') `
+                -Arguments @('-Mode', 'quiet') `
+                -Environment (Get-SandboxEnvironment -Sandbox $sandbox)
             $overridePath = Join-Path $sandbox.StateDir 'override.flag'
 
             $result.ExitCode | Should -Be 0
             (Get-Content $overridePath) | Should -Be 'quiet'
             (Get-StubCallConfigs -Sandbox $sandbox) | Should -Be @('Quiet_mode.json')
+            (Get-SandboxCurrentVolume -Sandbox $sandbox) | Should -Be 0
+            (Get-SandboxSavedVolume -Sandbox $sandbox) | Should -Be 55
         } finally {
             Remove-FanControlTestSandbox -Sandbox $sandbox
         }
@@ -63,7 +77,10 @@ Describe 'switch.ps1 sandbox scenarios' {
             Set-SandboxAutoSwitchStub -Sandbox $sandbox
             Set-Content (Join-Path $sandbox.StateDir 'override.flag') 'game' -Encoding UTF8
 
-            $result = Invoke-PowerShellScript -ScriptPath (Join-Path $sandbox.RuntimeDir 'switch.ps1') -Arguments @('-Mode', 'auto')
+            $result = Invoke-PowerShellScript `
+                -ScriptPath (Join-Path $sandbox.RuntimeDir 'switch.ps1') `
+                -Arguments @('-Mode', 'auto') `
+                -Environment (Get-SandboxEnvironment -Sandbox $sandbox)
 
             $result.ExitCode | Should -Be 0
             (Test-Path (Join-Path $sandbox.StateDir 'override.flag')) | Should -BeFalse
