@@ -1,6 +1,8 @@
-. (Join-Path $PSScriptRoot 'TestHelpers.ps1')
-
 Describe 'auto_switch.ps1 sandbox scenarios' {
+    BeforeAll {
+        . (Join-Path $PSScriptRoot 'TestHelpers.ps1')
+    }
+
     It 'switches to Game during normal daytime operation' {
         $sandbox = New-FanControlTestSandbox
         try {
@@ -11,13 +13,13 @@ Describe 'auto_switch.ps1 sandbox scenarios' {
             $status = Get-SandboxStatus -Sandbox $sandbox
             $calls = Get-StubCallConfigs -Sandbox $sandbox
 
-            $result.ExitCode | Should Be 0
-            $calls.Count | Should Be 1
-            $calls[0] | Should Be 'Game.json'
-            $status.Status | Should Be 'SUCCESS'
-            $status.Verified | Should Be $true
-            $status.TargetConfig | Should Be 'Game.json'
-            $status.ActualConfig | Should Be 'Game.json'
+            $result.ExitCode | Should -Be 0
+            $calls.Count | Should -Be 1
+            $calls[0] | Should -Be 'Game.json'
+            $status.Status | Should -Be 'SUCCESS'
+            $status.Verified | Should -BeTrue
+            $status.TargetConfig | Should -Be 'Game.json'
+            $status.ActualConfig | Should -Be 'Game.json'
         } finally {
             Remove-FanControlTestSandbox -Sandbox $sandbox
         }
@@ -33,10 +35,10 @@ Describe 'auto_switch.ps1 sandbox scenarios' {
             $status = Get-SandboxStatus -Sandbox $sandbox
             $calls = Get-StubCallConfigs -Sandbox $sandbox
 
-            $result.ExitCode | Should Be 0
-            $calls.Count | Should Be 0
-            $status.Status | Should Be 'SKIPPED'
-            $status.TargetConfig | Should Be 'Override: quiet'
+            $result.ExitCode | Should -Be 0
+            $calls.Count | Should -Be 0
+            $status.Status | Should -Be 'SKIPPED'
+            $status.TargetConfig | Should -Be 'Override: quiet'
         } finally {
             Remove-FanControlTestSandbox -Sandbox $sandbox
         }
@@ -53,12 +55,12 @@ Describe 'auto_switch.ps1 sandbox scenarios' {
             $status = Get-SandboxStatus -Sandbox $sandbox
             $calls = Get-StubCallConfigs -Sandbox $sandbox
 
-            $result.ExitCode | Should Be 0
-            (Test-Path (Join-Path $sandbox.StateDir 'override.flag')) | Should Be $false
-            $calls.Count | Should Be 1
-            $calls[0] | Should Be 'Quiet_mode.json'
-            $status.Status | Should Be 'SUCCESS'
-            $status.TargetConfig | Should Be 'Quiet_mode.json'
+            $result.ExitCode | Should -Be 0
+            (Test-Path (Join-Path $sandbox.StateDir 'override.flag')) | Should -BeFalse
+            $calls.Count | Should -Be 1
+            $calls[0] | Should -Be 'Quiet_mode.json'
+            $status.Status | Should -Be 'SUCCESS'
+            $status.TargetConfig | Should -Be 'Quiet_mode.json'
         } finally {
             Remove-FanControlTestSandbox -Sandbox $sandbox
         }
@@ -74,12 +76,12 @@ Describe 'auto_switch.ps1 sandbox scenarios' {
             $status = Get-SandboxStatus -Sandbox $sandbox
             $calls = Get-StubCallConfigs -Sandbox $sandbox
 
-            $result.ExitCode | Should Be 0
-            $calls.Count | Should Be 2
-            $calls[0] | Should Be 'Game.json'
-            $calls[1] | Should Be 'Game.json'
-            $status.Status | Should Be 'SUCCESS'
-            $status.Verified | Should Be $true
+            $result.ExitCode | Should -Be 0
+            $calls.Count | Should -Be 2
+            $calls[0] | Should -Be 'Game.json'
+            $calls[1] | Should -Be 'Game.json'
+            $status.Status | Should -Be 'SUCCESS'
+            $status.Verified | Should -BeTrue
         } finally {
             Remove-FanControlTestSandbox -Sandbox $sandbox
         }
@@ -95,11 +97,11 @@ Describe 'auto_switch.ps1 sandbox scenarios' {
             $status = Get-SandboxStatus -Sandbox $sandbox
             $calls = Get-StubCallConfigs -Sandbox $sandbox
 
-            $result.ExitCode | Should Be 0
-            $calls.Count | Should Be 1
-            $status.Status | Should Be 'FAILED'
-            $status.Verified | Should Be $false
-            $status.TargetConfig | Should Be 'Game.json'
+            $result.ExitCode | Should -Be 0
+            $calls.Count | Should -Be 1
+            $status.Status | Should -Be 'FAILED'
+            $status.Verified | Should -BeFalse
+            $status.TargetConfig | Should -Be 'Game.json'
         } finally {
             Remove-FanControlTestSandbox -Sandbox $sandbox
         }
@@ -115,11 +117,11 @@ Describe 'auto_switch.ps1 sandbox scenarios' {
             $status = Get-SandboxStatus -Sandbox $sandbox
             $calls = Get-StubCallConfigs -Sandbox $sandbox
 
-            $result.ExitCode | Should Be 0
-            $calls.Count | Should Be 2
-            $status.Status | Should Be 'SUCCESS'
-            $status.Verified | Should Be $true
-            $status.ActualConfig | Should Be 'Game.json'
+            $result.ExitCode | Should -Be 0
+            $calls.Count | Should -Be 2
+            $status.Status | Should -Be 'SUCCESS'
+            $status.Verified | Should -BeTrue
+            $status.ActualConfig | Should -Be 'Game.json'
         } finally {
             Remove-FanControlTestSandbox -Sandbox $sandbox
         }

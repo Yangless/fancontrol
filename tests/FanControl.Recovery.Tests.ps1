@@ -1,9 +1,10 @@
-$repoRoot = Split-Path -Parent $PSScriptRoot
-$helperPath = Join-Path $repoRoot 'scripts\current\auto_switch_recovery.ps1'
-
-. $helperPath
-
 Describe 'Cold-start recovery helper' {
+    BeforeAll {
+        $repoRoot = Split-Path -Parent $PSScriptRoot
+        $helperPath = Join-Path $repoRoot 'scripts\current\auto_switch_recovery.ps1'
+        . $helperPath
+    }
+
     It 'retries once after an initial verification failure on cold start' {
         $script:runCalls = 0
         $script:verifyCalls = 0
@@ -16,9 +17,9 @@ Describe 'Cold-start recovery helper' {
                 return ($script:verifyCalls -ge 2)
             }
 
-        $result | Should Be $true
-        $script:runCalls | Should Be 2
-        $script:verifyCalls | Should Be 2
+        $result | Should -BeTrue
+        $script:runCalls | Should -Be 2
+        $script:verifyCalls | Should -Be 2
     }
 
     It 'does not retry after a failed verification when the process was already running' {
@@ -33,8 +34,8 @@ Describe 'Cold-start recovery helper' {
                 return $false
             }
 
-        $result | Should Be $false
-        $script:runCalls | Should Be 1
-        $script:verifyCalls | Should Be 1
+        $result | Should -BeFalse
+        $script:runCalls | Should -Be 1
+        $script:verifyCalls | Should -Be 1
     }
 }

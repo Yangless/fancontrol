@@ -31,8 +31,10 @@
 ### 快速测试
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\tests\Invoke-FanControlTests.ps1
+pwsh -NoProfile -File .\tests\Invoke-FanControlTests.ps1
 ```
+
+测试套件现已基于 `Pester 5.x` 运行。
 
 ---
 

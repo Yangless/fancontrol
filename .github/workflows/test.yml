@@ -20,10 +20,10 @@ jobs:
         shell: pwsh
         run: |
           Set-PSRepository PSGallery -InstallationPolicy Trusted
-          Install-Module Pester -Scope CurrentUser -RequiredVersion 4.10.1 -Force -SkipPublisherCheck
+          Install-Module Pester -Scope CurrentUser -RequiredVersion 5.7.1 -Force -SkipPublisherCheck
 
       - name: Run test suite
         shell: pwsh
         run: |
-          Import-Module Pester -RequiredVersion 4.10.1 -Force
+          Import-Module Pester -RequiredVersion 5.7.1 -Force
           ./tests/Invoke-FanControlTests.ps1
