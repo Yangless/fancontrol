@@ -12,6 +12,7 @@ $QuietConfig = "$ConfigDir\Quiet_mode.json"
 $GameConfig = "$ConfigDir\Game.json"
 $CacheFile = "$ConfigDir\CACHE"
 $HelperFile = Join-Path $PSScriptRoot "auto_switch_recovery.ps1"
+$TimePolicyHelper = Join-Path $PSScriptRoot "time_policy.ps1"
 
 New-Item -ItemType Directory -Force -Path $StateDir | Out-Null
 New-Item -ItemType Directory -Force -Path $LogDir | Out-Null
@@ -20,6 +21,12 @@ if (Test-Path $HelperFile) {
     . $HelperFile
 } else {
     throw "Helper file not found: $HelperFile"
+}
+
+if (Test-Path $TimePolicyHelper) {
+    . $TimePolicyHelper
+} else {
+    throw "Helper file not found: $TimePolicyHelper"
 }
 
 function Write-Log {
@@ -139,15 +146,17 @@ function Test-ConfigSwitch {
 }
 
 function Get-TargetConfig {
-    $min = (Get-Date).Hour * 60 + (Get-Date).Minute
+    $currentDate = Get-Date
+    $min = Get-MinuteOfDay -Date $currentDate
+    $configName = Get-ConfigNameForMinute -Minute $min
 
-    if (($min -ge 760 -and $min -lt 840) -or ($min -ge 1260) -or ($min -lt 480)) {
+    if ($configName -eq "Quiet_mode.json") {
         Write-Log "Current time $((Get-Date).ToString('HH:mm')) is in Quiet period"
         return $QuietConfig
-    } else {
-        Write-Log "Current time $((Get-Date).ToString('HH:mm')) is in Game period"
-        return $GameConfig
     }
+
+    Write-Log "Current time $((Get-Date).ToString('HH:mm')) is in Game period"
+    return $GameConfig
 }
 
 function Show-Notification {
@@ -176,7 +185,8 @@ Write-Log "=========================================="
 
 Test-ConfigFiles
 
-$isForcePoint = ((Get-Date).Hour -eq 12 -and (Get-Date).Minute -eq 40) -or ((Get-Date).Hour -eq 21 -and (Get-Date).Minute -eq 0)
+$currentMinute = Get-MinuteOfDay
+$isForcePoint = Test-IsForcePointMinute -Minute $currentMinute
 $processWasRunning = (Get-Process -Name FanControl -ErrorAction SilentlyContinue) -ne $null
 
 if ($isForcePoint -or $Force) {

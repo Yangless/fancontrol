@@ -8,6 +8,13 @@ $LogFile = "C:\FanControl_Auto\logs\auto_switch.log"
 $SwitchLog = "C:\FanControl_Auto\logs\switch.log"
 $CacheFile = "D:\Program Files (x86)\FanControl\Configurations\CACHE"
 $OverrideFlag = "C:\FanControl_Auto\state\override.flag"
+$TimePolicyHelper = Join-Path $PSScriptRoot "time_policy.ps1"
+
+if (Test-Path $TimePolicyHelper) {
+    . $TimePolicyHelper
+} else {
+    throw "Helper file not found: $TimePolicyHelper"
+}
 
 function Get-StatusReport {
     Write-Host ""
@@ -91,12 +98,7 @@ function Get-StatusReport {
 
     # 6. 时间判断
     Write-Host "[Current Time Period]" -ForegroundColor Yellow
-    $min = (Get-Date).Hour * 60 + (Get-Date).Minute
-    $currentConfig = if (($min -ge 760 -and $min -lt 840) -or ($min -ge 1260) -or ($min -lt 480)) {
-        "Quiet_mode.json"
-    } else {
-        "Game.json"
-    }
+    $currentConfig = Get-ConfigNameForMinute -Minute (Get-MinuteOfDay)
     Write-Host "  Current Time: $(Get-Date -Format 'HH:mm:ss')" -ForegroundColor White
     Write-Host "  Should Be    : $currentConfig" -ForegroundColor White
 

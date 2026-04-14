@@ -30,6 +30,7 @@ scripts/
 
 - `auto_switch.ps1`
 - `auto_switch_recovery.ps1`
+- `time_policy.ps1`
 - `switch.ps1`
 - `check_status.ps1`
 - `monitor_simple.ps1`

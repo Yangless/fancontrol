@@ -7,8 +7,15 @@ param(
 
 $StatusFile = "C:\FanControl_Auto\state\current_status.json"
 $CacheFile = "D:\Program Files (x86)\FanControl\Configurations\CACHE"
+$TimePolicyHelper = Join-Path $PSScriptRoot "time_policy.ps1"
 
 New-Item -ItemType Directory -Force -Path $OutputDir | Out-Null
+
+if (Test-Path $TimePolicyHelper) {
+    . $TimePolicyHelper
+} else {
+    throw "Helper file not found: $TimePolicyHelper"
+}
 
 $monitorData = @()
 $lastSummaryTime = Get-Date
@@ -27,8 +34,7 @@ function Get-Status {
         $status.CurrentConfig = $cache.CurrentConfigFileName
     }
 
-    $min = (Get-Date).Hour * 60 + (Get-Date).Minute
-    $status.ExpectedConfig = if (($min -ge 760 -and $min -lt 840) -or ($min -ge 1260) -or ($min -lt 480)) { "Quiet_mode.json" } else { "Game.json" }
+    $status.ExpectedConfig = Get-ConfigNameForMinute -Minute (Get-MinuteOfDay)
 
     if ($status.CurrentConfig) {
         $status.ConfigMatch = ($status.CurrentConfig -eq $status.ExpectedConfig)
