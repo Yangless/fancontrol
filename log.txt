@@ -1,0 +1,11 @@
+
+[V264] 2026/4/11 18:00:07: Updater service - Get latest release error:
+[V264] 2026/4/11 18:00:07: MatchesRelease - System.Net.Http.HttpRequestException: Response status code does not indicate success: 403 (rate limit exceeded).
+   at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+   at System.Net.Http.HttpClient.GetStringAsyncCore(HttpRequestMessage request, CancellationToken cancellationToken)
+   at FanControl.Domain.UpdaterService.GetLatestRelease()
+[V264] 2026/4/11 20:17:23: Updater service - Get latest release error:
+[V264] 2026/4/11 20:17:23: MatchesRelease - System.Net.Http.HttpRequestException: Response status code does not indicate success: 403 (rate limit exceeded).
+   at System.Net.Http.HttpResponseMessage.EnsureSuccessStatusCode()
+   at System.Net.Http.HttpClient.GetStringAsyncCore(HttpRequestMessage request, CancellationToken cancellationToken)
+   at FanControl.Domain.UpdaterService.GetLatestRelease()

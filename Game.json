@@ -1,0 +1,812 @@
+{
+  "__VERSION__": "262",
+  "FanControl": {
+    "Controls": [
+      {
+        "NickName": "CPU Fan",
+        "Identifier": "/lpc/nct6687d/control/0",
+        "IsHidden": false,
+        "Enable": true,
+        "SelectedFanCurve": {
+          "Name": "Auto"
+        },
+        "SelectedOffset": 0,
+        "PairedFanSensor": {
+          "Identifier": "/lpc/nct6687d/fan/0"
+        },
+        "SelectedStart": 0,
+        "SelectedStop": 0,
+        "MinimumPercent": 0,
+        "SelectedCommandStepUp": 8,
+        "SelectedCommandStepDown": 8,
+        "ManualControlValue": 50,
+        "ManualControl": false,
+        "ForceApply": false,
+        "Calibration": [
+          [
+            10,
+            379
+          ],
+          [
+            20,
+            382
+          ],
+          [
+            30,
+            527
+          ],
+          [
+            40,
+            704
+          ],
+          [
+            50,
+            857
+          ],
+          [
+            60,
+            1010
+          ],
+          [
+            70,
+            1150
+          ],
+          [
+            80,
+            1277
+          ],
+          [
+            90,
+            1387
+          ],
+          [
+            100,
+            1509
+          ]
+        ]
+      },
+      {
+        "NickName": "Pump Fan",
+        "Identifier": "/lpc/nct6687d/control/1",
+        "IsHidden": true,
+        "Enable": false,
+        "SelectedFanCurve": null,
+        "SelectedOffset": 0,
+        "PairedFanSensor": null,
+        "SelectedStart": 0,
+        "SelectedStop": 0,
+        "MinimumPercent": 0,
+        "SelectedCommandStepUp": 8,
+        "SelectedCommandStepDown": 8,
+        "ManualControlValue": 50,
+        "ManualControl": false,
+        "ForceApply": false,
+        "Calibration": []
+      },
+      {
+        "NickName": "System Fan #1",
+        "Identifier": "/lpc/nct6687d/control/2",
+        "IsHidden": true,
+        "Enable": false,
+        "SelectedFanCurve": null,
+        "SelectedOffset": 0,
+        "PairedFanSensor": null,
+        "SelectedStart": 0,
+        "SelectedStop": 0,
+        "MinimumPercent": 0,
+        "SelectedCommandStepUp": 8,
+        "SelectedCommandStepDown": 8,
+        "ManualControlValue": 50,
+        "ManualControl": false,
+        "ForceApply": false,
+        "Calibration": []
+      },
+      {
+        "NickName": "System Fan #2",
+        "Identifier": "/lpc/nct6687d/control/3",
+        "IsHidden": false,
+        "Enable": true,
+        "SelectedFanCurve": {
+          "Name": "Auto 1"
+        },
+        "SelectedOffset": 0,
+        "PairedFanSensor": {
+          "Identifier": "/lpc/nct6687d/fan/3"
+        },
+        "SelectedStart": 0,
+        "SelectedStop": 0,
+        "MinimumPercent": 0,
+        "SelectedCommandStepUp": 8,
+        "SelectedCommandStepDown": 8,
+        "ManualControlValue": 50,
+        "ManualControl": false,
+        "ForceApply": false,
+        "Calibration": [
+          [
+            0,
+            296
+          ],
+          [
+            1,
+            325
+          ],
+          [
+            10,
+            326
+          ],
+          [
+            20,
+            454
+          ],
+          [
+            30,
+            680
+          ],
+          [
+            40,
+            872
+          ],
+          [
+            50,
+            1029
+          ],
+          [
+            60,
+            1199
+          ],
+          [
+            70,
+            1336
+          ],
+          [
+            80,
+            1470
+          ],
+          [
+            90,
+            1581
+          ],
+          [
+            100,
+            1726
+          ]
+        ]
+      },
+      {
+        "NickName": "System Fan #3",
+        "Identifier": "/lpc/nct6687d/control/4",
+        "IsHidden": false,
+        "Enable": true,
+        "SelectedFanCurve": {
+          "Name": "Auto 2"
+        },
+        "SelectedOffset": 0,
+        "PairedFanSensor": {
+          "Identifier": "/lpc/nct6687d/fan/4"
+        },
+        "SelectedStart": 25,
+        "SelectedStop": 16,
+        "MinimumPercent": 0,
+        "SelectedCommandStepUp": 8,
+        "SelectedCommandStepDown": 8,
+        "ManualControlValue": 50,
+        "ManualControl": false,
+        "ForceApply": false,
+        "Calibration": [
+          [
+            10,
+            0
+          ],
+          [
+            20,
+            342
+          ],
+          [
+            30,
+            525
+          ],
+          [
+            40,
+            717
+          ],
+          [
+            50,
+            870
+          ],
+          [
+            60,
+            1038
+          ],
+          [
+            70,
+            1180
+          ],
+          [
+            80,
+            1322
+          ],
+          [
+            90,
+            1436
+          ],
+          [
+            100,
+            1574
+          ]
+        ]
+      },
+      {
+        "NickName": "System Fan #4",
+        "Identifier": "/lpc/nct6687d/control/5",
+        "IsHidden": false,
+        "Enable": true,
+        "SelectedFanCurve": {
+          "Name": "Auto 2"
+        },
+        "SelectedOffset": 0,
+        "PairedFanSensor": {
+          "Identifier": "/lpc/nct6687d/fan/5"
+        },
+        "SelectedStart": 22,
+        "SelectedStop": 16,
+        "MinimumPercent": 0,
+        "SelectedCommandStepUp": 8,
+        "SelectedCommandStepDown": 8,
+        "ManualControlValue": 50,
+        "ManualControl": false,
+        "ForceApply": false,
+        "Calibration": [
+          [
+            10,
+            0
+          ],
+          [
+            20,
+            389
+          ],
+          [
+            30,
+            594
+          ],
+          [
+            40,
+            777
+          ],
+          [
+            50,
+            927
+          ],
+          [
+            60,
+            1084
+          ],
+          [
+            70,
+            1210
+          ],
+          [
+            80,
+            1333
+          ],
+          [
+            90,
+            1430
+          ],
+          [
+            100,
+            1544
+          ]
+        ]
+      },
+      {
+        "NickName": "System Fan #5",
+        "Identifier": "/lpc/nct6687d/control/6",
+        "IsHidden": true,
+        "Enable": false,
+        "SelectedFanCurve": null,
+        "SelectedOffset": 0,
+        "PairedFanSensor": null,
+        "SelectedStart": 0,
+        "SelectedStop": 0,
+        "MinimumPercent": 0,
+        "SelectedCommandStepUp": 8,
+        "SelectedCommandStepDown": 8,
+        "ManualControlValue": 50,
+        "ManualControl": false,
+        "ForceApply": false,
+        "Calibration": []
+      },
+      {
+        "NickName": "System Fan #6",
+        "Identifier": "/lpc/nct6687d/control/7",
+        "IsHidden": true,
+        "Enable": false,
+        "SelectedFanCurve": null,
+        "SelectedOffset": 0,
+        "PairedFanSensor": null,
+        "SelectedStart": 0,
+        "SelectedStop": 0,
+        "MinimumPercent": 0,
+        "SelectedCommandStepUp": 8,
+        "SelectedCommandStepDown": 8,
+        "ManualControlValue": 50,
+        "ManualControl": false,
+        "ForceApply": false,
+        "Calibration": []
+      },
+      {
+        "NickName": "Control 1 - NVIDIA GeForce RTX 4070 Ti",
+        "Identifier": "NVApiWrapper/0-AD104-A/control/0",
+        "IsHidden": false,
+        "Enable": false,
+        "SelectedFanCurve": null,
+        "SelectedOffset": 0,
+        "PairedFanSensor": {
+          "Identifier": "NVApiWrapper/0-AD104-A/fan/0"
+        },
+        "SelectedStart": 9,
+        "SelectedStop": 6,
+        "MinimumPercent": 0,
+        "SelectedCommandStepUp": 8,
+        "SelectedCommandStepDown": 8,
+        "ManualControlValue": 50,
+        "ManualControl": false,
+        "ForceApply": false,
+        "Calibration": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            1168
+          ],
+          [
+            10,
+            1168
+          ],
+          [
+            20,
+            1168
+          ],
+          [
+            30,
+            1168
+          ],
+          [
+            40,
+            1472
+          ],
+          [
+            50,
+            1775
+          ],
+          [
+            60,
+            2074
+          ],
+          [
+            70,
+            2376
+          ],
+          [
+            80,
+            2677
+          ],
+          [
+            90,
+            2978
+          ],
+          [
+            100,
+            3243
+          ]
+        ]
+      },
+      {
+        "NickName": "Control 2 - NVIDIA GeForce RTX 4070 Ti",
+        "Identifier": "NVApiWrapper/0-AD104-A/control/1",
+        "IsHidden": false,
+        "Enable": false,
+        "SelectedFanCurve": null,
+        "SelectedOffset": 0,
+        "PairedFanSensor": {
+          "Identifier": "NVApiWrapper/0-AD104-A/fan/1"
+        },
+        "SelectedStart": 9,
+        "SelectedStop": 6,
+        "MinimumPercent": 0,
+        "SelectedCommandStepUp": 8,
+        "SelectedCommandStepDown": 8,
+        "ManualControlValue": 50,
+        "ManualControl": false,
+        "ForceApply": false,
+        "Calibration": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            1170
+          ],
+          [
+            10,
+            1170
+          ],
+          [
+            20,
+            1170
+          ],
+          [
+            30,
+            1172
+          ],
+          [
+            40,
+            1474
+          ],
+          [
+            50,
+            1772
+          ],
+          [
+            60,
+            2077
+          ],
+          [
+            70,
+            2378
+          ],
+          [
+            80,
+            2683
+          ],
+          [
+            90,
+            2976
+          ],
+          [
+            100,
+            3233
+          ]
+        ]
+      }
+    ],
+    "CustomSensors": [],
+    "FanCurves": [
+      {
+        "Name": "Auto",
+        "IsHidden": false,
+        "CommandMode": 0,
+        "SelectedTempSource": {
+          "Identifier": "/intelcpu/0/temperature/16"
+        },
+        "Step": 2,
+        "Deadband": 3,
+        "SelectedResponseTime": 2,
+        "IdleTemperature": 35,
+        "MinFanSpeed": 30,
+        "MaxFanSpeed": 80,
+        "LoadTemperature": 70
+      },
+      {
+        "Name": "Auto 1",
+        "IsHidden": false,
+        "CommandMode": 0,
+        "SelectedTempSource": {
+          "Identifier": "/intelcpu/0/temperature/16"
+        },
+        "Step": 2,
+        "Deadband": 3,
+        "SelectedResponseTime": 2,
+        "IdleTemperature": 40,
+        "MinFanSpeed": 20,
+        "MaxFanSpeed": 80,
+        "LoadTemperature": 70
+      },
+      {
+        "Name": "Auto 2",
+        "IsHidden": false,
+        "CommandMode": 0,
+        "SelectedTempSource": {
+          "Identifier": "/intelcpu/0/temperature/1"
+        },
+        "Step": 2,
+        "Deadband": 3,
+        "SelectedResponseTime": 2,
+        "IdleTemperature": 50,
+        "MinFanSpeed": 0,
+        "MaxFanSpeed": 80,
+        "LoadTemperature": 80
+      }
+    ],
+    "FanSensors": [
+      {
+        "Identifier": "/lpc/nct6687d/fan/0",
+        "IsHidden": false,
+        "NickName": "CPU Fan"
+      },
+      {
+        "Identifier": "/lpc/nct6687d/fan/1",
+        "IsHidden": false,
+        "NickName": "Pump Fan"
+      },
+      {
+        "Identifier": "/lpc/nct6687d/fan/2",
+        "IsHidden": false,
+        "NickName": "System Fan #1"
+      },
+      {
+        "Identifier": "/lpc/nct6687d/fan/3",
+        "IsHidden": false,
+        "NickName": "System Fan #2"
+      },
+      {
+        "Identifier": "/lpc/nct6687d/fan/4",
+        "IsHidden": false,
+        "NickName": "System Fan #3"
+      },
+      {
+        "Identifier": "/lpc/nct6687d/fan/5",
+        "IsHidden": false,
+        "NickName": "System Fan #4"
+      },
+      {
+        "Identifier": "/lpc/nct6687d/fan/6",
+        "IsHidden": false,
+        "NickName": "System Fan #5"
+      },
+      {
+        "Identifier": "/lpc/nct6687d/fan/7",
+        "IsHidden": false,
+        "NickName": "System Fan #6"
+      },
+      {
+        "Identifier": "NVApiWrapper/0-AD104-A/fan/0",
+        "IsHidden": false,
+        "NickName": "Control 1 - NVIDIA GeForce RTX 4070 Ti"
+      },
+      {
+        "Identifier": "NVApiWrapper/0-AD104-A/fan/1",
+        "IsHidden": false,
+        "NickName": "Control 2 - NVIDIA GeForce RTX 4070 Ti"
+      }
+    ],
+    "TemperatureSensors": [
+      {
+        "Identifier": "/intelcpu/0/temperature/0",
+        "IsHidden": false,
+        "NickName": "Core Max"
+      },
+      {
+        "Identifier": "/intelcpu/0/temperature/1",
+        "IsHidden": false,
+        "NickName": "Core Average"
+      },
+      {
+        "Identifier": "/intelcpu/0/temperature/2",
+        "IsHidden": false,
+        "NickName": "P-Core #1"
+      },
+      {
+        "Identifier": "/intelcpu/0/temperature/3",
+        "IsHidden": false,
+        "NickName": "P-Core #2"
+      },
+      {
+        "Identifier": "/intelcpu/0/temperature/4",
+        "IsHidden": false,
+        "NickName": "P-Core #3"
+      },
+      {
+        "Identifier": "/intelcpu/0/temperature/5",
+        "IsHidden": false,
+        "NickName": "P-Core #4"
+      },
+      {
+        "Identifier": "/intelcpu/0/temperature/6",
+        "IsHidden": false,
+        "NickName": "P-Core #5"
+      },
+      {
+        "Identifier": "/intelcpu/0/temperature/7",
+        "IsHidden": false,
+        "NickName": "P-Core #6"
+      },
+      {
+        "Identifier": "/intelcpu/0/temperature/8",
+        "IsHidden": false,
+        "NickName": "E-Core #1"
+      },
+      {
+        "Identifier": "/intelcpu/0/temperature/9",
+        "IsHidden": false,
+        "NickName": "E-Core #2"
+      },
+      {
+        "Identifier": "/intelcpu/0/temperature/10",
+        "IsHidden": false,
+        "NickName": "E-Core #3"
+      },
+      {
+        "Identifier": "/intelcpu/0/temperature/11",
+        "IsHidden": false,
+        "NickName": "E-Core #4"
+      },
+      {
+        "Identifier": "/intelcpu/0/temperature/12",
+        "IsHidden": false,
+        "NickName": "E-Core #5"
+      },
+      {
+        "Identifier": "/intelcpu/0/temperature/13",
+        "IsHidden": false,
+        "NickName": "E-Core #6"
+      },
+      {
+        "Identifier": "/intelcpu/0/temperature/14",
+        "IsHidden": false,
+        "NickName": "E-Core #7"
+      },
+      {
+        "Identifier": "/intelcpu/0/temperature/15",
+        "IsHidden": false,
+        "NickName": "E-Core #8"
+      },
+      {
+        "Identifier": "/intelcpu/0/temperature/16",
+        "IsHidden": false,
+        "NickName": "CPU Package"
+      },
+      {
+        "Identifier": "/intelcpu/0/temperature/17",
+        "IsHidden": false,
+        "NickName": "P-Core #1 Distance to TjMax"
+      },
+      {
+        "Identifier": "/intelcpu/0/temperature/18",
+        "IsHidden": false,
+        "NickName": "P-Core #2 Distance to TjMax"
+      },
+      {
+        "Identifier": "/intelcpu/0/temperature/19",
+        "IsHidden": false,
+        "NickName": "P-Core #3 Distance to TjMax"
+      },
+      {
+        "Identifier": "/intelcpu/0/temperature/20",
+        "IsHidden": false,
+        "NickName": "P-Core #4 Distance to TjMax"
+      },
+      {
+        "Identifier": "/intelcpu/0/temperature/21",
+        "IsHidden": false,
+        "NickName": "P-Core #5 Distance to TjMax"
+      },
+      {
+        "Identifier": "/intelcpu/0/temperature/22",
+        "IsHidden": false,
+        "NickName": "P-Core #6 Distance to TjMax"
+      },
+      {
+        "Identifier": "/intelcpu/0/temperature/23",
+        "IsHidden": false,
+        "NickName": "E-Core #1 Distance to TjMax"
+      },
+      {
+        "Identifier": "/intelcpu/0/temperature/24",
+        "IsHidden": false,
+        "NickName": "E-Core #2 Distance to TjMax"
+      },
+      {
+        "Identifier": "/intelcpu/0/temperature/25",
+        "IsHidden": false,
+        "NickName": "E-Core #3 Distance to TjMax"
+      },
+      {
+        "Identifier": "/intelcpu/0/temperature/26",
+        "IsHidden": false,
+        "NickName": "E-Core #4 Distance to TjMax"
+      },
+      {
+        "Identifier": "/intelcpu/0/temperature/27",
+        "IsHidden": false,
+        "NickName": "E-Core #5 Distance to TjMax"
+      },
+      {
+        "Identifier": "/intelcpu/0/temperature/28",
+        "IsHidden": false,
+        "NickName": "E-Core #6 Distance to TjMax"
+      },
+      {
+        "Identifier": "/intelcpu/0/temperature/29",
+        "IsHidden": false,
+        "NickName": "E-Core #7 Distance to TjMax"
+      },
+      {
+        "Identifier": "/intelcpu/0/temperature/30",
+        "IsHidden": false,
+        "NickName": "E-Core #8 Distance to TjMax"
+      },
+      {
+        "Identifier": "/lpc/nct6687d/temperature/0",
+        "IsHidden": false,
+        "NickName": "CPU"
+      },
+      {
+        "Identifier": "/lpc/nct6687d/temperature/1",
+        "IsHidden": false,
+        "NickName": "System"
+      },
+      {
+        "Identifier": "/lpc/nct6687d/temperature/2",
+        "IsHidden": false,
+        "NickName": "VRM MOS"
+      },
+      {
+        "Identifier": "/lpc/nct6687d/temperature/3",
+        "IsHidden": false,
+        "NickName": "PCH"
+      },
+      {
+        "Identifier": "/lpc/nct6687d/temperature/4",
+        "IsHidden": false,
+        "NickName": "CPU Socket"
+      },
+      {
+        "Identifier": "/lpc/nct6687d/temperature/5",
+        "IsHidden": false,
+        "NickName": "PCIe x1"
+      },
+      {
+        "Identifier": "/lpc/nct6687d/temperature/6",
+        "IsHidden": false,
+        "NickName": "M2 #1"
+      },
+      {
+        "Identifier": "NVApiWrapper/0-AD104-A/sensor/0",
+        "IsHidden": false,
+        "NickName": "GPU"
+      }
+    ]
+  },
+  "Sensors": {
+    "AdlxWrapperSettings": {
+      "Enabled": true
+    },
+    "DisabledPlugins": [],
+    "DisableStorageSensors": true,
+    "LibreHardwareMonitorSettings": {
+      "Controller": false,
+      "CPU": true,
+      "EmbeddedEC": true,
+      "GPU": true,
+      "Memory": false,
+      "Motherboard": true,
+      "PowerMonitor": false,
+      "PSU": false,
+      "Storage": false,
+      "StorageUpdateInterval": "00:01:00",
+      "ZeroRPMOverride": true
+    },
+    "NvAPIWrapperSettings": {
+      "Enabled": true,
+      "ZeroRPMOverride": true
+    }
+  },
+  "MainWindow": {
+    "Fahrenheit": false,
+    "HideCalibration": false,
+    "HideFanSpeedCards": true,
+    "HorizontalUIOrientation": false,
+    "PrimaryColor": "#FF607D8B",
+    "SecondaryColor": "#FFAEEA00",
+    "SelectedTheme": "",
+    "ShowHiddenCards": false,
+    "SyncThemeWithWindows": true,
+    "SyncTrayIconColorWithWindows": true,
+    "TrayIconColor": null,
+    "TrayIcons": []
+  }
+}
