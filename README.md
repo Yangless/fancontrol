@@ -189,7 +189,7 @@ Get-ScheduledTask | Where-Object { $_.TaskName -like 'FanControl-*' } |
 ```
 
 **参数**：
-- `-Force`：强制切换（忽略时间判断，直接切换到当前时段应有的配置）
+- `-Force`：进入强制 Quiet 分支（主要用于 12:40 / 21:00 强制点或手动测试）
 
 ### switch.ps1（手动干预脚本）
 

@@ -58,8 +58,8 @@ if ($Mode -eq "auto") {
         Write-Log "No override flag detected"
     }
 
-    Write-Log "Calling auto switch script for calibration"
-    & "C:\FanControl_Auto\auto_switch.ps1" -Force
+    Write-Log "Calling auto switch script for time-based calibration"
+    & "C:\FanControl_Auto\auto_switch.ps1"
 
     Write-Log "========== Manual switch ended =========="
     exit
