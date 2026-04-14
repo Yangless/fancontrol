@@ -11,6 +11,8 @@
 
 - 当前维护的源码入口：`scripts/current/`
 - 当前自动化测试入口：`tests/Invoke-FanControlTests.ps1`
+- 详细文档索引：`docs/README_CONSOLIDATED.md`
+- 历史报告索引：`archive/README.md`
 - 系统实际运行副本：`C:\FanControl_Auto\`
 - 当前公开许可证：`MIT`
 
@@ -19,6 +21,12 @@
 - 想把 FanControl 配置切换自动化的人
 - 想参考 PowerShell + Windows 任务计划实现方式的人
 - 想直接复用当前脚本结构并按自己机器路径调整的人
+
+### 公开仓库整理说明
+
+- 根目录只保留当前仍然有入口价值的文件
+- 历史报告、阶段性整理报告统一放入 `archive/`
+- 更完整的技术文档统一放入 `docs/`
 
 ### 快速测试
 
