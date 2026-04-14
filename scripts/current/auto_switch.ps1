@@ -11,9 +11,16 @@ $LogFile = "$LogDir\auto_switch.log"
 $QuietConfig = "$ConfigDir\Quiet_mode.json"
 $GameConfig = "$ConfigDir\Game.json"
 $CacheFile = "$ConfigDir\CACHE"
+$HelperFile = Join-Path $PSScriptRoot "auto_switch_recovery.ps1"
 
 New-Item -ItemType Directory -Force -Path $StateDir | Out-Null
 New-Item -ItemType Directory -Force -Path $LogDir | Out-Null
+
+if (Test-Path $HelperFile) {
+    . $HelperFile
+} else {
+    throw "Helper file not found: $HelperFile"
+}
 
 function Write-Log {
     param([string]$Message)
@@ -170,6 +177,7 @@ Write-Log "=========================================="
 Test-ConfigFiles
 
 $isForcePoint = ((Get-Date).Hour -eq 12 -and (Get-Date).Minute -eq 40) -or ((Get-Date).Hour -eq 21 -and (Get-Date).Minute -eq 0)
+$processWasRunning = (Get-Process -Name FanControl -ErrorAction SilentlyContinue) -ne $null
 
 if ($isForcePoint -or $Force) {
     Write-Log "Force trigger detected, clearing override flag"
@@ -178,9 +186,17 @@ if ($isForcePoint -or $Force) {
     $configName = Split-Path $QuietConfig -Leaf
     Write-Log "Force switch to Quiet mode: $configName"
 
-    & $FanControlExe -c $QuietConfig -tray
-
-    $verified = Test-ConfigSwitch -TargetConfig $QuietConfig
+    $verified = Invoke-ConfigSwitchWithRetry `
+        -ProcessWasRunning:$processWasRunning `
+        -RunSwitchCommand {
+            & $FanControlExe -c $QuietConfig -tray
+        } `
+        -VerifySwitch {
+            Test-ConfigSwitch -TargetConfig $QuietConfig
+        } `
+        -OnRetry {
+            Write-Log "Cold start detected and initial verification failed, retrying Quiet config through running FanControl process"
+        }
 
     $status = if ($verified) { "SUCCESS" } else { "FAILED" }
     $message = "Force switch to $configName - " + $(if ($verified) { "Verified" } else { "Not verified" })
@@ -211,9 +227,17 @@ $configName = Split-Path $targetConfig -Leaf
 
 Write-Log "Attempting to switch config: $configName"
 
-& $FanControlExe -c $targetConfig -tray
-
-$verified = Test-ConfigSwitch -TargetConfig $targetConfig
+$verified = Invoke-ConfigSwitchWithRetry `
+    -ProcessWasRunning:$processWasRunning `
+    -RunSwitchCommand {
+        & $FanControlExe -c $targetConfig -tray
+    } `
+    -VerifySwitch {
+        Test-ConfigSwitch -TargetConfig $targetConfig
+    } `
+    -OnRetry {
+        Write-Log "Cold start detected and initial verification failed, retrying config switch through running FanControl process"
+    }
 
 $status = if ($verified) { "SUCCESS" } else { "FAILED" }
 $message = "Switch to $configName - " + $(if ($verified) { "Verified" } else { "Not verified" })

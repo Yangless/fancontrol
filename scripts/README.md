@@ -26,9 +26,10 @@ scripts/
 
 ## 当前激活脚本
 
-`scripts/current/` 当前保存以下 5 个活跃脚本：
+`scripts/current/` 当前保存以下活跃文件：
 
 - `auto_switch.ps1`
+- `auto_switch_recovery.ps1`
 - `switch.ps1`
 - `check_status.ps1`
 - `monitor_simple.ps1`

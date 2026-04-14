@@ -42,6 +42,7 @@ FanControl 官方支持命令行参数 `-c <配置文件路径>`：
 ```
 C:\FanControl_Auto\             ← 实际运行目录（任务计划直接调用这里）
 ├── auto_switch.ps1             ← 当前运行入口
+├── auto_switch_recovery.ps1    ← 冷启动失败后的补发切换 helper
 ├── switch.ps1                  ← 当前手动干预入口
 ├── check_status.ps1            ← 当前状态查看工具
 ├── monitor_simple.ps1          ← 当前持续监控工具
@@ -70,6 +71,7 @@ D:\Y\others\fancontrol\         ← 项目源码目录（源码主位置）
 ├── SYNC_MEMO.md                ← D→C 同步备忘录
 ├── scripts\
 │   ├── current\                ← 当前最新脚本源码（默认编辑这里）
+│   │   └── auto_switch_recovery.ps1 等支撑文件
 │   ├── iterating\              ← 正在试验的候选脚本
 │   ├── history\                ← 历史脚本和旧快照
 │   └── tools\                  ← XML / 部署说明 / 参考工具
