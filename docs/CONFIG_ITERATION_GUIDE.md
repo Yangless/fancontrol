@@ -2,6 +2,12 @@
 
 > **目标**: 建立一套可重复、可验证的配置优化流程
 
+## 路径约定
+
+- 仓库快照：`configs/`
+- FanControl live config：`D:\Program Files (x86)\FanControl\Configurations\`
+- 先修改仓库快照，再决定是否部署到 live config 目录进行测试
+
 ---
 
 ## 核心方法论
@@ -23,9 +29,9 @@
 ### 修改流程
 
 #### 1. 创建实验配置
-```bash
+```powershell
 # 命名规范: <基础配置>_<版本号>_<优化目标>.json
-cp Game.json Game_v3.3_quiet-test.json
+Copy-Item .\configs\Game.json .\configs\Game_v3.3_quiet-test.json
 ```
 
 #### 2. 添加元数据（可选）
@@ -63,27 +69,28 @@ cp Game.json Game_v3.3_quiet-test.json
 #### 基准测试（修改前）
 ```powershell
 # 1. 确保使用原始配置
-FanControl.exe -c Game.json
+FanControl.exe -c "D:\Program Files (x86)\FanControl\Configurations\Game.json"
 
 # 2. 启动监控
 C:\FanControl_Auto\monitor_simple.ps1 -IntervalSeconds 5 -SummaryMinutes 10
 
 # 3. 等待 10 分钟，保存为 baseline
 # 输出文件: monitor_20260413_100000.json
-mv monitor_20260413_100000.json baseline_game_v3.2.json
+Move-Item .\monitor_20260413_100000.json .\baseline_game_v3.2.json
 ```
 
 #### 实验测试（修改后）
 ```powershell
 # 1. 切换到实验配置
-FanControl.exe -c Game_v3.3_quiet-test.json
+Copy-Item .\configs\Game_v3.3_quiet-test.json "D:\Program Files (x86)\FanControl\Configurations\Game_v3.3_quiet-test.json" -Force
+FanControl.exe -c "D:\Program Files (x86)\FanControl\Configurations\Game_v3.3_quiet-test.json"
 
 # 2. 启动监控
 C:\FanControl_Auto\monitor_simple.ps1 -IntervalSeconds 5 -SummaryMinutes 10
 
 # 3. 等待 10 分钟，保存为实验结果
 # 输出文件: monitor_20260413_110000.json
-mv monitor_20260413_110000.json experiment_game_v3.3_quiet.json
+Move-Item .\monitor_20260413_110000.json .\experiment_game_v3.3_quiet.json
 ```
 
 ---
@@ -163,11 +170,12 @@ Write-Host "变化: 平均 $([math]::Round($fanExp.Avg - $fanBase.Avg, 0)) RPM"
 ### 合并流程
 ```powershell
 # 接受实验配置
-cp Game_v3.3_quiet-test.json Game.json
+Copy-Item .\configs\Game_v3.3_quiet-test.json .\configs\Game.json -Force
+Copy-Item .\configs\Game.json "D:\Program Files (x86)\FanControl\Configurations\Game.json" -Force
 Write-Log "配置升级: v3.2 → v3.3 (降噪优化)"
 
 # Git 提交
-git add Game.json
+git add .\configs\Game.json
 git commit -m "config: upgrade to v3.3 (quiet optimization)
 
 - IdleTemperature: 35 → 40
@@ -178,12 +186,12 @@ git commit -m "config: upgrade to v3.3 (quiet optimization)
 ### 拒绝处理
 ```powershell
 # 回滚到原始配置
-FanControl.exe -c Game.json
+FanControl.exe -c "D:\Program Files (x86)\FanControl\Configurations\Game.json"
 
 # 归档实验配置（供参考）
-mkdir -p archive/failed_experiments
-mv Game_v3.3_quiet-test.json archive/failed_experiments/
-echo "实验失败原因: 温度升高超过阈值" >> archive/failed_experiments/README.md
+New-Item -ItemType Directory -Force .\archive\failed_experiments | Out-Null
+Move-Item .\configs\Game_v3.3_quiet-test.json .\archive\failed_experiments\
+Add-Content .\archive\failed_experiments\README.md "实验失败原因: 温度升高超过阈值"
 ```
 
 ---
@@ -232,23 +240,23 @@ monitor_simple.ps1 -IntervalSeconds 30 -SummaryMinutes 1440
 ## 配置版本管理最佳实践
 
 ### Git 工作流
-```bash
+```powershell
 # 创建配置优化分支
 git checkout -b config/optimize-quiet-v3.3
 
 # 创建实验配置
-cp Game.json Game_v3.3_test.json
+Copy-Item .\configs\Game.json .\configs\Game_v3.3_test.json
 
 # 修改配置...
 
 # 提交实验配置
-git add Game_v3.3_test.json
+git add .\configs\Game_v3.3_test.json
 git commit -m "WIP: quiet optimization v3.3"
 
 # 测试完成后
 # 如果满意，合并到主配置
-cp Game_v3.3_test.json Game.json
-git add Game.json
+Copy-Item .\configs\Game_v3.3_test.json .\configs\Game.json -Force
+git add .\configs\Game.json
 git commit -m "config: upgrade to v3.3 (quiet optimization)"
 
 # 推送到远程
@@ -260,9 +268,9 @@ git push origin v3.3
 ```
 
 ### 配置回滚
-```bash
+```powershell
 # 如果新配置有问题，快速回滚
-git checkout v3.2 -- Game.json
+git checkout v3.2 -- .\configs\Game.json
 git commit -m "rollback: revert to v3.2 due to thermal issues"
 ```
 

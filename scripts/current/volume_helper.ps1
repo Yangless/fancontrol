@@ -1,3 +1,22 @@
+if (-not $StateDir -or -not $LogDir) {
+    $RuntimePathsHelper = Join-Path $PSScriptRoot "runtime_paths.ps1"
+
+    if (Test-Path $RuntimePathsHelper) {
+        . $RuntimePathsHelper
+        $Paths = Get-FanControlPaths
+
+        if (-not $StateDir) {
+            $StateDir = $Paths.StateDir
+        }
+
+        if (-not $LogDir) {
+            $LogDir = $Paths.LogDir
+        }
+    } else {
+        throw "Helper file not found: $RuntimePathsHelper"
+    }
+}
+
 $script:QuietSavedVolumeFile = Join-Path $StateDir 'quiet_saved_volume.json'
 $script:VolumeLogFile = Join-Path $LogDir 'volume_helper.log'
 

@@ -1,3 +1,23 @@
+function Test-ConfigSwitchVerificationPassed {
+    param(
+        $VerificationResult
+    )
+
+    if ($null -eq $VerificationResult) {
+        return $false
+    }
+
+    if ($VerificationResult -is [bool]) {
+        return $VerificationResult
+    }
+
+    if ($VerificationResult.PSObject.Properties['Verified']) {
+        return [bool]$VerificationResult.Verified
+    }
+
+    return [bool]$VerificationResult
+}
+
 function Invoke-ConfigSwitchWithRetry {
     param(
         [scriptblock]$RunSwitchCommand,
@@ -7,13 +27,14 @@ function Invoke-ConfigSwitchWithRetry {
     )
 
     & $RunSwitchCommand
-    $verified = & $VerifySwitch
+    $verificationResult = & $VerifySwitch
+    $verified = Test-ConfigSwitchVerificationPassed -VerificationResult $verificationResult
 
     if (-not $verified -and -not $ProcessWasRunning) {
         & $OnRetry
         & $RunSwitchCommand
-        $verified = & $VerifySwitch
+        $verificationResult = & $VerifySwitch
     }
 
-    return $verified
+    return $verificationResult
 }

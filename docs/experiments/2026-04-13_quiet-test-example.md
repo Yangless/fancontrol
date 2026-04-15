@@ -74,10 +74,11 @@
 
 ```powershell
 # 合并到主配置
-cp Game_v3.3_quiet-test.json Game.json
+Copy-Item .\configs\Game_v3.3_quiet-test.json .\configs\Game.json -Force
+Copy-Item .\configs\Game.json "D:\Program Files (x86)\FanControl\Configurations\Game.json" -Force
 
 # Git 提交
-git add Game.json
+git add .\configs\Game.json
 git commit -m "config: upgrade to v3.3 (quiet optimization)
 
 - IdleTemperature: 35 → 40 (+14%)

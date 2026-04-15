@@ -3,6 +3,12 @@ param()
 $ErrorActionPreference = "Stop"
 $TaskName = "FanControl-Startup"
 $ScriptPath = "C:\FanControl_Auto\auto_switch.ps1"
+$RuntimePathsHelper = Join-Path $PSScriptRoot "runtime_paths.ps1"
+
+if (Test-Path $RuntimePathsHelper) {
+    . $RuntimePathsHelper
+    $ScriptPath = (Get-FanControlPaths).RuntimeAutoSwitch
+}
 
 Write-Host "=== Fix FanControl Startup Task ===" -ForegroundColor Cyan
 

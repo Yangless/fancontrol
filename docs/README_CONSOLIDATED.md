@@ -1,182 +1,84 @@
-# FanControl 自动化配置系统 - 整合文档
+# FanControl 文档导航与历史索引
 
-> **版本**: v3.2 | **整理日期**: 2026-04-13 | **状态**: 生产运行中 ✅
+> 更新日期：2026-04-14
+>
+> 本文档只做导航和历史索引。当前真实目录结构只以 [PROJECT_STRUCTURE.md](./PROJECT_STRUCTURE.md) 为准。
 
----
+## 1. 当前应优先阅读的文档
 
-## 文档导航
+1. [README.md](../README.md)
+2. [PROJECT_STRUCTURE.md](./PROJECT_STRUCTURE.md)
+3. [scripts/README.md](../scripts/README.md)
+4. [SYNC_MEMO.md](../SYNC_MEMO.md)
 
-### 核心文档（必须阅读）
-1. **[README.md](../README.md)** - 项目总览、架构设计、快速上手
-2. **[CHANGELOG.md](../CHANGELOG.md)** - 完整开发历史、版本演进、问题记录
+如果需要理解配置文件和后续调优，再看：
 
-### 技术文档（按时间排序）
+- [CONFIG_ANALYSIS.md](./CONFIG_ANALYSIS.md)
+- [CONFIG_ITERATION_GUIDE.md](./CONFIG_ITERATION_GUIDE.md)
+
+如果需要回看历史问题与修复过程，再看：
+
+- [archive/README.md](../archive/README.md)
+
+## 2. 当前文档分工
+
+| 文档 | 作用 | 是否定义当前结构 |
+|------|------|----------------|
+| `README.md` | 项目总览、使用说明、运维入口 | 否 |
+| `docs/PROJECT_STRUCTURE.md` | 当前仓库结构权威说明 | 是 |
+| `scripts/README.md` | 脚本目录职责与同步规则 | 否 |
+| `SYNC_MEMO.md` | repo source / runtime mirror 同步备忘录 | 否 |
+| `docs/README_CONSOLIDATED.md` | 文档导航、历史索引、时间线 | 否 |
+
+## 3. 历史文档索引
+
 | 文档 | 日期 | 关键内容 | 文件路径 |
 |------|------|---------|---------|
 | 测试报告 v1.0 | 2026-03-31 | 初始版本测试结果 | [archive/2026-03-31_测试报告_v1.0.md](../archive/2026-03-31_测试报告_v1.0.md) |
 | 开发部署文档 v1.0 | 2026-04-02 | 首次部署指南、任务计划配置 | [archive/2026-04-02_开发部署文档_v1.0.md](../archive/2026-04-02_开发部署文档_v1.0.md) |
 | 修复报告 v2.0 | 2026-04-11 | 静默失败问题、日志机制引入 | [archive/2026-04-11_修复报告_v2.0.md](../archive/2026-04-11_修复报告_v2.0.md) |
 | 修复完成报告 v3.0 | 2026-04-11 | 配置路径统一、验证机制完善 | [archive/2026-04-11_修复完成报告_v3.0.md](../archive/2026-04-11_修复完成报告_v3.0.md) |
-| 监控验证机制说明 v3.0 | 2026-04-11 | 验证流程、CACHE文件检查 | [archive/2026-04-11_监控验证机制说明_v3.0.md](../archive/2026-04-11_监控验证机制说明_v3.0.md) |
-| 开机状态分析报告 | 2026-04-12 | BootTrigger问题诊断 | [archive/2026-04-12_开机状态分析报告.md](../archive/2026-04-12_开机状态分析报告.md) |
-| 开机状态和监控总结 | 2026-04-12 | 问题根因分析、修复方案 | [archive/2026-04-12_开机状态和监控总结.md](../archive/2026-04-12_开机状态和监控总结.md) |
-| 持续监控系统使用说明 v3.1 | 2026-04-12 | monitor_simple.ps1 使用指南 | [archive/2026-04-12_持续监控系统使用说明_v3.1.md](../archive/2026-04-12_持续监控系统使用说明_v3.1.md) |
+| 监控验证机制说明 v3.0 | 2026-04-11 | 验证流程、CACHE 文件检查 | [archive/2026-04-11_监控验证机制说明_v3.0.md](../archive/2026-04-11_监控验证机制说明_v3.0.md) |
+| 开机状态分析报告 | 2026-04-12 | BootTrigger 问题诊断 | [archive/2026-04-12_开机状态分析报告.md](../archive/2026-04-12_开机状态分析报告.md) |
+| 开机状态和监控总结 | 2026-04-12 | 根因分析与修复总结 | [archive/2026-04-12_开机状态和监控总结.md](../archive/2026-04-12_开机状态和监控总结.md) |
+| 持续监控系统使用说明 v3.1 | 2026-04-12 | `monitor_simple.ps1` 使用方式 | [archive/2026-04-12_持续监控系统使用说明_v3.1.md](../archive/2026-04-12_持续监控系统使用说明_v3.1.md) |
 
----
-
-## 版本演进时间线
+## 4. 版本时间线
 
 ### v1.0 (2026-04-02)
-**里程碑**: 项目启动、基础功能实现
 
-**关键成果**:
-- ✅ 实现时段自动切换 (08:00/12:40/14:00/21:00)
-- ✅ 任务计划注册成功
-- ✅ 时间边界测试通过
-
-**遗留问题**:
-- ❌ 无日志、静默失败
-- ❌ BootTrigger + Interactive 组合失效（未被察觉）
-
----
+- 完成基础时段切换与任务计划注册。
+- 仍缺少日志、验证和稳定的启动流程。
 
 ### v2.0 (2026-04-11)
-**里程碑**: 引入日志、手动覆盖机制
 
-**新增功能**:
-- ✅ `override.flag` 免打扰机制
-- ✅ 强制触发点（12:40/21:00）清除 override
-- ✅ `switch.ps1` 支持手动干预
-- ✅ 日志系统 (`logs/auto_switch.log`)
-
-**遗留问题**:
-- ❌ 配置路径不一致 (Game_ultr.json vs Game.json)
-- ❌ 时间边界逻辑缺少注释
-
----
+- 引入日志、`override.flag` 和手动切换入口。
+- 开始把“个人脚本”推进到可维护状态。
 
 ### v3.0 (2026-04-11)
-**里程碑**: 全面修复、生产级稳定性
 
-**修复内容**:
-- ✅ 统一配置路径为 `Game.json`
-- ✅ 重写时间判断逻辑 + 详细注释
-- ✅ 配置文件存在性验证 (`Test-ConfigFiles`)
-- ✅ 配置切换验证机制 (`Test-ConfigSwitch`)
-- ✅ 状态文件 (`state/current_status.json`)
-- ✅ Windows 托盘通知
-
-**遗留问题**:
-- ❌ 开机任务仍未运行（BootTrigger 问题）
-
----
+- 引入配置切换验证、状态文件和托盘通知。
+- 解决了路径统一和基本验证闭环。
 
 ### v3.1 (2026-04-12)
-**里程碑**: 状态监控工具
 
-**新增工具**:
-- ✅ `check_status.ps1` - 一次性/持续状态查看
-- ✅ `monitor_simple.ps1` - 持续采样监控
-
----
+- 增加 `check_status.ps1` 和 `monitor_simple.ps1` 两个观察工具。
 
 ### v3.2 (2026-04-12)
-**里程碑**: 彻底修复开机自启
 
-**修复内容**:
-- ✅ BootTrigger → LogonTrigger
-- ✅ 添加 30 秒延迟
-- ✅ 验证成功：`LastTaskResult: 0`
+- 把开机启动从 `BootTrigger` 调整为 `LogonTrigger`，并增加延迟。
 
----
+## 5. 当前背景摘要
 
-## 架构核心概念
+这个仓库当前处于“从个人自动化脚本向正式代码库治理过渡”的阶段，主要背景如下：
 
-### 1. 时段规则
-```
-Quiet 时段: 12:40-14:00, 21:00-次日08:00
-Game 时段: 08:00-12:40, 14:00-21:00
-```
+- 核心自动切换功能已经可用。
+- 测试已经覆盖核心切换路径。
+- 文档、结构治理、状态统一和 runtime 边界还在补齐。
 
-### 2. 状态机
-```
-自动调度模式 (无 override)  ←→  免打扰模式 (有 override)
-         ↑                                    ↓
-         └────────── 强制触发点 ─────────────┘
-              (12:40/21:00 自动清除 override)
-```
+## 6. 使用本索引时的规则
 
-### 3. 文件流转
-```
-FanControl.exe -c <config>
-       ↓
-CACHE 文件更新 (1-2秒延迟)
-       ↓
-Test-ConfigSwitch() 验证
-       ↓
-current_status.json 记录
-       ↓
-托盘通知
-```
-
----
-
-## 关键经验教训
-
-### 技术层面
-1. **BootTrigger vs LogonTrigger**: GUI 程序开机自启应使用 `LogonTrigger`
-2. **IPC 热切换**: FanControl 支持 `-c` 参数进行无重启切换
-3. **CACHE 验证滞后**: 配置切换后需等待 1-2 秒再验证
-
-### 工程实践
-1. **日志优先**: 后台脚本必须记录详细日志
-2. **路径统一**: 配置文件路径应集中定义在脚本顶部
-3. **验证闭环**: 切换操作必须有验证机制确认成功
-
----
-
-## GitHub 迭代建议
-
-### 文档结构建议
-```
-fancontrol/
-├── README.md                    # 主文档（保持更新）
-├── CHANGELOG.md                 # 版本历史
-├── docs/                        # 文档目录
-│   ├── README_CONSOLIDATED.md   # 本文档
-│   ├── CONFIG_ANALYSIS.md       # 配置文件分析
-│   └── archive/                 # 历史文档归档
-│       ├── 2026-03-31_测试报告_v1.0.md
-│       ├── ...
-├── scripts/                     # 脚本目录
-│   ├── current/                # 当前最新脚本源码
-│   ├── iterating/              # 正在试验的候选脚本
-│   ├── history/                # 历史脚本与旧快照
-│   └── tools/                  # XML / 参考工具
-└── configs/                     # 配置文件目录
-    ├── Game.json
-    ├── Quiet_mode.json
-    └── Game_ultr.json
-```
-
-### 版本管理建议
-1. **Tag 管理**: 为每个版本打 tag (v3.0, v3.1, v3.2)
-2. **Release Notes**: 基于 CHANGELOG.md 生成 GitHub Release
-3. **Issue 跟踪**: 将已知问题转为 GitHub Issues
-
-### 持续改进方向
-1. **配置文件优化**: 参见 [CONFIG_ANALYSIS.md](./CONFIG_ANALYSIS.md)
-2. **监控增强**: 添加性能指标采集
-3. **跨平台支持**: 考虑 Linux/macOS 兼容性（如适用）
-
----
-
-## 快速链接
-
-- **FanControl 官网**: https://getfancontrol.com/
-- **FanControl GitHub**: https://github.com/Rem0o/FanControl
-- **Windows 任务计划文档**: https://learn.microsoft.com/powershell/module/scheduledtasks/
-
----
-
-**维护者注**: 本整合文档基于 v3.2 版本整理，后续版本更新时请同步修改此文档。
+- 想知道“仓库现在长什么样”，看 [PROJECT_STRUCTURE.md](./PROJECT_STRUCTURE.md)。
+- 想知道“现在怎么运行、怎么部署、怎么维护”，看 [README.md](../README.md)。
+- 想知道“为什么会演进成现在这样”，看 `archive/` 中的历史文档。
+- 如果在仓库外看到旧同步报告或整理稿，不要把它们当作当前事实来源。

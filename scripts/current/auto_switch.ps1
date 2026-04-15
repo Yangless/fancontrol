@@ -1,19 +1,24 @@
 param([switch]$Force)
 
-$FanControlExe = "D:\Program Files (x86)\FanControl\FanControl.exe"
-$ConfigDir = "D:\Program Files (x86)\FanControl\Configurations"
-$StateDir = "C:\FanControl_Auto\state"
-$LogDir = "C:\FanControl_Auto\logs"
-$OverrideFlag = "$StateDir\override.flag"
-$StatusFile = "$StateDir\current_status.json"
-$LogFile = "$LogDir\auto_switch.log"
-
-$QuietConfig = "$ConfigDir\Quiet_mode.json"
-$GameConfig = "$ConfigDir\Game.json"
-$CacheFile = "$ConfigDir\CACHE"
+$RuntimePathsHelper = Join-Path $PSScriptRoot "runtime_paths.ps1"
 $HelperFile = Join-Path $PSScriptRoot "auto_switch_recovery.ps1"
+$ConfigSwitchCoreHelper = Join-Path $PSScriptRoot "config_switch_core.ps1"
 $TimePolicyHelper = Join-Path $PSScriptRoot "time_policy.ps1"
 $VolumeHelperFile = Join-Path $PSScriptRoot "volume_helper.ps1"
+
+if (Test-Path $RuntimePathsHelper) {
+    . $RuntimePathsHelper
+} else {
+    throw "Helper file not found: $RuntimePathsHelper"
+}
+
+$Paths = Get-FanControlPaths
+$StateDir = $Paths.StateDir
+$LogDir = $Paths.LogDir
+$OverrideFlag = $Paths.OverrideFlag
+$LogFile = Join-Path $LogDir 'auto_switch.log'
+$QuietConfig = $Paths.QuietConfig
+$GameConfig = $Paths.GameConfig
 
 New-Item -ItemType Directory -Force -Path $StateDir | Out-Null
 New-Item -ItemType Directory -Force -Path $LogDir | Out-Null
@@ -36,6 +41,12 @@ if (Test-Path $VolumeHelperFile) {
     throw "Helper file not found: $VolumeHelperFile"
 }
 
+if (Test-Path $ConfigSwitchCoreHelper) {
+    . $ConfigSwitchCoreHelper
+} else {
+    throw "Helper file not found: $ConfigSwitchCoreHelper"
+}
+
 function Write-Log {
     param([string]$Message)
     $timestamp = Get-Date -Format "yyyy/MM/dd HH:mm:ss"
@@ -43,126 +54,17 @@ function Write-Log {
     Add-Content -Path $LogFile -Value $logEntry -ErrorAction SilentlyContinue
 }
 
-function Update-StatusFile {
-    param(
-        [string]$TargetConfig,
-        [string]$Status,
-        [string]$Message,
-        [bool]$Verified = $false
-    )
-
-    $statusData = @{
-        Timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-        TargetConfig = $TargetConfig
-        ActualConfig = $null
-        Status = $Status
-        Message = $Message
-        Verified = $Verified
-        ProcessRunning = $false
-        ProcessId = $null
-    }
-
-    $process = Get-Process -Name FanControl -ErrorAction SilentlyContinue
-    if ($process) {
-        $statusData.ProcessRunning = $true
-        $statusData.ProcessId = $process.Id
-    }
-
-    if (Test-Path $CacheFile) {
-        try {
-            $cache = Get-Content $CacheFile | ConvertFrom-Json
-            $statusData.ActualConfig = $cache.CurrentConfigFileName
-        } catch {
-            $statusData.ActualConfig = "Unknown"
-        }
-    }
-
-    $statusData | ConvertTo-Json -Depth 3 | Set-Content $StatusFile -ErrorAction SilentlyContinue
-}
-
-function Test-ConfigFiles {
-    $errors = @()
-
-    if (-not (Test-Path $FanControlExe)) {
-        $errors += "FanControl.exe not found: $FanControlExe"
-    }
-
-    if (-not (Test-Path $QuietConfig)) {
-        $errors += "Quiet config not found: $QuietConfig"
-    }
-
-    if (-not (Test-Path $GameConfig)) {
-        $errors += "Game config not found: $GameConfig"
-    }
-
-    if ($errors.Count -gt 0) {
-        Write-Log "ERROR: Config validation failed"
-        $errors | ForEach-Object { Write-Log "  - $_" }
-
-        Update-StatusFile -TargetConfig "N/A" -Status "ERROR" -Message ($errors -join "; ") -Verified $false
-
-        [System.Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms") | Out-Null
-        [System.Windows.Forms.MessageBox]::Show(
-            "Config validation failed:`n" + ($errors -join "`n"),
-            "FanControl Auto Switch Error",
-            "OK",
-            "Error"
-        ) | Out-Null
-
-        exit 1
-    }
-
-    Write-Log "Config validation passed"
-}
-
-function Test-ConfigSwitch {
-    param(
-        [string]$TargetConfig,
-        [int]$MaxWaitSeconds = 10
-    )
-
-    $configName = Split-Path $TargetConfig -Leaf
-    Write-Log "Verifying config switch to: $configName"
-
-    $waited = 0
-    $verified = $false
-
-    while ($waited -lt $MaxWaitSeconds) {
-        Start-Sleep -Seconds 1
-        $waited++
-
-        if (Test-Path $CacheFile) {
-            try {
-                $cache = Get-Content $CacheFile | ConvertFrom-Json
-                $actualConfig = $cache.CurrentConfigFileName
-
-                if ($actualConfig -eq $configName) {
-                    $verified = $true
-                    Write-Log "SUCCESS: Config verified after ${waited}s - Actual: $actualConfig"
-                    break
-                } else {
-                    Write-Log "Waiting... (${waited}s) - Target: $configName, Actual: $actualConfig"
-                }
-            } catch {
-                Write-Log "Warning: Cannot read CACHE file (${waited}s)"
-            }
-        }
-    }
-
-    return $verified
-}
-
 function Get-TargetConfig {
     $currentDate = Get-Date
-    $min = Get-MinuteOfDay -Date $currentDate
-    $configName = Get-ConfigNameForMinute -Minute $min
+    $window = Get-TimePolicyWindow -Minute (Get-MinuteOfDay -Date $currentDate)
+    $configName = $window.Config
 
     if ($configName -eq "Quiet_mode.json") {
-        Write-Log "Current time $((Get-Date).ToString('HH:mm')) is in Quiet period"
+        Write-Log "Current time $($currentDate.ToString('HH:mm')) matched policy $($window.Label) -> Quiet"
         return $QuietConfig
     }
 
-    Write-Log "Current time $((Get-Date).ToString('HH:mm')) is in Game period"
+    Write-Log "Current time $($currentDate.ToString('HH:mm')) matched policy $($window.Label) -> Game"
     return $GameConfig
 }
 
@@ -190,44 +92,62 @@ Write-Log "Script started (Enhanced v3.0)"
 Write-Log "Parameter: Force=$Force"
 Write-Log "=========================================="
 
-Test-ConfigFiles
+try {
+    Test-FanControlConfigFiles `
+        -RequiredConfigs @($QuietConfig, $GameConfig) `
+        -Paths $Paths `
+        -LogAction { param($Message) Write-Log $Message }
+    Write-Log "Config validation passed"
+} catch {
+    $errorMessage = $_.Exception.Message
+    Write-Log "ERROR: Config validation failed"
+    Write-FanControlStatus `
+        -TargetConfig 'N/A' `
+        -Status 'ERROR' `
+        -Message $errorMessage `
+        -Verified $false `
+        -CommandIssued:$false `
+        -VerificationConfidence 'Low' `
+        -Paths $Paths
+
+    [System.Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms") | Out-Null
+    [System.Windows.Forms.MessageBox]::Show(
+        "Config validation failed:`n$errorMessage",
+        "FanControl Auto Switch Error",
+        "OK",
+        "Error"
+    ) | Out-Null
+
+    exit 1
+}
 
 $currentMinute = Get-MinuteOfDay
 $isForcePoint = Test-IsForcePointMinute -Minute $currentMinute
 $isQuietExitPoint = Test-IsQuietExitPointMinute -Minute $currentMinute
-$processWasRunning = (Get-Process -Name FanControl -ErrorAction SilentlyContinue) -ne $null
+$processWasRunning = Get-FanControlProcessRunning
 
 if ($isForcePoint -or $Force) {
     Write-Log "Force trigger detected, clearing override flag"
     Remove-Item $OverrideFlag -Force -ErrorAction SilentlyContinue
     Enter-QuietVolumeMode
 
-    $configName = Split-Path $QuietConfig -Leaf
-    Write-Log "Force switch to Quiet mode: $configName"
-
-    $verified = Invoke-ConfigSwitchWithRetry `
+    $result = Invoke-FanControlConfigSwitch `
+        -TargetConfigPath $QuietConfig `
         -ProcessWasRunning:$processWasRunning `
-        -RunSwitchCommand {
-            & $FanControlExe -c $QuietConfig -tray
-        } `
-        -VerifySwitch {
-            Test-ConfigSwitch -TargetConfig $QuietConfig
-        } `
-        -OnRetry {
-            Write-Log "Cold start detected and initial verification failed, retrying Quiet config through running FanControl process"
-        }
+        -UseTray `
+        -StatusPrefix 'Force switch' `
+        -Paths $Paths `
+        -LogAction { param($Message) Write-Log $Message }
 
-    $status = if ($verified) { "SUCCESS" } else { "FAILED" }
-    $message = "Force switch to $configName - " + $(if ($verified) { "Verified" } else { "Not verified" })
-    Update-StatusFile -TargetConfig $configName -Status $status -Message $message -Verified $verified
+    $configName = $result.TargetConfigName
 
-    if ($verified) {
+    if ($result.Verified) {
         Show-Notification -Title "FanControl Auto Switch" -Message "Successfully switched to $configName" -Type "Info"
     } else {
         Show-Notification -Title "FanControl Switch Warning" -Message "Switch to $configName may have failed" -Type "Warning"
     }
 
-    Write-Log "Script ended (Force mode) - Status: $status"
+    Write-Log "Script ended (Force mode) - Status: $($result.Status)"
     exit
 }
 
@@ -235,7 +155,13 @@ if (Test-Path $OverrideFlag) {
     $overrideMode = Get-Content $OverrideFlag -ErrorAction SilentlyContinue
     Write-Log "Override flag detected, skipping auto switch (current mode: $overrideMode)"
 
-    Update-StatusFile -TargetConfig "Override: $overrideMode" -Status "SKIPPED" -Message "Override mode active" -Verified $false
+    Write-FanControlStatus `
+        -TargetConfig "Override: $overrideMode" `
+        -Status "SKIPPED" `
+        -Message "Override mode active" `
+        -Verified $false `
+        -CommandIssued:$false `
+        -Paths $Paths
 
     Write-Log "Script ended (Override mode)"
     exit
@@ -251,27 +177,19 @@ if ($isQuietExitPoint -and $configName -eq 'Game.json') {
 
 Write-Log "Attempting to switch config: $configName"
 
-$verified = Invoke-ConfigSwitchWithRetry `
+$result = Invoke-FanControlConfigSwitch `
+    -TargetConfigPath $targetConfig `
     -ProcessWasRunning:$processWasRunning `
-    -RunSwitchCommand {
-        & $FanControlExe -c $targetConfig -tray
-    } `
-    -VerifySwitch {
-        Test-ConfigSwitch -TargetConfig $targetConfig
-    } `
-    -OnRetry {
-        Write-Log "Cold start detected and initial verification failed, retrying config switch through running FanControl process"
-    }
+    -UseTray `
+    -StatusPrefix 'Switch' `
+    -Paths $Paths `
+    -LogAction { param($Message) Write-Log $Message }
 
-$status = if ($verified) { "SUCCESS" } else { "FAILED" }
-$message = "Switch to $configName - " + $(if ($verified) { "Verified" } else { "Not verified" })
-Update-StatusFile -TargetConfig $configName -Status $status -Message $message -Verified $verified
-
-if ($verified) {
+if ($result.Verified) {
     Show-Notification -Title "FanControl Auto Switch" -Message "Successfully switched to $configName" -Type "Info"
 } else {
     Show-Notification -Title "FanControl Switch Warning" -Message "Switch to $configName may have failed" -Type "Warning"
 }
 
-Write-Log "Script ended - Status: $status"
+Write-Log "Script ended - Status: $($result.Status)"
 Write-Log "=========================================="

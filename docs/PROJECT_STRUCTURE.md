@@ -1,308 +1,166 @@
-# 项目文档与配置整理完成报告
+# FanControl 项目当前结构规范
 
-**整理日期**: 2026-04-13
-**项目版本**: v3.2
-**整理范围**: 全部历史文档、配置文件、脚本工具
+> 更新日期：2026-04-14
+>
+> 本文档是仓库当前结构的唯一权威说明，只描述已经存在的真实结构，不描述未来建议。
 
----
+## 1. 文档边界
 
-## 一、文档整理成果
+- 本文档回答“仓库现在长什么样、各目录负责什么、repo 和 runtime 的边界在哪里”。
+- `README.md` 负责项目总览、使用方式和运维说明。
+- `docs/README_CONSOLIDATED.md` 只负责文档导航和历史索引，不再定义当前结构。
+- 如果在仓库外看到 `SCRIPT_SYNC_REPORT.md` 等旧整理稿，应视为历史产物，不是当前权威来源。
 
-### 1. 新增整合文档
+## 2. 当前仓库根目录
 
-已创建 3 个核心文档，位于 `docs/` 目录:
+截至 2026-04-14，仓库根目录当前实际包含以下内容：
 
-#### (1) README_CONSOLIDATED.md
-**内容**:
-- 文档导航索引（按时间和版本组织）
-- 版本演进时间线（v1.0 → v3.2）
-- 架构核心概念总结
-- 关键经验教训提炼
-- GitHub 迭代建议
-
-**用途**: 快速了解项目全貌，定位历史问题
-
-#### (2) CONFIG_ANALYSIS.md
-**内容**:
-- Game.json / Quiet_mode.json / Game_ultr.json 详细对比
-- 配置结构深度解析（Controls / FanCurves / Sensors）
-- 参数含义说明（IdleTemperature / MinFanSpeed 等）
-- 三大优化方向建议（降噪、散热、Quiet_mode 实际控制）
-- 配置版本管理建议
-
-**用途**: 理解配置文件结构，指导后续优化
-
-#### (3) CONFIG_ITERATION_GUIDE.md
-**内容**:
-- 可迭代改进方法论（三步循环法）
-- 详细操作流程（修改 → 测试 → 评估 → 决策）
-- 数据分析脚本示例
-- 评估标准与决策矩阵
-- Git 工作流最佳实践
-- 常见问题处理方案
-
-**用途**: 指导配置文件的系统性优化
-
----
-
-### 2. 历史文档归档
-
-已存在完整的归档文档（无需整理）:
-```
-archive/
-├── 2026-03-31_测试报告_v1.0.md
-├── 2026-04-02_开发部署文档_v1.0.md
-├── 2026-04-11_修复报告_v2.0.md
-├── 2026-04-11_修复完成报告_v3.0.md
-├── 2026-04-11_修复完成报告_v3.0_draft.md
-├── 2026-04-11_监控验证机制说明_v3.0.md
-├── 2026-04-12_开机状态分析报告.md
-├── 2026-04-12_开机状态和监控总结.md
-└── 2026-04-12_持续监控系统使用说明_v3.1.md
-```
-
----
-
-## 二、配置文件分析
-
-### 1. 配置文件现状
-
-| 文件 | 大小 | 用途 | 使用状态 |
-|------|------|------|---------|
-| Game.json | 812 行 | 游戏模式配置 | ✅ 生产使用 |
-| Quiet_mode.json | 476 行 | 安静模式配置 | ✅ 生产使用 |
-| Game_ultr.json | 812 行 | 备用配置 | ⚠️ 未使用 |
-
-### 2. 关键发现
-
-#### Game.json 特点
-- **活跃风扇**: CPU Fan + 3 个 System Fan
-- **风扇曲线**: Auto / Auto 1 / Auto 2（针对不同温度源）
-- **控制策略**: 主动散热，温度敏感度高
-
-#### Quiet_mode.json 特点
-- **关键差异**: 所有 Controls.Enable = false
-- **实际效果**: 完全禁用风扇控制，依赖主板策略
-- **潜在问题**: 无法利用 FanControl 的精细控制
-
-#### Game_ultr.json 状态
-- **文件内容**: 与 Game.json 完全相同
-- **建议操作**: 删除或重新定义为"性能模式"
-
----
-
-## 三、迭代改进方法论
-
-### 1. 核心流程
-```
-修改配置 → monitor_simple.ps1 采集数据 → 对比分析 → 决策
-```
-
-### 2. 参数优先级
-
-#### 高影响参数（建议优先调整）:
-- `IdleTemperature`: 启动温度阈值（+/- 5°C）
-- `MinFanSpeed` / `MaxFanSpeed`: 转速范围
-- `LoadTemperature`: 负载温度阈值
-
-#### 中影响参数:
-- `Step`: 温度敏感度
-- `Deadband`: 死区范围
-- `SelectedResponseTime`: 响应时间
-
-### 3. 评估标准
-
-| 温度变化 | 转速变化 | 噪音改善 | 决策 |
-|---------|---------|---------|------|
-| < +1°C | > -200 RPM | 明显改善 | ✅ 优秀 |
-| < +3°C | -100~200 RPM | 有改善 | ✅ 接受 |
-| > +5°C | < -100 RPM | 无改善 | ❌ 拒绝 |
-
----
-
-## 四、GitHub 上传建议
-
-### 1. 目录结构重组建议
-
-```
+```text
 fancontrol/
-├── README.md                    # 主文档（保持更新）
-├── CHANGELOG.md                 # 版本历史
-├── LICENSE                      # 许可证（可选）
-│
-├── docs/                        # 文档目录
-│   ├── README_CONSOLIDATED.md   # 整合文档
-│   ├── CONFIG_ANALYSIS.md       # 配置分析
-│   ├── CONFIG_ITERATION_GUIDE.md # 迭代指南
-│   └── archive/                 # 历史文档
-│       └── (现有归档文档)
-│
-├── configs/                     # 配置文件目录
-│   ├── Game.json               # 游戏模式配置
-│   ├── Quiet_mode.json         # 安静模式配置
-│   └── Game_ultr.json          # 备用配置（建议删除或重定义）
-│
-├── scripts/                     # 脚本目录
-│   ├── current/                # 当前最新脚本源码（默认编辑这里）
-│   │   ├── auto_switch.ps1
-│   │   ├── switch.ps1
-│   │   ├── check_status.ps1
-│   │   ├── monitor_simple.ps1
-│   │   └── fix_startup_logon.ps1
-│   ├── iterating/              # 正在试验、尚未部署的候选脚本
-│   ├── history/                # 历史脚本和旧快照
-│   └── tools/                  # XML / 部署说明 / 参考工具
-│
-└── tools/                       # 辅助工具（未来扩展）
-    └── analysis.ps1            # 数据分析脚本示例
+├── .claude/
+├── .github/
+├── archive/
+├── configs/
+├── docs/
+├── scripts/
+├── tests/
+├── .gitignore
+├── CHANGELOG.md
+├── LICENSE
+├── README.md
+└── SYNC_MEMO.md
 ```
 
-### 2. Git 管理建议
+### 根目录角色说明
 
-#### 版本标签
-```bash
-git tag -a v3.2 -m "修复开机自启问题"
-git tag -a v3.1 -m "新增监控工具"
-git tag -a v3.0 -m "配置路径统一与验证机制"
+- `.claude/`：本地代理/自动化协作相关配置。
+- `.github/`：CI 工作流与 GitHub 配置。
+- `archive/`：历史报告和阶段性文档归档，不作为当前结构定义来源。
+- `configs/`：仓库跟踪中的配置快照。
+- `docs/`：当前维护中的文档、技术说明、计划与规格。
+- `scripts/`：脚本源码、实验脚本、历史快照和部署辅助资料。
+- `tests/`：Pester 测试与测试辅助脚本。
+- `CHANGELOG.md`：版本演进记录。
+- `README.md`：项目入口和使用说明。
+- `SYNC_MEMO.md`：repo source 和 runtime mirror 的同步约束。
+- `configs/` 下当前包含 `Game.json`、`Quiet_mode.json`、`Game_ultr.json` 三个配置快照。
+
+## 3. scripts 目录当前结构
+
+```text
+scripts/
+├── current/
+├── history/
+├── iterating/
+├── tools/
+└── README.md
 ```
 
-#### 分支策略
-```
-main                # 生产稳定版本
-  ├── config/*      # 配置优化实验
-  ├── feature/*     # 新功能开发
-  └── hotfix/*      # 紧急修复
-```
+### `scripts/current/`
 
-### 3. .gitignore 建议
-```gitignore
-# 日志文件
-logs/
-*.log
+这是当前活跃脚本在仓库中的唯一源码权威目录，也是默认编辑入口。
 
-# 运行时状态文件
-state/
-monitor_data/
+当前文件：
 
-# 临时文件
-*.tmp
-*.bak
+- `auto_switch.ps1`
+- `auto_switch_recovery.ps1`
+- `check_status.ps1`
+- `config_switch_core.ps1`
+- `fix_startup_logon.ps1`
+- `monitor_simple.ps1`
+- `runtime_paths.ps1`
+- `runtime_state.ps1`
+- `switch.ps1`
+- `time_policy.ps1`
+- `volume_helper.ps1`
 
-# 系统文件
-.DS_Store
-Thumbs.db
-```
+其中：
 
----
+- `runtime_paths.ps1` 是统一路径层，负责解析 runtime root、config root、FanControl.exe 和状态目录。
+- `runtime_state.ps1` 是统一状态层，负责读取进程、CACHE、status、override。
+- `config_switch_core.ps1` 是统一切换核心，负责切换、验证和状态写入。
+- `time_policy.ps1` 是统一时间策略层，负责调度窗口、强制点和 Quiet 退出点判断。
 
-## 五、后续迭代建议
+### `scripts/iterating/`
 
-### 短期（1-2 周）
+用于放置正在试验、尚未提升为活跃源码的候选脚本。这里的文件不应默认视为生产入口。
 
-1. **降噪优化实验**
-   - 目标: Game.json 平均转速降低 150+ RPM
-   - 参数: IdleTemperature 35→40, MinFanSpeed 30→25
-   - 验证: monitor_simple.ps1 采集对比数据
+### `scripts/history/`
 
-2. **Quiet_mode 重定义**
-   - 目标: 从"禁用控制"改为"低噪音曲线"
-   - 新增: LowNoise 风扇曲线（IdleTemperature: 50, MaxFanSpeed: 50）
-   - 优势: 保持 FanControl 控制能力
+用于保留旧脚本快照和历史遗留文件。当前子目录命名方式还不统一，但它们都属于历史归档层，不属于当前结构定义：
 
-### 中期（1 个月）
+- `legacy_snapshot/`
+- `production_snapshot_2026-04-13/`
+- `root_legacy_files/`
 
-1. **负载感知切换（概念验证）**
-   - 监控 CPU 负载，高负载时自动切换到 Game 模式
-   - 需要编写额外的监控脚本
+### `scripts/tools/`
 
-2. **配置验证工具**
-   - JSON Schema 验证脚本
-   - 自动检测配置文件完整性
+保存任务 XML、部署说明和其他辅助资料，不作为活跃调度入口。
 
-### 长期（3 个月+）
+## 4. repo source 与 runtime mirror 的关系
 
-1. **Web 界面**（可选）
-   - 远程查看当前状态
-   - 手动切换配置
+当前项目明确区分两个位置：
 
-2. **配置优化建议系统**
-   - 基于历史数据自动推荐参数调整
+- 仓库源码权威位置：`D:\Y\others\fancontrol\scripts\current\`
+- 运行时镜像位置：`C:\FanControl_Auto\`
 
----
+### 当前规则
 
-## 六、快速上手指南
+- `scripts/current/` 是唯一源码 source of truth。
+- `C:\FanControl_Auto\` 是 deploy-only runtime mirror，任务计划和快捷方式直接调用这里。
+- 部署动作是把已经验证过的仓库脚本复制到 runtime mirror。
+- `state/`、`logs/`、`monitor_data/` 等运行期产物只属于 runtime，不属于仓库源码。
 
-### 第一次使用本整理成果
-
-1. **阅读文档**: 从 `docs/README_CONSOLIDATED.md` 开始
-2. **理解配置**: 查看 `docs/CONFIG_ANALYSIS.md`
-3. **开始优化**: 按照 `docs/CONFIG_ITERATION_GUIDE.md` 操作
-
-### 开始第一次配置优化
+### 当前同步方式
 
 ```powershell
-# 1. 创建实验配置
-cp Game.json Game_v3.3_quiet-test.json
-
-# 2. 编辑配置（使用记事本或 VS Code）
-notepad Game_v3.3_quiet-test.json
-# 修改 IdleTemperature: 35 → 40
-# 修改 MinFanSpeed: 30 → 25
-
-# 3. 测试原始配置
-FanControl.exe -c Game.json
-monitor_simple.ps1 -IntervalSeconds 5 -SummaryMinutes 10
-# 保存输出为 baseline.json
-
-# 4. 测试实验配置
-FanControl.exe -c Game_v3.3_quiet-test.json
-monitor_simple.ps1 -IntervalSeconds 5 -SummaryMinutes 10
-# 保存输出为 experiment.json
-
-# 5. 对比分析
-# (手动对比两个 JSON 文件，或使用数据分析脚本)
+Copy-Item "D:\Y\others\fancontrol\scripts\current\*" "C:\FanControl_Auto\" -Force
 ```
 
----
+### 紧急热修规则
 
-## 七、文档维护建议
+如果必须直接修改 `C:\FanControl_Auto\`：
 
-### 版本更新时
-1. 更新 `README.md` 的版本号和日期
-2. 在 `CHANGELOG.md` 添加新版本条目
-3. 更新 `docs/README_CONSOLIDATED.md` 的版本时间线
-4. 如有配置变更，更新 `docs/CONFIG_ANALYSIS.md`
+1. 记录改了哪些文件。
+2. 立即把最终版本同步回 `scripts/current/`。
+3. 确保仓库源码重新成为唯一事实来源。
 
-### 新增实验时
-1. 在 `docs/experiments/` 创建实验记录
-2. 记录修改参数、测试结果、决策依据
-3. 如果实验成功，更新主配置文件
+## 5. docs 目录当前角色
 
----
-
-## 八、总结
-
-### 已完成
-- ✅ 历史文档整理归档
-- ✅ 配置文件深度分析
-- ✅ 迭代改进方法论建立
-- ✅ GitHub 上传结构建议
-
-### 文档位置
-```
+```text
 docs/
-├── README_CONSOLIDATED.md       # 整合文档
-├── CONFIG_ANALYSIS.md           # 配置分析
-└── CONFIG_ITERATION_GUIDE.md    # 迭代指南
+├── CONFIG_ANALYSIS.md
+├── CONFIG_ITERATION_GUIDE.md
+├── PROJECT_STRUCTURE.md
+├── README_CONSOLIDATED.md
+└── superpowers/
 ```
 
-### 下一步行动
-1. 选择一个优化方向（建议从降噪开始）
-2. 按照迭代指南创建实验配置
-3. 采集对比数据并评估效果
-4. 根据结果决定是否合并到生产配置
+角色说明：
 
----
+- `PROJECT_STRUCTURE.md`：当前结构权威说明。
+- `README_CONSOLIDATED.md`：导航与历史索引。
+- `CONFIG_ANALYSIS.md`：配置文件分析。
+- `CONFIG_ITERATION_GUIDE.md`：配置迭代方法。
+- `superpowers/`：代理执行计划、规格和工作记录，不作为项目当前结构权威来源。
 
-**整理完成时间**: 2026-04-13
-**下次审查时间**: 建议在 v3.3 版本发布时更新文档
+## 6. 当前事实与后续工作
+
+下面用于明确“现在是什么”和“接下来要改什么”：
+
+| 主题 | 当前事实 | 后续工作 |
+|------|---------|---------|
+| 活跃脚本源码 | `scripts/current/` 是唯一权威源码目录 | 继续保持，不再引入平行活跃目录 |
+| 运行入口 | 任务计划仍直接调用 `C:\FanControl_Auto\` | 后续加强同步与校验机制 |
+| 配置快照位置 | `configs/` 保存仓库跟踪中的配置快照 | 后续统一更多配置版本命名与管理规则 |
+| 历史脚本归档 | `scripts/history/` 目录存在，但命名维度混用 | 后续统一历史命名规则 |
+| 状态与路径逻辑 | 已有 `runtime_paths.ps1`、`runtime_state.ps1`、`config_switch_core.ps1` 和 `time_policy.ps1` 作为共享层 | 继续减少遗留脚本中的旁路逻辑和运行时特例 |
+
+## 7. 判断当前结构时的优先级
+
+遇到结构信息冲突时，按以下优先级判断：
+
+1. 先看实际仓库目录和文件。
+2. 再看本文档 `docs/PROJECT_STRUCTURE.md`。
+3. 再看 `README.md`、`scripts/README.md`、`SYNC_MEMO.md` 的说明。
+4. 历史报告、外部整理稿、运行目录备忘录都不能覆盖本文档。

@@ -71,7 +71,7 @@ Describe 'switch.ps1 sandbox scenarios' {
         }
     }
 
-    It 'restores auto mode without passing -Force to auto_switch.ps1' {
+    It 'restores auto mode through shared calibration without invoking auto_switch.ps1' {
         $sandbox = New-FanControlTestSandbox
         try {
             Set-SandboxAutoSwitchStub -Sandbox $sandbox
@@ -80,11 +80,73 @@ Describe 'switch.ps1 sandbox scenarios' {
             $result = Invoke-PowerShellScript `
                 -ScriptPath (Join-Path $sandbox.RuntimeDir 'switch.ps1') `
                 -Arguments @('-Mode', 'auto') `
-                -Environment (Get-SandboxEnvironment -Sandbox $sandbox)
+                -Environment (Get-SandboxEnvironment -Sandbox $sandbox -Values @{
+                    FANCONTROL_TEST_MINUTE = '480'
+                    FANCONTROL_TEST_PROCESS_RUNNING = 'False'
+                })
 
             $result.ExitCode | Should -Be 0
             (Test-Path (Join-Path $sandbox.StateDir 'override.flag')) | Should -BeFalse
-            (Get-AutoSwitchStubCalls -Sandbox $sandbox) | Should -Be @('Force=False')
+            (Get-AutoSwitchStubCalls -Sandbox $sandbox) | Should -Be @()
+            (Get-StubCallConfigs -Sandbox $sandbox) | Should -Be @('Game.json')
+        } finally {
+            Remove-FanControlTestSandbox -Sandbox $sandbox
+        }
+    }
+
+    It 'returns non-zero when game mode verification fails' {
+        $sandbox = New-FanControlTestSandbox
+        try {
+            Set-FanControlStubBehavior -Sandbox $sandbox -Mode 'NoCacheUpdate' -InitialConfig 'Quiet_mode.json'
+
+            $result = Invoke-PowerShellScript `
+                -ScriptPath (Join-Path $sandbox.RuntimeDir 'switch.ps1') `
+                -Arguments @('-Mode', 'game') `
+                -Environment (Get-SandboxEnvironment -Sandbox $sandbox -Values @{
+                    FANCONTROL_TEST_PROCESS_RUNNING = 'True'
+                })
+
+            $result.ExitCode | Should -Be 1
+        } finally {
+            Remove-FanControlTestSandbox -Sandbox $sandbox
+        }
+    }
+
+    It 'returns non-zero when quiet mode verification fails' {
+        $sandbox = New-FanControlTestSandbox
+        try {
+            Set-FanControlStubBehavior -Sandbox $sandbox -Mode 'NoCacheUpdate' -InitialConfig 'Game.json'
+
+            $result = Invoke-PowerShellScript `
+                -ScriptPath (Join-Path $sandbox.RuntimeDir 'switch.ps1') `
+                -Arguments @('-Mode', 'quiet') `
+                -Environment (Get-SandboxEnvironment -Sandbox $sandbox -Values @{
+                    FANCONTROL_TEST_PROCESS_RUNNING = 'True'
+                })
+
+            $result.ExitCode | Should -Be 1
+        } finally {
+            Remove-FanControlTestSandbox -Sandbox $sandbox
+        }
+    }
+
+    It 'returns non-zero when auto calibration verification fails' {
+        $sandbox = New-FanControlTestSandbox
+        try {
+            Set-SandboxAutoSwitchStub -Sandbox $sandbox
+            Set-FanControlStubBehavior -Sandbox $sandbox -Mode 'NoCacheUpdate' -InitialConfig 'Quiet_mode.json'
+            Set-Content (Join-Path $sandbox.StateDir 'override.flag') 'game' -Encoding UTF8
+
+            $result = Invoke-PowerShellScript `
+                -ScriptPath (Join-Path $sandbox.RuntimeDir 'switch.ps1') `
+                -Arguments @('-Mode', 'auto') `
+                -Environment (Get-SandboxEnvironment -Sandbox $sandbox -Values @{
+                    FANCONTROL_TEST_MINUTE = '480'
+                    FANCONTROL_TEST_PROCESS_RUNNING = 'True'
+                })
+
+            $result.ExitCode | Should -Be 1
+            (Get-AutoSwitchStubCalls -Sandbox $sandbox) | Should -Be @()
         } finally {
             Remove-FanControlTestSandbox -Sandbox $sandbox
         }

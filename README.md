@@ -3,18 +3,27 @@
 [![Test](https://github.com/Yangless/fancontrol/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/Yangless/fancontrol/actions/workflows/test.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-> **当前版本：** v3.2 | **最后更新：** 2026-04-12 | **状态：** 生产运行中
+> **当前版本：** v3.2 | **最后更新：** 2026-04-14 | **状态：** 生产运行中
 
 这是一个面向 Windows + FanControl 的自动化脚本仓库，用来在固定时间段和登录场景下切换风扇配置，并保留手动干预与运行期验证能力。
 
 ## 快速入口
 
 - 当前维护的源码入口：`scripts/current/`
+- 当前结构权威说明：`docs/PROJECT_STRUCTURE.md`
+- 当前跟踪中的配置快照：`configs/`
 - 当前自动化测试入口：`tests/Invoke-FanControlTests.ps1`
 - 详细文档索引：`docs/README_CONSOLIDATED.md`
 - 历史报告索引：`archive/README.md`
 - 系统实际运行副本：`C:\FanControl_Auto\`
 - 当前公开许可证：`MIT`
+
+### Source / Runtime 规则
+
+- Repo source of truth：`scripts/current/`
+- Runtime mirror：`C:\FanControl_Auto\`
+- Deploy action：把验证通过的 `scripts/current/` 文件复制到 `C:\FanControl_Auto\`
+- Emergency hotfix rule：如果直接改了 `C:\FanControl_Auto\`，必须立即同步回 `scripts/current/`
 
 ### 本仓库适合谁
 
@@ -73,53 +82,43 @@ FanControl 官方支持命令行参数 `-c <配置文件路径>`：
 
 ## 2. 目录结构
 
-```
-C:\FanControl_Auto\             ← 实际运行目录（任务计划直接调用这里）
-├── auto_switch.ps1             ← 当前运行入口
-├── auto_switch_recovery.ps1    ← 冷启动失败后的补发切换 helper
-├── time_policy.ps1             ← 共享时段/强制点判定 helper
-├── switch.ps1                  ← 当前手动干预入口
-├── check_status.ps1            ← 当前状态查看工具
-├── monitor_simple.ps1          ← 当前持续监控工具
-├── fix_startup_logon.ps1       ← 当前开机任务修复脚本
-├── RUNTIME_LAYOUT_MEMO.md      ← 运行目录备忘录
-├── history\                    ← 历史脚本 / 旧部署工具 / 旧 XML / 备份
-├── iterating\                  ← 候选脚本（尚未提升为运行入口）
-├── state\
-│   ├── override.flag           ← 免打扰标志（运行时生成/删除）
-│   └── current_status.json     ← 最后一次切换状态（运行时更新）
+当前真实结构以 `docs/PROJECT_STRUCTURE.md` 为准。这里仅保留与使用直接相关的分层说明。
+
+```text
+D:\Y\others\fancontrol\         ← 仓库根目录
+├── README.md                   ← 项目入口
+├── CHANGELOG.md                ← 版本历史
+├── SYNC_MEMO.md                ← repo/runtime 同步规则
+├── archive\                    ← 历史报告
+├── configs\                    ← 跟踪中的配置快照
+├── docs\                       ← 文档与计划
+├── scripts\
+│   ├── current\                ← 当前活跃脚本的唯一源码权威目录
+│   ├── iterating\              ← 候选脚本
+│   ├── history\                ← 历史快照与旧入口
+│   └── tools\                  ← 部署辅助资料
+└── tests\                      ← Pester 测试
+
+C:\FanControl_Auto\             ← runtime mirror，任务计划直接调用这里
+├── auto_switch.ps1
+├── switch.ps1
+├── check_status.ps1
+├── monitor_simple.ps1
+├── fix_startup_logon.ps1
 ├── logs\
-│   ├── auto_switch.log         ← 自动切换详细日志
-│   └── switch.log              ← 手动切换日志
-└── monitor_data\               ← 持续监控数据（JSON/MD格式）
+├── monitor_data\
+└── state\
 
 D:\Program Files (x86)\FanControl\
-└── Configurations\
-    ├── Quiet_mode.json         ← 安静模式配置（FanControl 原生）
-    ├── Game.json               ← 游戏模式配置（FanControl 原生）
-    ├── Game_ultr.json          ← 备用游戏配置（未使用）
-    └── CACHE                   ← 当前配置缓存（FanControl 自动维护，验证用）
-
-D:\Y\others\fancontrol\         ← 项目源码目录（源码主位置）
-├── README.md                   ← 本文档
-├── CHANGELOG.md                ← 开发历史
-├── SYNC_MEMO.md                ← D→C 同步备忘录
-├── scripts\
-│   ├── current\                ← 当前最新脚本源码（默认编辑这里）
-│   │   └── auto_switch_recovery.ps1 / time_policy.ps1 等支撑文件
-│   ├── iterating\              ← 正在试验的候选脚本
-│   ├── history\                ← 历史脚本和旧快照
-│   └── tools\                  ← XML / 部署说明 / 参考工具
-└── ...（配置、文档和报告）
+└── Configurations\             ← FanControl 原生配置目录与 CACHE 文件
 ```
 
 ### 脚本分层约定
 
-- `D:\Y\others\fancontrol\scripts\current\` 是当前脚本源码主位置
-- `C:\FanControl_Auto\` 根目录是系统实际运行副本
-- `iterating\` 表示“正在迭代”
-- `history\` 表示“历史归档”
-- 日常修改默认先改 D 盘，再同步到 C 盘
+- `scripts/current/` 是 repo source of truth
+- `C:\FanControl_Auto\` 是 deploy-only runtime mirror
+- 日常修改默认先改仓库，再部署到运行目录
+- 如果直接修改了运行目录，必须立即同步回仓库源码
 
 ---
 
@@ -136,18 +135,22 @@ D:\Y\others\fancontrol\         ← 项目源码目录（源码主位置）
 
 ### 时间判断逻辑
 
-```powershell
-$min = (Get-Date).Hour * 60 + (Get-Date).Minute
+当前时间策略已经收敛到 `scripts/current/time_policy.ps1` 的表驱动窗口定义，活跃脚本不再各自写一份 `if` 链。
 
-# Quiet 时段（三段合并，含跨天）
-if (($min -ge 760 -and $min -lt 840) -or   # 12:40-14:00
-    ($min -ge 1260) -or                     # 21:00-24:00
-    ($min -lt 480)) {                        # 00:00-08:00
-    # → Quiet_mode.json
-} else {
-    # → Game.json
-}
-```
+| Label | Start | End | Config | Force |
+|------|------:|----:|--------|-------|
+| NightQuiet | 0 | 480 | Quiet_mode.json | 否 |
+| MorningGame | 480 | 760 | Game.json | 否 |
+| LunchQuiet | 760 | 840 | Quiet_mode.json | 是 |
+| AfternoonGame | 840 | 1260 | Game.json | 否 |
+| EveningQuiet | 1260 | 1440 | Quiet_mode.json | 是 |
+
+对外仍保留以下稳定入口：
+
+- `Get-ConfigNameForMinute`
+- `Test-IsForcePointMinute`
+- `Test-IsQuietExitPointMinute`
+- `Get-TimePolicyWindow`
 
 ### 状态机
 
@@ -212,21 +215,28 @@ Get-ScheduledTask | Where-Object { $_.TaskName -like 'FanControl-*' } |
 **执行流程**：
 
 ```
-1. 验证配置文件路径（FanControl.exe、Quiet_mode.json、Game.json）
+1. 通过共享切换核心验证配置文件路径（FanControl.exe、Quiet_mode.json、Game.json）
    ↓ 失败 → 弹窗报错 + 写日志 + exit 1
 2. 判断是否为强制触发点（12:40 或 21:00）
    ↓ 是强制点 → 删除 override.flag → 切换 Quiet → 验证 → 通知 → exit
 3. 检查 override.flag 是否存在
    ↓ 存在 → 写日志 "skipped" → exit
-4. 根据当前时间判断目标配置
-5. 调用 FanControl.exe -c <config> -tray
-6. 等待最多 10 秒，从 CACHE 文件验证配置是否生效
-7. 更新 state/current_status.json
+4. 通过 `time_policy.ps1` 解析当前策略窗口
+5. 调用共享切换核心执行 `FanControl.exe -c <config> -tray`
+6. 等待最多 10 秒，从 CACHE 文件验证配置是否生效，并写出 `ObservedConfig` / `ObservedAt` / `VerificationConfidence`
+7. 更新 `state/current_status.json`
 8. 显示系统托盘通知
 ```
 
 **参数**：
 - `-Force`：进入强制 Quiet 分支（主要用于 12:40 / 21:00 强制点或手动测试）
+
+**共享依赖**：
+
+- `runtime_paths.ps1`：统一运行时路径解析
+- `time_policy.ps1`：统一时段窗口和强制点判断
+- `config_switch_core.ps1`：统一切换、验证、状态写入
+- `volume_helper.ps1`：静音/恢复音量
 
 ### switch.ps1（手动干预脚本）
 
@@ -240,6 +250,8 @@ Get-ScheduledTask | Where-Object { $_.TaskName -like 'FanControl-*' } |
 .\switch.ps1 -Help        # 显示帮助和当前状态
 ```
 
+`-Mode auto` 现在直接调用共享切换核心做“自动模式校准”，不再反向 shell 到 `C:\FanControl_Auto\auto_switch.ps1`。
+
 ### check_status.ps1（状态查看）
 
 ```powershell
@@ -249,16 +261,34 @@ Get-ScheduledTask | Where-Object { $_.TaskName -like 'FanControl-*' } |
 
 **显示内容**：进程状态、当前配置、override 状态、最后切换结果、最近日志、时段匹配检查
 
-### monitor_simple.ps1（持续采样监控）
+当前输出基于统一运行时状态层 `runtime_state.ps1`，会同时展示：
 
-用于调试或验证切换是否成功，每 N 秒采一次样，每 M 分钟保存一次 JSON 报告。
+- `DesiredConfig`
+- `EffectiveConfig`
+- `VerificationStatus`
+- `VerificationConfidence`
+- `ObservedConfig`
+- `StateConfidence`
+
+### monitor_simple.ps1（诊断与采样监控）
+
+用于调试或验证切换是否成功，当前已经是受支持的运行时诊断工具，基于统一状态层输出。
 
 ```powershell
-.\monitor_simple.ps1                              # 默认：5秒采样，5分钟保存
-.\monitor_simple.ps1 -IntervalSeconds 2 -SummaryMinutes 1  # 高频调试
+.\monitor_simple.ps1 -Mode Snapshot                           # 单次快照并写盘
+.\monitor_simple.ps1 -Mode Watch -IntervalSeconds 5          # 持续打印状态，不累计内存
+.\monitor_simple.ps1 -Mode Sample -IntervalSeconds 2 -SummaryMinutes 1  # 批量采样并周期写盘
 ```
 
 输出文件保存到 `C:\FanControl_Auto\monitor_data\monitor_YYYYMMDD_HHMMSS.json`
+
+### 共享辅助层
+
+当前活跃脚本还包含三个非入口但关键的共享层：
+
+- `runtime_paths.ps1`：唯一的运行时路径默认值和环境覆盖入口
+- `runtime_state.ps1`：统一读取进程、CACHE、status、override 四类事实源
+- `config_switch_core.ps1`：统一处理切换、验证、状态写入，供 `auto_switch.ps1` 和 `switch.ps1` 复用
 
 ---
 
@@ -271,8 +301,7 @@ Get-ScheduledTask | Where-Object { $_.TaskName -like 'FanControl-*' } |
 New-Item -ItemType Directory -Force "C:\FanControl_Auto\state"
 New-Item -ItemType Directory -Force "C:\FanControl_Auto\logs"
 
-# 2. 复制脚本文件到 C:\FanControl_Auto\
-# （从 D:\Y\others\fancontrol\scripts\current\ 同步当前脚本）
+# 2. 部署已验证的仓库脚本到 runtime mirror
 Copy-Item "D:\Y\others\fancontrol\scripts\current\*" "C:\FanControl_Auto\" -Force
 
 # 3. 注册或修复开机启动任务
@@ -451,26 +480,27 @@ Get-Content "C:\FanControl_Auto\logs\auto_switch.log" -Tail 10
 
 ## 9. 修改配置
 
+说明：
+
+- 仓库跟踪中的配置快照位于 `configs/`
+- FanControl 实际读取的 live config 位于 `D:\Program Files (x86)\FanControl\Configurations\`
+- 修改配置时，要区分“仓库快照更新”和“live config 部署”
+
 ### 修改时段规则
 
-先编辑 `D:\Y\others\fancontrol\scripts\current\auto_switch.ps1` 中的 `Get-TargetConfig` 函数，验证后再同步到 `C:\FanControl_Auto\auto_switch.ps1`：
+先编辑 repo source of truth `D:\Y\others\fancontrol\scripts\current\time_policy.ps1` 中的策略表，验证后再部署到 `C:\FanControl_Auto\`：
 
 ```powershell
-function Get-TargetConfig {
-    $min = (Get-Date).Hour * 60 + (Get-Date).Minute
-
-    # 修改这里的时间边界（单位：分钟）
-    if (($min -ge 760 -and $min -lt 840) -or   # 12:40-14:00 Quiet
-        ($min -ge 1260) -or                     # 21:00-24:00 Quiet
-        ($min -lt 480)) {                        # 00:00-08:00 Quiet
-        return $QuietConfig
-    } else {
-        return $GameConfig
-    }
-}
+$script:FanControlSchedule = @(
+    [PSCustomObject]@{ Start = 0; End = 480; Config = 'Quiet_mode.json'; Force = $false; Label = 'NightQuiet' },
+    [PSCustomObject]@{ Start = 480; End = 760; Config = 'Game.json'; Force = $false; Label = 'MorningGame' },
+    [PSCustomObject]@{ Start = 760; End = 840; Config = 'Quiet_mode.json'; Force = $true; Label = 'LunchQuiet' },
+    [PSCustomObject]@{ Start = 840; End = 1260; Config = 'Game.json'; Force = $false; Label = 'AfternoonGame' },
+    [PSCustomObject]@{ Start = 1260; End = 1440; Config = 'Quiet_mode.json'; Force = $true; Label = 'EveningQuiet' }
+)
 ```
 
-同步修改 `D:\Y\others\fancontrol\scripts\current\check_status.ps1` 中的相同逻辑，再复制到 `C:\FanControl_Auto\check_status.ps1`。
+不需要再同步修改 `check_status.ps1` 或 `monitor_simple.ps1` 的同类时间判断逻辑，它们已经走共享状态层。
 
 修改时段后，**还需要更新对应的任务计划触发时间**：
 ```powershell
@@ -481,25 +511,26 @@ Set-ScheduledTask -TaskName "FanControl-0800(Game)" -Trigger $trigger
 
 ### 修改强制触发点
 
-`auto_switch.ps1` 第 172 行：
+同样在 `scripts/current/time_policy.ps1` 中修改 `Force = $true` 的窗口起点。当前强制点由表定义，而不是写死在 `auto_switch.ps1`：
 
 ```powershell
-$isForcePoint = ((Get-Date).Hour -eq 12 -and (Get-Date).Minute -eq 40) -or
-                ((Get-Date).Hour -eq 21 -and (Get-Date).Minute -eq 0)
+[PSCustomObject]@{ Start = 760; End = 840; Config = 'Quiet_mode.json'; Force = $true; Label = 'LunchQuiet' }
+[PSCustomObject]@{ Start = 1260; End = 1440; Config = 'Quiet_mode.json'; Force = $true; Label = 'EveningQuiet' }
 ```
 
 ### 修改 FanControl 路径
 
-`auto_switch.ps1` 顶部变量：
+统一修改 `scripts/current/runtime_paths.ps1`，不要再分别改多个入口脚本：
 
 ```powershell
-$FanControlExe = "D:\Program Files (x86)\FanControl\FanControl.exe"
-$ConfigDir     = "D:\Program Files (x86)\FanControl\Configurations"
-$QuietConfig   = "$ConfigDir\Quiet_mode.json"
-$GameConfig    = "$ConfigDir\Game.json"
+function Get-FanControlPaths {
+    $runtimeRoot = 'C:\FanControl_Auto'
+    $configDir = 'D:\Program Files (x86)\FanControl\Configurations'
+    $fanControlExe = 'D:\Program Files (x86)\FanControl\FanControl.exe'
+}
 ```
 
-同步修改 `switch.ps1` 和 `check_status.ps1` 中的相同路径变量。
+`switch.ps1`、`auto_switch.ps1`、`check_status.ps1`、`monitor_simple.ps1` 都已经从这里取路径。任何直接对 runtime mirror 的热修，都应立即回拷到 `scripts/current/`。
 
 ### 重新部署任务计划
 

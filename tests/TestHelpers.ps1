@@ -2,9 +2,9 @@ function New-FanControlTestSandbox {
     $root = Join-Path $env:TEMP ("fancontrol-test-" + [guid]::NewGuid().ToString("N"))
     $runtimeDir = Join-Path $root 'runtime'
     $configDir = Join-Path $root 'config'
-    $stateDir = Join-Path $root 'state'
-    $logDir = Join-Path $root 'logs'
-    $monitorDir = Join-Path $root 'monitor_data'
+    $stateDir = Join-Path $runtimeDir 'state'
+    $logDir = Join-Path $runtimeDir 'logs'
+    $monitorDir = Join-Path $runtimeDir 'monitor_data'
     $stubPath = Join-Path $root 'FanControlStub.ps1'
     $behaviorFile = Join-Path $root 'stub_behavior.json'
     $callLog = Join-Path $root 'stub_calls.log'
@@ -155,6 +155,9 @@ function Copy-FanControlRuntimeScriptsToSandbox {
     $sourceFiles = @(
         'auto_switch.ps1',
         'auto_switch_recovery.ps1',
+        'config_switch_core.ps1',
+        'runtime_paths.ps1',
+        'runtime_state.ps1',
         'time_policy.ps1',
         'switch.ps1',
         'check_status.ps1',
@@ -168,13 +171,6 @@ function Copy-FanControlRuntimeScriptsToSandbox {
         $sourcePath = Join-Path $repoRoot "scripts\\current\\$name"
         $targetPath = Join-Path $Sandbox.RuntimeDir $name
         $content = Get-Content -Path $sourcePath -Raw
-
-        $content = $content.Replace('D:\Program Files (x86)\FanControl\FanControl.exe', $Sandbox.StubPath)
-        $content = $content.Replace('D:\Program Files (x86)\FanControl\Configurations', $Sandbox.ConfigDir)
-        $content = $content.Replace('C:\FanControl_Auto\state', $Sandbox.StateDir)
-        $content = $content.Replace('C:\FanControl_Auto\logs', $Sandbox.LogDir)
-        $content = $content.Replace('C:\FanControl_Auto\monitor_data', $Sandbox.MonitorDir)
-        $content = $content.Replace('C:\FanControl_Auto\auto_switch.ps1', (Join-Path $Sandbox.RuntimeDir 'auto_switch.ps1'))
 
         if ($name -eq 'time_policy.ps1') {
             $content = $content.Replace(
@@ -250,6 +246,10 @@ function Get-SandboxEnvironment {
     )
 
     $environment = @{
+        FANCONTROL_RUNTIME_ROOT = $Sandbox.RuntimeDir
+        FANCONTROL_CONFIG_DIR = $Sandbox.ConfigDir
+        FANCONTROL_EXE = $Sandbox.StubPath
+        FANCONTROL_TEST_MAX_WAIT_SECONDS = '2'
         FANCONTROL_TEST_VOLUME_FILE = $Sandbox.VolumeFile
         FANCONTROL_TEST_VOLUME_LOG = $Sandbox.VolumeCallLog
     }

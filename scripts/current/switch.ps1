@@ -3,16 +3,25 @@ param(
     [switch]$Help
 )
 
-$FanControlExe = "D:\Program Files (x86)\FanControl\FanControl.exe"
-$ConfigDir = "D:\Program Files (x86)\FanControl\Configurations"
-$StateDir = "C:\FanControl_Auto\state"
-$LogDir = "C:\FanControl_Auto\logs"
-$OverrideFlag = "$StateDir\override.flag"
-$LogFile = "$LogDir\switch.log"
+$RuntimePathsHelper = Join-Path $PSScriptRoot "runtime_paths.ps1"
+$ConfigSwitchCoreHelper = Join-Path $PSScriptRoot "config_switch_core.ps1"
 $VolumeHelperFile = Join-Path $PSScriptRoot "volume_helper.ps1"
 
-$QuietConfig = "$ConfigDir\Quiet_mode.json"
-$GameConfig = "$ConfigDir\Game.json"
+if (Test-Path $RuntimePathsHelper) {
+    . $RuntimePathsHelper
+} else {
+    throw "Helper file not found: $RuntimePathsHelper"
+}
+
+$Paths = Get-FanControlPaths
+$FanControlExe = $Paths.FanControlExe
+$ConfigDir = $Paths.ConfigDir
+$StateDir = $Paths.StateDir
+$LogDir = $Paths.LogDir
+$OverrideFlag = $Paths.OverrideFlag
+$LogFile = Join-Path $LogDir 'switch.log'
+$QuietConfig = $Paths.QuietConfig
+$GameConfig = $Paths.GameConfig
 
 New-Item -ItemType Directory -Force -Path $StateDir | Out-Null
 New-Item -ItemType Directory -Force -Path $LogDir | Out-Null
@@ -21,6 +30,12 @@ if (Test-Path $VolumeHelperFile) {
     . $VolumeHelperFile
 } else {
     throw "Helper file not found: $VolumeHelperFile"
+}
+
+if (Test-Path $ConfigSwitchCoreHelper) {
+    . $ConfigSwitchCoreHelper
+} else {
+    throw "Helper file not found: $ConfigSwitchCoreHelper"
 }
 
 function Write-Log {
@@ -54,6 +69,8 @@ $Mode = $Mode.ToLower().Trim()
 Write-Log "========== Manual switch started =========="
 Write-Log "Requested mode: $Mode"
 
+$processWasRunning = Get-FanControlProcessRunning
+
 if ($Mode -eq "auto") {
     Write-Log "Clearing override flag, restoring auto scheduling"
 
@@ -65,11 +82,18 @@ if ($Mode -eq "auto") {
         Write-Log "No override flag detected"
     }
 
-    Write-Log "Calling auto switch script for time-based calibration"
-    & "C:\FanControl_Auto\auto_switch.ps1"
+    Write-Log "Running shared auto calibration"
+    $result = Invoke-AutoCalibrationSwitch `
+        -ProcessWasRunning:$processWasRunning `
+        -Paths $Paths `
+        -LogAction { param($Message) Write-Log $Message }
 
     Write-Log "========== Manual switch ended =========="
-    exit
+    if (-not $result.Verified) {
+        exit 1
+    }
+
+    exit 0
 }
 
 if ($Mode -notin @("game", "quiet")) {
@@ -93,12 +117,25 @@ if ($Mode -eq 'quiet') {
     Enter-QuietVolumeMode
 }
 
-& $FanControlExe -c $targetConfig
+$result = Invoke-FanControlConfigSwitch `
+    -TargetConfigPath $targetConfig `
+    -ProcessWasRunning:$processWasRunning `
+    -Paths $Paths `
+    -LogAction { param($Message) Write-Log $Message } `
+    -StatusPrefix 'Manual switch'
 
-$Mode | Set-Content $OverrideFlag
+if (-not $result.Verified) {
+    Write-Host "ERROR: Failed to verify switch to $Mode mode ($configName)" -ForegroundColor Red
+    Write-Log "ERROR: Verification failed for $Mode mode"
+    Write-Log "========== Manual switch ended =========="
+    exit 1
+}
+
+$Mode | Set-Content -Path $OverrideFlag -Encoding UTF8
 Write-Log "Override flag set: $Mode"
 
 Write-Host "Switched to $Mode mode ($configName) with override enabled" -ForegroundColor Green
 Write-Host "Tip: Use '.\switch.ps1 -Mode auto' to restore auto scheduling" -ForegroundColor Yellow
 
 Write-Log "========== Manual switch ended =========="
+exit 0

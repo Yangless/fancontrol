@@ -16,12 +16,12 @@ Describe 'Script consistency' {
         $autoSwitchContent | Should -Match 'time_policy\.ps1'
     }
 
-    It 'loads the shared time policy helper in check_status.ps1' {
-        $checkStatusContent | Should -Match 'time_policy\.ps1'
+    It 'loads the shared runtime state helper in check_status.ps1' {
+        $checkStatusContent | Should -Match 'runtime_state\.ps1'
     }
 
-    It 'loads the shared time policy helper in monitor_simple.ps1' {
-        $monitorContent | Should -Match 'time_policy\.ps1'
+    It 'loads the shared runtime state helper in monitor_simple.ps1' {
+        $monitorContent | Should -Match 'runtime_state\.ps1'
     }
 
     It 'does not use -Force when restoring auto mode in switch.ps1' {

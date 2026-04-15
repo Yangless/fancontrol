@@ -21,8 +21,12 @@ Describe 'auto_switch.ps1 sandbox scenarios' {
             $calls[0] | Should -Be 'Game.json'
             $status.Status | Should -Be 'SUCCESS'
             $status.Verified | Should -BeTrue
+            $status.CommandIssued | Should -BeTrue
             $status.TargetConfig | Should -Be 'Game.json'
             $status.ActualConfig | Should -Be 'Game.json'
+            $status.ObservedConfig | Should -Be 'Game.json'
+            $status.VerificationConfidence | Should -Be 'High'
+            $status.ObservedAt | Should -Not -BeNullOrEmpty
         } finally {
             Remove-FanControlTestSandbox -Sandbox $sandbox
         }
@@ -161,7 +165,10 @@ Describe 'auto_switch.ps1 sandbox scenarios' {
             $calls.Count | Should -Be 1
             $status.Status | Should -Be 'FAILED'
             $status.Verified | Should -BeFalse
+            $status.CommandIssued | Should -BeTrue
             $status.TargetConfig | Should -Be 'Game.json'
+            $status.ObservedConfig | Should -Be 'Quiet_mode.json'
+            $status.VerificationConfidence | Should -Be 'Low'
         } finally {
             Remove-FanControlTestSandbox -Sandbox $sandbox
         }

@@ -1,48 +1,62 @@
 # Scripts 目录说明
 
-本目录保存 FanControl 自动切换系统的脚本源码、候选版本和历史归档。
+本目录保存 FanControl 自动切换系统的脚本源码、候选脚本、历史快照和部署辅助资料。
 
----
+## 核心规则
+
+- 仓库源码 source of truth：`scripts/current/`
+- 运行时镜像 runtime mirror：`C:\FanControl_Auto\`
+- 部署动作：把已经验证通过的 `scripts/current/` 文件复制到 `C:\FanControl_Auto\`
+- 紧急热修规则：如果直接改了 `C:\FanControl_Auto\`，必须立刻同步回 `scripts/current/`
 
 ## 当前分层
 
 ```text
 scripts/
-├── current/        # 当前生效脚本的源码主目录（D 盘真源）
-├── iterating/      # 正在试验、尚未部署到 C 盘根目录的候选脚本
-├── history/        # 历史脚本、旧快照、旧版根目录遗留文件
-├── tools/          # XML / 部署说明 / 参考工具
+├── current/
+├── history/
+├── iterating/
+├── tools/
 └── README.md
 ```
 
 ### 目录语义
 
-- `current/`：当前运行脚本在仓库中的源码镜像，也是后续修改的默认入口
-- `iterating/`：下一轮修改、验证中的候选版本
-- `history/`：不要默认执行，只用于回溯、参考、比对
-- `tools/`：任务 XML、部署说明等辅助资料
+- `current/`：当前活跃脚本的唯一源码权威目录，默认修改这里。
+- `iterating/`：正在试验、尚未提升为活跃源码的候选脚本。
+- `history/`：历史快照和旧入口文件，只用于回溯和比对。
+- `tools/`：任务 XML、部署说明和其他辅助资料。
 
----
+## 当前活跃脚本
 
-## 当前激活脚本
-
-`scripts/current/` 当前保存以下活跃文件：
+`scripts/current/` 当前包含：
 
 - `auto_switch.ps1`
 - `auto_switch_recovery.ps1`
-- `time_policy.ps1`
-- `switch.ps1`
 - `check_status.ps1`
-- `monitor_simple.ps1`
+- `config_switch_core.ps1`
 - `fix_startup_logon.ps1`
+- `monitor_simple.ps1`
+- `runtime_paths.ps1`
+- `runtime_state.ps1`
+- `switch.ps1`
+- `time_policy.ps1`
+- `volume_helper.ps1`
 
-它们与运行目录 `C:\FanControl_Auto\` 根目录中的同名脚本保持一致。
+共享职责约定：
 
----
+- `runtime_paths.ps1`：统一路径与环境覆盖。
+- `runtime_state.ps1`：统一运行时事实读取。
+- `config_switch_core.ps1`：统一切换与验证核心。
+- `time_policy.ps1`：统一时段窗口和强制点规则。
 
-## 运行目录约定
+这些文件在验证通过后，会部署到 `C:\FanControl_Auto\` 供任务计划和快捷方式调用。
 
-运行目录为：
+## runtime mirror 说明
+
+`C:\FanControl_Auto\` 是系统直接运行的副本目录，不是日常主编辑目录。
+
+当前运行目录通常包含：
 
 ```text
 C:\FanControl_Auto\
@@ -51,7 +65,6 @@ C:\FanControl_Auto\
 ├── check_status.ps1
 ├── monitor_simple.ps1
 ├── fix_startup_logon.ps1
-├── RUNTIME_LAYOUT_MEMO.md
 ├── history\
 ├── iterating\
 ├── logs\
@@ -61,27 +74,18 @@ C:\FanControl_Auto\
 
 说明：
 
-- `C:\FanControl_Auto\` 根目录只保留系统当前直接使用的脚本
 - 任务计划仍直接调用 `C:\FanControl_Auto\auto_switch.ps1`
-- 历史脚本和旧部署工具已移到 `C:\FanControl_Auto\history\`
-
----
+- `logs/`、`monitor_data/`、`state/` 都是运行期数据，不属于仓库源码
+- runtime mirror 的文件应由仓库源码部署而来，而不是长期手工维护
 
 ## 同步规则
 
-### 源码主位置
+### 标准流程
 
-默认先修改：
-
-```text
-D:\Y\others\fancontrol\scripts\current\
-```
-
-验证通过后，再同步到：
-
-```text
-C:\FanControl_Auto\
-```
+1. 修改 `scripts/current/` 中的目标脚本。
+2. 在仓库中完成检查和验证。
+3. 将通过验证的文件同步到 `C:\FanControl_Auto\`。
+4. 在运行环境验证任务计划、状态工具或日志结果。
 
 ### 同步命令
 
@@ -89,76 +93,21 @@ C:\FanControl_Auto\
 Copy-Item "D:\Y\others\fancontrol\scripts\current\*" "C:\FanControl_Auto\" -Force
 ```
 
-### 禁止反向习惯
+### 紧急热修
 
-- 不要把 `C:\FanControl_Auto\` 当作日常主编辑目录
-- 除非是紧急热修，否则不要先改 C 盘再补 D 盘
-- 如果确实在 C 盘做了热修，必须立即把最终文件回拷到 `scripts/current/`
+如果必须直接修改 runtime mirror：
 
----
+1. 记录热修文件和原因。
+2. 在 `C:\FanControl_Auto\` 完成必要修复。
+3. 立即把最终版本回拷到 `scripts/current/`。
+4. 再次以仓库版本为准完成后续验证。
 
-## 历史内容说明
+## 历史层说明
 
-### `history/legacy_snapshot/`
+`scripts/history/` 当前保留以下归档子目录：
 
-保存旧版 `scripts/legacy/` 的完整归档。
+- `legacy_snapshot/`
+- `production_snapshot_2026-04-13/`
+- `root_legacy_files/`
 
-### `history/production_snapshot_2026-04-13/`
-
-保存整理前 `scripts/production/` 的快照。
-
-### `history/root_legacy_files/`
-
-保存仓库根目录下原先混放的旧脚本：
-
-- `AutoFanSwitch.ps1`
-- `AutoFanSwitch_test.ps1`
-- `AutoFanSwitch.bat`
-- `TestFan.bat`
-
----
-
-## tools 目录
-
-`tools/` 保存不属于“当前运行脚本”的辅助文件，例如：
-
-- `FanControl_Task.xml`
-- `startup_task.xml`
-- `startup_task_export.xml`
-- `startup_task_fixed.xml`
-- `部署说明.md`
-
----
-
-## 推荐工作流
-
-### 修改当前脚本
-
-1. 编辑 `scripts/current/` 下的目标脚本
-2. 在仓库中先完成检查
-3. 同步到 `C:\FanControl_Auto\`
-4. 用状态工具或任务计划验证结果
-
-### 做新一轮实验
-
-1. 在 `scripts/iterating/` 新建候选脚本
-2. 命名包含目的或版本，如：
-   - `auto_switch_force-fix.ps1`
-   - `auto_switch_v3_3_candidate.ps1`
-3. 验证后再决定是否提升为 `current/`
-
-### 查看当前状态
-
-```powershell
-C:\FanControl_Auto\check_status.ps1
-Get-Content C:\FanControl_Auto\logs\auto_switch.log -Tail 20
-```
-
----
-
-## 维护备注
-
-- `scripts/current/` 才代表“现在最新且准备部署”的脚本版本
-- `C:\FanControl_Auto\` 代表“现在系统正在跑”的脚本副本
-- `iterating/` 代表“正在迭代但还没上线”
-- `history/` 代表“历史版本，不要混入当前判断”
+这些名称反映的是历史来源，不代表当前推荐命名规范，更不代表活跃源码目录。

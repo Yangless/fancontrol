@@ -1,124 +1,97 @@
 # FanControl 状态查看工具
-# 用途：快速查看当前配置状态、验证结果和进程信息
+# 用途：快速查看统一运行时状态和最近切换结果
 
-param([switch]$Watch) # 持续监控模式
+param([switch]$Watch)
 
-$StatusFile = "C:\FanControl_Auto\state\current_status.json"
-$LogFile = "C:\FanControl_Auto\logs\auto_switch.log"
-$SwitchLog = "C:\FanControl_Auto\logs\switch.log"
-$CacheFile = "D:\Program Files (x86)\FanControl\Configurations\CACHE"
-$OverrideFlag = "C:\FanControl_Auto\state\override.flag"
-$TimePolicyHelper = Join-Path $PSScriptRoot "time_policy.ps1"
+$RuntimePathsHelper = Join-Path $PSScriptRoot "runtime_paths.ps1"
+$RuntimeStateHelper = Join-Path $PSScriptRoot "runtime_state.ps1"
 
-if (Test-Path $TimePolicyHelper) {
-    . $TimePolicyHelper
+if (Test-Path $RuntimePathsHelper) {
+    . $RuntimePathsHelper
 } else {
-    throw "Helper file not found: $TimePolicyHelper"
+    throw "Helper file not found: $RuntimePathsHelper"
+}
+
+if (Test-Path $RuntimeStateHelper) {
+    . $RuntimeStateHelper
+} else {
+    throw "Helper file not found: $RuntimeStateHelper"
+}
+
+$Paths = Get-FanControlPaths
+$LogFile = Join-Path $Paths.LogDir 'auto_switch.log'
+
+function Write-StateLine {
+    param(
+        [string]$Label,
+        [object]$Value,
+        [string]$Color = 'White'
+    )
+
+    $text = if ($null -eq $Value) {
+        'N/A'
+    } elseif ($Value -is [string] -and $Value -eq '') {
+        'N/A'
+    } else {
+        [string]$Value
+    }
+
+    Write-Host ("  {0,-18}: {1}" -f $Label, $text) -ForegroundColor $Color
 }
 
 function Get-StatusReport {
+    $state = Get-FanControlRuntimeState
+
     Write-Host ""
     Write-Host "======================================" -ForegroundColor Cyan
     Write-Host "  FanControl Status Report" -ForegroundColor Cyan
     Write-Host "======================================" -ForegroundColor Cyan
     Write-Host ""
 
-    # 1. 进程状态
-    Write-Host "[Process Status]" -ForegroundColor Yellow
-    $process = Get-Process -Name FanControl -ErrorAction SilentlyContinue
-    if ($process) {
-        Write-Host "  Status      : Running" -ForegroundColor Green
-        Write-Host "  PID         : $($process.Id)" -ForegroundColor White
-        Write-Host "  Started     : $($process.StartTime)" -ForegroundColor White
+    Write-Host "[Unified Runtime State]" -ForegroundColor Yellow
+    Write-StateLine -Label 'Timestamp' -Value $state.Timestamp
+    Write-StateLine -Label 'DesiredConfig' -Value $state.DesiredConfig
+    Write-StateLine -Label 'EffectiveConfig' -Value $state.EffectiveConfig
+    Write-StateLine -Label 'OverrideActive' -Value $state.OverrideActive -Color $(if ($state.OverrideActive) { 'Yellow' } else { 'Green' })
+    Write-StateLine -Label 'OverrideMode' -Value $state.OverrideMode
+    Write-StateLine -Label 'ProcessRunning' -Value $state.ProcessRunning -Color $(if ($state.ProcessRunning) { 'Green' } else { 'Red' })
+    Write-StateLine -Label 'VerificationStatus' -Value $state.VerificationStatus -Color $(if ($state.VerificationStatus -eq 'SUCCESS') { 'Green' } elseif ($state.VerificationStatus -eq 'Unknown') { 'Yellow' } else { 'Red' })
+    Write-StateLine -Label 'VerificationConfidence' -Value $state.VerificationConfidence -Color $(if ($state.VerificationConfidence -eq 'High') { 'Green' } elseif ($state.VerificationConfidence -eq 'Medium') { 'Yellow' } elseif ($state.VerificationConfidence -eq 'Unknown') { 'Yellow' } else { 'Red' })
+    Write-StateLine -Label 'CommandIssued' -Value $state.CommandIssued
+    Write-StateLine -Label 'ObservedConfig' -Value $state.ObservedConfig
+    Write-StateLine -Label 'ObservedAt' -Value $state.ObservedAt
+    Write-StateLine -Label 'StateConfidence' -Value $state.StateConfidence -Color $(if ($state.StateConfidence -eq 'High') { 'Green' } elseif ($state.StateConfidence -eq 'Medium') { 'Yellow' } else { 'Red' })
+    Write-StateLine -Label 'CacheReadable' -Value $state.CacheReadable -Color $(if ($state.CacheReadable) { 'Green' } else { 'Red' })
+    Write-StateLine -Label 'StatusReadable' -Value $state.StatusReadable -Color $(if ($state.StatusReadable) { 'Green' } else { 'Red' })
+    Write-StateLine -Label 'CacheAgeSeconds' -Value $state.CacheAgeSeconds
+    Write-StateLine -Label 'StatusAgeSeconds' -Value $state.StatusAgeSeconds
+    Write-Host ""
+
+    Write-Host "[Last Status File]" -ForegroundColor Yellow
+    if ($state.LastStatus) {
+        Write-StateLine -Label 'LastStatus' -Value $state.LastStatus.Status
+        Write-StateLine -Label 'LastTarget' -Value $state.LastStatus.TargetConfig
+        Write-StateLine -Label 'LastActual' -Value $state.LastStatus.ActualConfig
+        Write-StateLine -Label 'LastMessage' -Value $state.LastStatus.Message
     } else {
-        Write-Host "  Status      : Not Running" -ForegroundColor Red
+        Write-Host "  No readable status file" -ForegroundColor Yellow
     }
     Write-Host ""
 
-    # 2. 配置文件状态
-    Write-Host "[Configuration]" -ForegroundColor Yellow
-    if (Test-Path $CacheFile) {
-        try {
-            $cache = Get-Content $CacheFile | ConvertFrom-Json
-            Write-Host "  Current     : $($cache.CurrentConfigFileName)" -ForegroundColor Green
-            Write-Host "  Config Dir  : $($cache.CustomConfigFolder)" -ForegroundColor White
-        } catch {
-            Write-Host "  Current     : Unable to read CACHE" -ForegroundColor Red
-        }
-    } else {
-        Write-Host "  Current     : CACHE file not found" -ForegroundColor Red
-    }
-    Write-Host ""
-
-    # 3. Override 状态
-    Write-Host "[Override Status]" -ForegroundColor Yellow
-    if (Test-Path $OverrideFlag) {
-        $overrideMode = Get-Content $OverrideFlag -ErrorAction SilentlyContinue
-        Write-Host "  Status      : Active" -ForegroundColor Yellow
-        Write-Host "  Mode        : $overrideMode" -ForegroundColor White
-    } else {
-        Write-Host "  Status      : Inactive (Auto mode)" -ForegroundColor Green
-    }
-    Write-Host ""
-
-    # 4. 最后一次切换状态
-    Write-Host "[Last Switch Status]" -ForegroundColor Yellow
-    if (Test-Path $StatusFile) {
-        try {
-            $status = Get-Content $StatusFile | ConvertFrom-Json
-            Write-Host "  Timestamp   : $($status.Timestamp)" -ForegroundColor White
-            Write-Host "  Target      : $($status.TargetConfig)" -ForegroundColor White
-            Write-Host "  Actual      : $($status.ActualConfig)" -ForegroundColor White
-            Write-Host "  Status      : $($status.Status)" -ForegroundColor $(if ($status.Status -eq "SUCCESS") { "Green" } else { "Red" })
-            Write-Host "  Verified    : $($status.Verified)" -ForegroundColor $(if ($status.Verified) { "Green" } else { "Yellow" })
-
-            # 显示验证结果详情
-            if ($status.TargetConfig -eq $status.ActualConfig -and $status.ActualConfig -ne $null) {
-                Write-Host "  Result      : Configuration matched!" -ForegroundColor Green
-            } elseif ($status.ActualConfig -ne $null) {
-                Write-Host "  Result      : MISMATCH! Target: $($status.TargetConfig), Actual: $($status.ActualConfig)" -ForegroundColor Red
-            }
-        } catch {
-            Write-Host "  Status file corrupted" -ForegroundColor Red
-        }
-    } else {
-        Write-Host "  No status file found" -ForegroundColor Yellow
-    }
-    Write-Host ""
-
-    # 5. 最近日志（最后 5 条）
     Write-Host "[Recent Logs]" -ForegroundColor Yellow
     if (Test-Path $LogFile) {
-        $logs = Get-Content $LogFile -Tail 5
-        $logs | ForEach-Object { Write-Host "  $_" -ForegroundColor Gray }
+        Get-Content $LogFile -Tail 5 | ForEach-Object {
+            Write-Host "  $_" -ForegroundColor Gray
+        }
     } else {
         Write-Host "  No log file found" -ForegroundColor Yellow
-    }
-    Write-Host ""
-
-    # 6. 时间判断
-    Write-Host "[Current Time Period]" -ForegroundColor Yellow
-    $currentConfig = Get-ConfigNameForMinute -Minute (Get-MinuteOfDay)
-    Write-Host "  Current Time: $(Get-Date -Format 'HH:mm:ss')" -ForegroundColor White
-    Write-Host "  Should Be    : $currentConfig" -ForegroundColor White
-
-    # 对比实际配置
-    if (Test-Path $CacheFile) {
-        $cache = Get-Content $CacheFile | ConvertFrom-Json
-        if ($cache.CurrentConfigFileName -eq $currentConfig) {
-            Write-Host "  Match       : YES" -ForegroundColor Green
-        } else {
-            Write-Host "  Match       : NO (Expected: $currentConfig, Actual: $($cache.CurrentConfigFileName))" -ForegroundColor Red
-        }
     }
     Write-Host ""
 
     Write-Host "======================================" -ForegroundColor Cyan
 }
 
-# 主逻辑
 if ($Watch) {
-    # 持续监控模式（每 5 秒刷新一次）
     while ($true) {
         Clear-Host
         Get-StatusReport
@@ -126,6 +99,5 @@ if ($Watch) {
         Start-Sleep -Seconds 5
     }
 } else {
-    # 单次显示
     Get-StatusReport
 }

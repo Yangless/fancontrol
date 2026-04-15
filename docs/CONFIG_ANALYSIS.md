@@ -1,6 +1,12 @@
 # FanControl 配置文件分析与优化建议
 
-> **分析日期**: 2026-04-13 | **配置版本**: v262 | **分析范围**: Game.json, Quiet_mode.json, Game_ultr.json
+> **分析日期**: 2026-04-13 | **配置版本**: v262 | **分析范围**: configs/Game.json, configs/Quiet_mode.json, configs/Game_ultr.json
+
+## 路径约定
+
+- 仓库跟踪中的配置快照位于 `configs/`
+- FanControl live config 位于 `D:\Program Files (x86)\FanControl\Configurations\`
+- 本文中凡是 `configs/...` 路径，指的是仓库资产，不是运行时目录
 
 ---
 
@@ -142,8 +148,8 @@
 ## Game_ultr.json 分析
 
 ### 与 Game.json 差异
-```bash
-diff Game.json Game_ultr.json
+```powershell
+git diff --no-index -- .\configs\Game.json .\configs\Game_ultr.json
 # 无差异（文件完全相同）
 ```
 
@@ -199,7 +205,7 @@ config_v3.3.json  ←─ 修改单项参数
 ```
 
 **测试步骤**:
-1. 修改 Game.json 并备份为 `Game_v3.3_quiet.json`
+1. 修改 `configs/Game.json` 并备份为 `configs/Game_v3.3_quiet.json`
 2. 运行 `monitor_simple.ps1` 采集 30 分钟数据
 3. 对比温度峰值、平均转速、噪音主观感受
 
@@ -253,16 +259,16 @@ configs/
 ```
 
 #### Git 管理
-```bash
+```powershell
 # 配置变更流程
 git checkout -b config/optimize-game-v3.3
-cp configs/Game.json configs/Game_v3.3_quiet.json
+Copy-Item .\configs\Game.json .\configs\Game_v3.3_quiet.json
 # 修改参数
 monitor_simple.ps1  # 采集数据
-git add configs/Game_v3.3_quiet.json
+git add .\configs\Game_v3.3_quiet.json
 git commit -m "config: optimize Game for noise reduction"
 # 测试满意后合并到主配置
-cp configs/Game_v3.3_quiet.json configs/Game.json
+Copy-Item .\configs\Game_v3.3_quiet.json .\configs\Game.json -Force
 ```
 
 ---
