@@ -19,6 +19,49 @@
 | Quiet_mode.json | 安静模式配置 | ✅ 生产使用 | 476 行 |
 | Game_ultr.json | 备用游戏配置 | ⚠️ 未使用 | 812 行 |
 
+### 当前两套主配置的实现逻辑摘要
+
+#### Game.json 的实现逻辑
+
+`Game.json` 不是简单的“高转速模式”，而是一个分层风扇控制配置：
+
+- `CPU Fan` 绑定 `Auto` 曲线，温度源是 `CPU Package`
+- `System Fan #2` 绑定 `Auto 1` 曲线，仍以 `CPU Package` 为主，但阈值更宽松
+- `System Fan #3/#4` 绑定 `Auto 2` 曲线，温度源改为 `Core Average`
+- `Pump Fan`、`System Fan #1/#5/#6` 和 `GPU Control` 仍保持禁用，不参与当前策略
+
+这意味着当前 `Game.json` 的核心思想是：
+
+1. CPU 风扇承担第一优先级响应，直接跟随 `CPU Package`
+2. 机箱风扇分成两层响应
+3. 靠近 CPU 的机箱风扇更早介入
+4. 另外两路机箱风扇延后介入，并允许更低速甚至停转
+
+换句话说，`Game.json` 当前并不是“全机一起猛转”，而是一个偏保守、分层启停的散热策略。
+
+#### Quiet_mode.json 的实现逻辑
+
+`Quiet_mode.json` 当前也不是“低速曲线模式”，而是“FanControl 主动控制整体退出”模式：
+
+- 所有 `Controls.Enable = false`
+- 所有 `SelectedFanCurve = null`
+- `FanCurves = []`
+
+这意味着切到 `Quiet_mode.json` 后：
+
+1. FanControl 仍在运行
+2. 但它不再主动控制任何风扇
+3. 实际风扇行为交回主板 BIOS / EC / 显卡自身控制策略
+
+所以当前 Quiet 的本质不是“更柔和的 FanControl 曲线”，而是“让出控制权”。
+
+#### 当前两者的真实差异
+
+从运行机制上看，当前项目并不是两条不同的 FanControl 曲线在切换，而是两种不同的控制哲学在切换：
+
+- `Game.json`：FanControl 主动接管，按多曲线分层控制
+- `Quiet_mode.json`：FanControl 放弃控制，回退到硬件默认策略
+
 ---
 
 ## 配置结构分析
@@ -68,6 +111,23 @@
 }
 ```
 
+#### 当前每个活跃风扇的实际控制含义
+
+| 风扇 | 曲线 | 温度源 | 启停参数 | 当前含义 |
+|------|------|--------|---------|---------|
+| CPU Fan | Auto | CPU Package | `Start=0`, `Stop=0` | CPU 风扇始终由主 CPU 温度直接驱动，是最先响应的主控制风扇 |
+| System Fan #2 | Auto 1 | CPU Package | `Start=0`, `Stop=0` | 仍跟随 CPU Package，但阈值比 CPU Fan 更宽松，属于第二层响应 |
+| System Fan #3 | Auto 2 | Core Average | `Start=25`, `Stop=16` | 只有到较高温度区间才明显介入，并允许较低负载时停转 |
+| System Fan #4 | Auto 2 | Core Average | `Start=22`, `Stop=16` | 与 System Fan #3 逻辑一致，但启动点略低，更早参与辅助排热 |
+
+这里最关键的不是“有没有开启”，而是三层响应的分工：
+
+- 第一层是 `CPU Fan -> Auto -> CPU Package`
+- 第二层是 `System Fan #2 -> Auto 1 -> CPU Package`
+- 第三层是 `System Fan #3/#4 -> Auto 2 -> Core Average`
+
+这说明当前 `Game.json` 不是所有风扇盯同一个温度源，而是把“CPU 封装温度”和“核心平均温度”分开使用。
+
 ---
 
 ### 2. FanControl.FanCurves (风扇曲线)
@@ -106,6 +166,27 @@
 }
 ```
 
+#### 三条曲线的阈值组合意味着什么
+
+| 曲线 | Temp Source | IdleTemp | MinFanSpeed | MaxFanSpeed | LoadTemp | 当前含义 |
+|------|-------------|---------:|------------:|------------:|---------:|---------|
+| Auto | CPU Package | 35 | 30 | 80 | 70 | CPU 风扇较早介入，保障 CPU 温度优先受控 |
+| Auto 1 | CPU Package | 40 | 20 | 80 | 70 | 相比 Auto 更晚介入、底噪更低，适合机箱辅助风扇 |
+| Auto 2 | Core Average | 50 | 0 | 80 | 80 | 明显更晚介入，且允许停转，偏向“只有明显升温时才参与” |
+
+从阈值组合可以直接读出当前策略倾向：
+
+- `IdleTemperature` 由 `35 -> 40 -> 50` 逐级抬高，说明风扇介入是分层的
+- `MinFanSpeed` 由 `30 -> 20 -> 0` 逐级降低，说明外围风扇被允许更保守
+- `LoadTemperature` 在 `70/70/80`，说明 CPU 主风扇和第一层机箱风扇更早进入负载区，第三层风扇更偏辅助
+- 三条曲线的 `Step=2`、`Deadband=3`、`Response=2` 完全一致，说明当前差异主要来自阈值而不是响应算法
+
+因此，当前 `Game.json` 的本质可以总结为：
+
+- CPU 风扇负责快响应
+- 一路机箱风扇负责中等强度跟随
+- 两路机箱风扇负责延后介入和轻载静音
+
 ---
 
 ### 3. Sensors 配置
@@ -142,6 +223,38 @@
 1. 所有风扇回到 BIOS/主板默认控制
 2. FanControl 仅作为监控工具运行
 3. 依赖主板自身的风扇策略（通常更安静）
+
+#### Quiet_mode 的逐项实现状态
+
+| 控制对象 | Enable | SelectedFanCurve | 当前含义 |
+|----------|--------|------------------|---------|
+| CPU Fan | false | null | FanControl 不再控制 CPU 风扇 |
+| Pump Fan | false | null | FanControl 不接管水泵/辅助控制 |
+| System Fan #1 ~ #6 | false | null | 机箱风扇全部退出 FanControl 控制 |
+| GPU Control 1/2 | false | null | 显卡风扇继续由显卡自身逻辑控制 |
+
+再加上：
+
+- `FanCurves = []`
+- 没有任何新的 Quiet 专属曲线定义
+
+所以 `Quiet_mode.json` 不是“曲线更平缓”，而是“根本没有曲线参与”。
+这也是它和 `Game.json` 最大的结构差异。
+
+### Quiet_mode 当前实现的优点和问题
+
+**优点**:
+
+- 结构极简，几乎不会因为 FanControl 曲线设计错误导致异常升速
+- 在很多主板默认策略偏保守时，能快速获得“比 Game 更安静”的体验
+- 切换语义清晰，等同于“退出主动调速”
+
+**问题**:
+
+- 行为不可控，实际噪音和温度表现完全依赖 BIOS
+- 主板策略通常对短时负载响应较迟钝
+- 与 `Game.json` 的切换不是“同一套控制体系中的两档”，而是“接管/放权”二元切换
+- 后续如果要做更精细的办公、夜间、轻载模式，会缺乏统一调参基线
 
 ---
 
@@ -187,7 +300,6 @@ config_v3.3.json  ←─ 修改单项参数
 3. **低影响参数**:
    - `SelectedCommandStepUp/Down` (平滑过渡)
 
----
 
 ### 2. 具体优化方向
 
