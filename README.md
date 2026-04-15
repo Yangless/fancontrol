@@ -59,6 +59,7 @@ pwsh -NoProfile -File .\tests\Invoke-FanControlTests.ps1
 8. [故障排查](#8-故障排查)
 9. [修改配置](#9-修改配置)
 10. [开发历史](#10-开发历史)
+11. [Next](#11-next)
 
 ---
 
@@ -151,6 +152,44 @@ D:\Program Files (x86)\FanControl\
 - `Test-IsForcePointMinute`
 - `Test-IsQuietExitPointMinute`
 - `Get-TimePolicyWindow`
+
+### 当前配置实现逻辑
+
+当前两套主配置不是“同一组曲线的两个档位”，而是两种不同的运行语义：
+
+- `Game.json`：FanControl 主动接管风扇控制
+- `Quiet_mode.json`：FanControl 退出风扇控制，行为回到 BIOS / EC / GPU 默认策略
+
+`Game.json` 当前的风扇绑定关系是：
+
+| 风扇 | 曲线 | 温度源 | 当前含义 |
+|------|------|--------|---------|
+| CPU Fan | Auto | CPU Package | 第一优先级响应风扇 |
+| System Fan #2 | Auto 1 | CPU Package | 第二层辅助响应 |
+| System Fan #3 | Auto 2 | Core Average | 延后介入，允许低负载停转 |
+| System Fan #4 | Auto 2 | Core Average | 与 #3 类似，但启动点略低 |
+
+`Game.json` 当前的三条曲线阈值为：
+
+| 曲线 | IdleTemp | MinFanSpeed | MaxFanSpeed | LoadTemp |
+|------|---------:|------------:|------------:|---------:|
+| Auto | 35 | 30 | 80 | 70 |
+| Auto 1 | 40 | 20 | 80 | 70 |
+| Auto 2 | 50 | 0 | 80 | 80 |
+
+这意味着当前 Game 模式的实际策略是：
+
+- CPU 风扇最早介入
+- 一路机箱风扇中等强度跟随
+- 两路机箱风扇更晚介入，偏轻载静音
+
+`Quiet_mode.json` 当前的实现则是：
+
+- 所有 `Controls.Enable = false`
+- 所有 `SelectedFanCurve = null`
+- `FanCurves = []`
+
+所以 Quiet 模式不是低速曲线模式，而是“FanControl 不再控制风扇”的退出控制模式。
 
 ### 状态机
 
@@ -559,6 +598,16 @@ powershell -ExecutionPolicy Bypass -File "C:\FanControl_Auto\fix_startup_logon.p
 | v3.0 | 2026-04-11 | 修复：统一配置路径、完善时间边界注释、修复启动延迟 |
 | v3.1 | 2026-04-12 | 新增：check_status.ps1 状态工具、monitor_simple.ps1 监控工具 |
 | v3.2 | 2026-04-12 | **修复开机自启**：BootTrigger → LogonTrigger + 30s 延迟 |
+
+---
+
+## 11. Next
+
+下一项工作：
+
+- 自动调整 config 中各项曲线参数
+
+目标是把当前依赖手工调整的曲线阈值和响应参数，逐步演进为可自动分析、可自动修正的配置调优流程。
 
 ---
 
