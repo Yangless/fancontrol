@@ -1,4 +1,5 @@
 /.claude/worktrees/
+/.worktrees/
 /.claude/settings.local.json
 /gcm-diagnose.log
 /log.txt
