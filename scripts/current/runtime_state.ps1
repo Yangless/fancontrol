@@ -16,6 +16,13 @@ if (Test-Path $TimePolicyHelper) {
 function Get-OverrideTargetConfigName {
     param([string]$OverrideMode)
 
+    if (-not [string]::IsNullOrWhiteSpace($OverrideMode)) {
+        $trimmedOverrideMode = $OverrideMode.Trim()
+        if ($trimmedOverrideMode -like '*.json') {
+            return Split-Path -Leaf $trimmedOverrideMode
+        }
+    }
+
     $normalizedOverrideMode = if ($null -eq $OverrideMode) {
         ''
     } else {
