@@ -91,6 +91,75 @@ For the fuller directory explanation, see [`docs/PROJECT_STRUCTURE.md`](./docs/P
 - source/runtime separation is now explicit
 - config analysis and iteration docs exist, so future tuning work has a documented base
 
+## Current Accepted Baseline
+
+An accepted low-RPM baseline was verified on `2026-04-29`:
+
+- Config: [`configs/Game_vNext_stage1_low-rpm.json`](./configs/Game_vNext_stage1_low-rpm.json)
+- Status: `accepted-baseline`
+- Full experiment log: [`docs/experiments/2026-04-29_stage1-low-rpm.md`](./docs/experiments/2026-04-29_stage1-low-rpm.md)
+
+Current conclusion:
+
+- idle steady-state reduced `TotalTrackedFanRpm` by about `930 RPM` versus `Game.json`
+- under GPU-biased stress, `Auto 2` now follows `GPU` temperature and `System Fan #3/#4` finally participate in short high-temperature bursts
+- the current baseline passed re-test within guardrails:
+  - `CPU Package max = 86°C`
+  - `MinDistanceToTjMax min = 16°C`
+  - `GPU Temp avg = 77.5°C`
+
+### Temperature-to-Fan Curves
+
+The accepted baseline keeps the current three-layer strategy:
+
+- `Auto`: CPU fan, primary CPU response
+- `Auto 1`: second case-fan layer, still CPU-driven
+- `Auto 2`: third case-fan layer, now GPU-driven
+
+```mermaid
+xychart-beta
+    title "CPU Fan / Auto"
+    x-axis "Temperature (°C)" [40, 78]
+    y-axis "Fan Speed (%)" 0 --> 85
+    line "Auto" [25, 85]
+```
+
+```mermaid
+xychart-beta
+    title "Case Fan Layer 2 / Auto 1"
+    x-axis "Temperature (°C)" [48, 78]
+    y-axis "Fan Speed (%)" 0 --> 80
+    line "Auto 1" [15, 72]
+```
+
+```mermaid
+xychart-beta
+    title "Case Fan Layer 3 / Auto 2 (GPU-aware)"
+    x-axis "Temperature (°C)" [62, 74]
+    y-axis "Fan Speed (%)" 0 --> 60
+    line "Auto 2" [0, 55]
+```
+
+Notes:
+
+- each chart shows the linear control window between `IdleTemperature` and `LoadTemperature`
+- `System Fan #3/#4` still keep their original `Start/Stop` logic, so low percentages do not guarantee immediate spin-up
+
+### Estimated RPM Curves
+
+```mermaid
+xychart-beta
+    title "Estimated RPM by Fan Control Percent"
+    x-axis "Control (%)" [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+    y-axis "RPM" 0 --> 1800
+    line "CPU Fan" [0, 379, 382, 527, 704, 857, 1010, 1150, 1277, 1387, 1509]
+    line "System Fan #2" [296, 326, 454, 680, 872, 1029, 1199, 1336, 1470, 1581, 1726]
+    line "System Fan #3" [0, 0, 342, 525, 717, 870, 1038, 1180, 1322, 1436, 1574]
+    line "System Fan #4" [0, 0, 389, 594, 792, 950, 1118, 1264, 1400, 1528, 1669]
+```
+
+This chart is an operating estimate based on FanControl calibration data. It is meant to make the README easier to reason about, not to claim exact instantaneous RPM at every point.
+
 ## In progress
 
 The most important active direction is **model-assisted tuning of config curve parameters**.
@@ -104,10 +173,10 @@ That means building a safer workflow around:
 
 ## Next
 
-- define clearer noise-versus-cooling tuning targets
-- compare candidate curve sets against observed runtime behavior
-- turn the existing analysis docs into more systematic tuning inputs
-- move toward a semi-automated, reviewable config optimization workflow
+- continue with small adjustments on top of the current `accepted-baseline`, not large curve rewrites
+- prioritize observing whether `Auto 2` needs smoother high-GPU-temperature engagement
+- revisit `Auto` / `Auto 1` later if more noise reduction is still worth pursuing
+- keep collecting real-load samples for a semi-automated, reviewable tuning workflow
 
 ## Documentation
 

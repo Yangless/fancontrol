@@ -95,6 +95,75 @@ fancontrol/
 - runtime/source 分层已经明确，日常维护不再依赖直接编辑运行目录
 - 配置分析文档和迭代指南已经具备，后续调优有了可持续积累的入口
 
+## 当前接受版
+
+`2026-04-29` 已确认一版可继续使用的低转速基线：
+
+- 配置文件：[`configs/Game_vNext_stage1_low-rpm.json`](./configs/Game_vNext_stage1_low-rpm.json)
+- 状态：`accepted-baseline`
+- 详细实验记录：[`docs/experiments/2026-04-29_stage1-low-rpm.md`](./docs/experiments/2026-04-29_stage1-low-rpm.md)
+
+本轮结论：
+
+- idle 稳态下，`TotalTrackedFanRpm` 相比 `Game.json` 下降约 `930 RPM`
+- GPU 偏重烤鸡下，`Auto 2` 已改为跟随 `GPU` 温度，`System Fan #3/#4` 开始在高温段短时介入
+- 当前保护线内通过复测：
+  - `CPU Package max = 86°C`
+  - `MinDistanceToTjMax min = 16°C`
+  - `GPU Temp avg = 77.5°C`
+
+### 温度-风扇曲线
+
+当前接受版保留三层结构：
+
+- `Auto`：CPU 风扇，优先响应 CPU
+- `Auto 1`：第二层机箱风扇，继续跟随 CPU
+- `Auto 2`：第三层机箱风扇，现已改为跟随 GPU
+
+```mermaid
+xychart-beta
+    title "CPU Fan / Auto"
+    x-axis "Temperature (°C)" [40, 78]
+    y-axis "Fan Speed (%)" 0 --> 85
+    line "Auto" [25, 85]
+```
+
+```mermaid
+xychart-beta
+    title "Case Fan Layer 2 / Auto 1"
+    x-axis "Temperature (°C)" [48, 78]
+    y-axis "Fan Speed (%)" 0 --> 80
+    line "Auto 1" [15, 72]
+```
+
+```mermaid
+xychart-beta
+    title "Case Fan Layer 3 / Auto 2 (GPU-aware)"
+    x-axis "Temperature (°C)" [62, 74]
+    y-axis "Fan Speed (%)" 0 --> 60
+    line "Auto 2" [0, 55]
+```
+
+说明：
+
+- 图中数值为 `IdleTemperature / LoadTemperature` 两端点的线性控制区间
+- `System Fan #3/#4` 仍保留原有 `Start/Stop` 逻辑，所以低百分比阶段并不保证立刻转动
+
+### 占空比-RPM 估算
+
+```mermaid
+xychart-beta
+    title "Estimated RPM by Fan Control Percent"
+    x-axis "Control (%)" [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+    y-axis "RPM" 0 --> 1800
+    line "CPU Fan" [0, 379, 382, 527, 704, 857, 1010, 1150, 1277, 1387, 1509]
+    line "System Fan #2" [296, 326, 454, 680, 872, 1029, 1199, 1336, 1470, 1581, 1726]
+    line "System Fan #3" [0, 0, 342, 525, 717, 870, 1038, 1180, 1322, 1436, 1574]
+    line "System Fan #4" [0, 0, 389, 594, 792, 950, 1118, 1264, 1400, 1528, 1669]
+```
+
+这张图用于帮助理解“百分比曲线”在实际听感和风量上的大致落点，不代表每个瞬时点都一定精确命中。
+
 ## 正在进行
 
 当前最值得关注的方向是：**通过模型自动调整 `config` 中各项曲线参数。**
@@ -108,10 +177,10 @@ fancontrol/
 
 ## 下一步
 
-- 定义更明确的噪音 / 散热平衡指标
-- 对比候选曲线方案与实际采样结果
-- 把当前文档化的配置分析转成更系统的调优输入
-- 推进半自动、可审查的配置参数优化流程
+- 在当前 `accepted-baseline` 上继续做小步微调，而不是大改整套曲线
+- 优先观察 `Auto 2` 是否需要更平滑的 GPU 高温段介入
+- 后续如需继续压噪，再回头审视 `Auto` / `Auto 1`
+- 继续积累真实负载采样，为半自动、可审查的参数优化提供数据
 
 ## 文档导航
 
