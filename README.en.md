@@ -118,31 +118,18 @@ The accepted baseline keeps the current three-layer strategy:
 
 ```mermaid
 xychart-beta
-    title "CPU Fan / Auto"
-    x-axis "Temperature (°C)" [40, 78]
+    title "Fan Speed (%) by Temperature"
+    x-axis "Temperature (°C)" [40, 48, 62, 74, 78]
     y-axis "Fan Speed (%)" 0 --> 85
-    line "Auto" [25, 85]
-```
-
-```mermaid
-xychart-beta
-    title "Case Fan Layer 2 / Auto 1"
-    x-axis "Temperature (°C)" [48, 78]
-    y-axis "Fan Speed (%)" 0 --> 80
-    line "Auto 1" [15, 72]
-```
-
-```mermaid
-xychart-beta
-    title "Case Fan Layer 3 / Auto 2 (GPU-aware)"
-    x-axis "Temperature (°C)" [62, 74]
-    y-axis "Fan Speed (%)" 0 --> 60
-    line "Auto 2" [0, 55]
+    line "CPU Fan / Auto" [25, 38, 60, 79, 85]
+    line "System Fan #2 / Auto 1" [15, 15, 42, 64, 72]
+    line "System Fan #3/#4 / Auto 2" [0, 0, 0, 55, 55]
 ```
 
 Notes:
 
-- each chart shows the linear control window between `IdleTemperature` and `LoadTemperature`
+- the three fan layers are overlaid in one chart so their engagement order is easier to compare
+- values are projected onto one shared temperature axis from each layer's own `IdleTemperature / LoadTemperature` window
 - `System Fan #3/#4` still keep their original `Start/Stop` logic, so low percentages do not guarantee immediate spin-up
 
 ### Estimated RPM Curves

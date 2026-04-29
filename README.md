@@ -122,31 +122,18 @@ fancontrol/
 
 ```mermaid
 xychart-beta
-    title "CPU Fan / Auto"
-    x-axis "Temperature (°C)" [40, 78]
+    title "Fan Speed (%) by Temperature"
+    x-axis "Temperature (°C)" [40, 48, 62, 74, 78]
     y-axis "Fan Speed (%)" 0 --> 85
-    line "Auto" [25, 85]
-```
-
-```mermaid
-xychart-beta
-    title "Case Fan Layer 2 / Auto 1"
-    x-axis "Temperature (°C)" [48, 78]
-    y-axis "Fan Speed (%)" 0 --> 80
-    line "Auto 1" [15, 72]
-```
-
-```mermaid
-xychart-beta
-    title "Case Fan Layer 3 / Auto 2 (GPU-aware)"
-    x-axis "Temperature (°C)" [62, 74]
-    y-axis "Fan Speed (%)" 0 --> 60
-    line "Auto 2" [0, 55]
+    line "CPU Fan / Auto" [25, 38, 60, 79, 85]
+    line "System Fan #2 / Auto 1" [15, 15, 42, 64, 72]
+    line "System Fan #3/#4 / Auto 2" [0, 0, 0, 55, 55]
 ```
 
 说明：
 
-- 图中数值为 `IdleTemperature / LoadTemperature` 两端点的线性控制区间
+- 图中将三层风扇曲线叠加在同一坐标系，便于直接比较升温时的介入顺序
+- 曲线数值按各自 `IdleTemperature / LoadTemperature` 线性换算到统一温度轴
 - `System Fan #3/#4` 仍保留原有 `Start/Stop` 逻辑，所以低百分比阶段并不保证立刻转动
 
 ### 占空比-RPM 估算
