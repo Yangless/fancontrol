@@ -161,7 +161,8 @@ function Copy-FanControlRuntimeScriptsToSandbox {
         'time_policy.ps1',
         'switch.ps1',
         'check_status.ps1',
-        'monitor_simple.ps1'
+        'monitor_simple.ps1',
+        'hardware_metrics.ps1'
     )
     $optionalSourceFiles = @('volume_helper.ps1')
 

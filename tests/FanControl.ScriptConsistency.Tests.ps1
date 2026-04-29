@@ -24,6 +24,10 @@ Describe 'Script consistency' {
         $monitorContent | Should -Match 'runtime_state\.ps1'
     }
 
+    It 'loads the shared hardware metrics helper in monitor_simple.ps1' {
+        $monitorContent | Should -Match 'hardware_metrics\.ps1'
+    }
+
     It 'does not use -Force when restoring auto mode in switch.ps1' {
         $switchContent | Should -Not -Match 'auto_switch\.ps1" -Force'
     }

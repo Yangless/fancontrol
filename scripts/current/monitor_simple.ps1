@@ -8,17 +8,14 @@ param(
 
 $RuntimePathsHelper = Join-Path $PSScriptRoot "runtime_paths.ps1"
 $RuntimeStateHelper = Join-Path $PSScriptRoot "runtime_state.ps1"
+$HardwareMetricsHelper = Join-Path $PSScriptRoot "hardware_metrics.ps1"
 
-if (Test-Path $RuntimePathsHelper) {
-    . $RuntimePathsHelper
-} else {
-    throw "Helper file not found: $RuntimePathsHelper"
-}
-
-if (Test-Path $RuntimeStateHelper) {
-    . $RuntimeStateHelper
-} else {
-    throw "Helper file not found: $RuntimeStateHelper"
+foreach ($helper in @($RuntimePathsHelper, $RuntimeStateHelper, $HardwareMetricsHelper)) {
+    if (Test-Path $helper) {
+        . $helper
+    } else {
+        throw "Helper file not found: $helper"
+    }
 }
 
 $Paths = Get-FanControlPaths
@@ -27,6 +24,7 @@ if (-not $OutputDir) {
 }
 
 New-Item -ItemType Directory -Force -Path $OutputDir | Out-Null
+$InvariantCulture = [System.Globalization.CultureInfo]::InvariantCulture
 
 function New-MonitorFilePath {
     param([string]$Prefix)
@@ -46,28 +44,78 @@ function Write-MonitorJson {
     return $path
 }
 
+function New-MonitorSample {
+    $runtimeState = Get-FanControlRuntimeState
+    $hardwareMetrics = Get-FanControlHardwareMetrics
+
+    return [PSCustomObject]@{
+        Timestamp = $runtimeState.Timestamp
+        Runtime = $runtimeState
+        Hardware = $hardwareMetrics
+    }
+}
+
+function Format-SummaryValue {
+    param($Value)
+
+    if ($null -eq $Value) {
+        return 'NA'
+    }
+
+    if ($Value -is [double] -or $Value -is [single] -or $Value -is [decimal]) {
+        if ([math]::Abs($Value - [math]::Round($Value, 0)) -lt 0.05) {
+            return ([int][math]::Round($Value, 0)).ToString($InvariantCulture)
+        }
+
+        return ([math]::Round($Value, 1)).ToString('0.0', $InvariantCulture)
+    }
+
+    if ($Value -is [System.IFormattable]) {
+        return $Value.ToString($null, $InvariantCulture)
+    }
+
+    return $Value.ToString()
+}
+
 function Write-StateSummary {
-    param([Parameter(Mandatory = $true)]$State)
+    param([Parameter(Mandatory = $true)]$Sample)
 
-    $processText = if ($State.ProcessRunning) { 'OK' } else { 'X' }
-    $configText = if ($State.EffectiveConfig) { $State.EffectiveConfig } else { 'N/A' }
-    $desiredText = if ($State.DesiredConfig) { $State.DesiredConfig } else { 'N/A' }
-    $confidenceText = if ($State.StateConfidence) { $State.StateConfidence } else { 'Unknown' }
-    $verificationText = if ($State.VerificationConfidence) { $State.VerificationConfidence } else { 'Unknown' }
+    $runtime = $Sample.Runtime
+    $hardware = $Sample.Hardware
+    $processText = if ($runtime.ProcessRunning) { 'OK' } else { 'X' }
+    $configText = if ($runtime.EffectiveConfig) { $runtime.EffectiveConfig } else { 'N/A' }
+    $desiredText = if ($runtime.DesiredConfig) { $runtime.DesiredConfig } else { 'N/A' }
+    $confidenceText = if ($runtime.StateConfidence) { $runtime.StateConfidence } else { 'Unknown' }
+    $verificationText = if ($runtime.VerificationConfidence) { $runtime.VerificationConfidence } else { 'Unknown' }
+    $fanValues = (@(
+        (Format-SummaryValue -Value $hardware.CpuFanRpm),
+        (Format-SummaryValue -Value $hardware.SystemFan2Rpm),
+        (Format-SummaryValue -Value $hardware.SystemFan3Rpm),
+        (Format-SummaryValue -Value $hardware.SystemFan4Rpm)
+    ) -join '/')
+    $summaryParts = @(
+        ("[{0}]" -f $Sample.Timestamp),
+        ("Process:{0}" -f $processText),
+        ("Desired:{0}" -f $desiredText),
+        ("Effective:{0}" -f $configText),
+        ("Verify:{0}" -f $verificationText),
+        ("Confidence:{0}" -f $confidenceText),
+        ("CPU:{0}C" -f (Format-SummaryValue -Value $hardware.CpuPackage)),
+        ("CoreAvg:{0}C" -f (Format-SummaryValue -Value $hardware.CoreAverage)),
+        ("Dist:{0}C" -f (Format-SummaryValue -Value $hardware.MinDistanceToTjMax)),
+        ("Load:{0}%" -f (Format-SummaryValue -Value $hardware.CpuLoadPercent)),
+        ("Clock:{0}MHz" -f (Format-SummaryValue -Value $hardware.EffectiveClockMHz)),
+        ("Fans:{0}" -f $fanValues),
+        ("Total:{0}" -f (Format-SummaryValue -Value $hardware.TotalFanRpm))
+    )
 
-    Write-Host ("[{0}] Process:{1} Desired:{2} Effective:{3} Verify:{4} Confidence:{5}" -f `
-        $State.Timestamp,
-        $processText,
-        $desiredText,
-        $configText,
-        $verificationText,
-        $confidenceText)
+    Write-Host ($summaryParts -join ' ')
 }
 
 function Invoke-SnapshotMode {
-    $state = Get-FanControlRuntimeState
-    $path = Write-MonitorJson -Prefix 'snapshot' -Payload $state
-    Write-StateSummary -State $state
+    $sample = New-MonitorSample
+    $path = Write-MonitorJson -Prefix 'snapshot' -Payload $sample
+    Write-StateSummary -Sample $sample
     Write-Host "Saved: $(Split-Path $path -Leaf)"
 }
 
@@ -78,9 +126,9 @@ function Invoke-SampleMode {
 
     try {
         while ($true) {
-            $state = Get-FanControlRuntimeState
-            $samples += $state
-            Write-StateSummary -State $state
+            $sample = New-MonitorSample
+            $samples += $sample
+            Write-StateSummary -Sample $sample
 
             $reachedMaxSamples = ($MaxSamples -gt 0 -and $samples.Count -ge $MaxSamples)
             $reachedSummaryWindow = (((Get-Date) - $lastFlushAt).TotalMinutes -ge $SummaryMinutes)
@@ -129,9 +177,9 @@ function Invoke-WatchMode {
     $sampleCount = 0
 
     while ($true) {
-        $state = Get-FanControlRuntimeState
+        $sample = New-MonitorSample
         $sampleCount++
-        Write-StateSummary -State $state
+        Write-StateSummary -Sample $sample
 
         if ($MaxSamples -gt 0 -and $sampleCount -ge $MaxSamples) {
             break
