@@ -1,0 +1,3082 @@
+{
+  "model_version": "fancontrol.baseline-model.v2",
+  "created_at": "2026-04-30T03:41:33Z",
+  "dataset_path": "./artifacts/modeling/training_rows.jsonl",
+  "target_key": "target_score",
+  "row_count": 143,
+  "preferred_model": "ridge_cv",
+  "feature_names": [
+    "cpu_package_c",
+    "core_average_c",
+    "min_distance_to_tjmax_c",
+    "cpu_total_load_pct",
+    "cpu_core_max_load_pct",
+    "cpu_clock_avg_mhz",
+    "pcore_clock_avg_mhz",
+    "ecore_clock_avg_mhz",
+    "cpu_package_power_w",
+    "system_temp_c",
+    "vrm_mos_temp_c",
+    "pch_temp_c",
+    "gpu_temp_c",
+    "gpu_3d_util_pct",
+    "cpu_fan_rpm",
+    "system_fan2_rpm",
+    "system_fan3_rpm",
+    "system_fan4_rpm",
+    "total_case_fan_rpm",
+    "total_tracked_fan_rpm",
+    "cpu_soft_margin_c",
+    "gpu_soft_margin_c",
+    "tjmax_soft_margin_c",
+    "case_fan_share",
+    "gpu_assist_share",
+    "fan_per_cpu_w",
+    "source_sample_count",
+    "sample_progress_pct",
+    "elapsed_seconds",
+    "delta_seconds",
+    "cpu_package_delta_1",
+    "gpu_temp_delta_1",
+    "total_tracked_fan_rpm_delta_1",
+    "cpu_total_load_delta_1",
+    "rolling_cpu_package_avg_3",
+    "rolling_cpu_package_max_3",
+    "rolling_gpu_temp_avg_3",
+    "rolling_gpu_temp_max_3",
+    "rolling_total_tracked_fan_rpm_avg_3",
+    "rolling_total_tracked_fan_rpm_max_3",
+    "rolling_cpu_total_load_avg_3",
+    "rolling_cpu_total_load_max_3",
+    "cfg_auto_idle_temp_c",
+    "cfg_auto_min_speed_pct",
+    "cfg_auto_max_speed_pct",
+    "cfg_auto_load_temp_c",
+    "cfg_auto_uses_gpu_temp",
+    "cfg_auto1_idle_temp_c",
+    "cfg_auto1_min_speed_pct",
+    "cfg_auto1_max_speed_pct",
+    "cfg_auto1_load_temp_c",
+    "cfg_auto1_uses_gpu_temp",
+    "cfg_auto2_idle_temp_c",
+    "cfg_auto2_min_speed_pct",
+    "cfg_auto2_max_speed_pct",
+    "cfg_auto2_load_temp_c",
+    "cfg_auto2_uses_gpu_temp",
+    "cfg_system_fan3_start_pct",
+    "cfg_system_fan3_stop_pct",
+    "cfg_system_fan4_start_pct",
+    "cfg_system_fan4_stop_pct"
+  ],
+  "models": {
+    "ridge": {
+      "name": "ridge",
+      "model_type": "ridge",
+      "target_key": "target_score",
+      "feature_names": [
+        "cpu_package_c",
+        "core_average_c",
+        "min_distance_to_tjmax_c",
+        "cpu_total_load_pct",
+        "cpu_core_max_load_pct",
+        "cpu_clock_avg_mhz",
+        "pcore_clock_avg_mhz",
+        "ecore_clock_avg_mhz",
+        "cpu_package_power_w",
+        "system_temp_c",
+        "vrm_mos_temp_c",
+        "pch_temp_c",
+        "gpu_temp_c",
+        "gpu_3d_util_pct",
+        "cpu_fan_rpm",
+        "system_fan2_rpm",
+        "system_fan3_rpm",
+        "system_fan4_rpm",
+        "total_case_fan_rpm",
+        "total_tracked_fan_rpm",
+        "cpu_soft_margin_c",
+        "gpu_soft_margin_c",
+        "tjmax_soft_margin_c",
+        "case_fan_share",
+        "gpu_assist_share",
+        "fan_per_cpu_w",
+        "source_sample_count",
+        "sample_progress_pct",
+        "elapsed_seconds",
+        "delta_seconds",
+        "cpu_package_delta_1",
+        "gpu_temp_delta_1",
+        "total_tracked_fan_rpm_delta_1",
+        "cpu_total_load_delta_1",
+        "rolling_cpu_package_avg_3",
+        "rolling_cpu_package_max_3",
+        "rolling_gpu_temp_avg_3",
+        "rolling_gpu_temp_max_3",
+        "rolling_total_tracked_fan_rpm_avg_3",
+        "rolling_total_tracked_fan_rpm_max_3",
+        "rolling_cpu_total_load_avg_3",
+        "rolling_cpu_total_load_max_3",
+        "cfg_auto_idle_temp_c",
+        "cfg_auto_min_speed_pct",
+        "cfg_auto_max_speed_pct",
+        "cfg_auto_load_temp_c",
+        "cfg_auto_uses_gpu_temp",
+        "cfg_auto1_idle_temp_c",
+        "cfg_auto1_min_speed_pct",
+        "cfg_auto1_max_speed_pct",
+        "cfg_auto1_load_temp_c",
+        "cfg_auto1_uses_gpu_temp",
+        "cfg_auto2_idle_temp_c",
+        "cfg_auto2_min_speed_pct",
+        "cfg_auto2_max_speed_pct",
+        "cfg_auto2_load_temp_c",
+        "cfg_auto2_uses_gpu_temp",
+        "cfg_system_fan3_start_pct",
+        "cfg_system_fan3_stop_pct",
+        "cfg_system_fan4_start_pct",
+        "cfg_system_fan4_stop_pct"
+      ],
+      "intercept": 80.175776,
+      "weights": {
+        "cpu_package_c": -2.339147,
+        "core_average_c": 2.185281,
+        "min_distance_to_tjmax_c": 0.171294,
+        "cpu_total_load_pct": -0.457649,
+        "cpu_core_max_load_pct": 0.518884,
+        "cpu_clock_avg_mhz": 0.0,
+        "pcore_clock_avg_mhz": 0.0,
+        "ecore_clock_avg_mhz": -0.0,
+        "cpu_package_power_w": 1.248279,
+        "system_temp_c": -2.042946,
+        "vrm_mos_temp_c": -3.463281,
+        "pch_temp_c": 0.639838,
+        "gpu_temp_c": -0.5802,
+        "gpu_3d_util_pct": 0.377641,
+        "cpu_fan_rpm": -1.842977,
+        "system_fan2_rpm": -2.311473,
+        "system_fan3_rpm": -0.611938,
+        "system_fan4_rpm": -3.360025,
+        "total_case_fan_rpm": -2.909689,
+        "total_tracked_fan_rpm": -2.62209,
+        "cpu_soft_margin_c": 2.339147,
+        "gpu_soft_margin_c": 0.5802,
+        "tjmax_soft_margin_c": 0.171294,
+        "case_fan_share": 0.966408,
+        "gpu_assist_share": 2.197435,
+        "fan_per_cpu_w": 1.096653,
+        "source_sample_count": 1.38676,
+        "sample_progress_pct": 0.270009,
+        "elapsed_seconds": -0.497928,
+        "delta_seconds": -0.259699,
+        "cpu_package_delta_1": 0.592177,
+        "gpu_temp_delta_1": 0.149717,
+        "total_tracked_fan_rpm_delta_1": 0.24448,
+        "cpu_total_load_delta_1": -0.181897,
+        "rolling_cpu_package_avg_3": 2.606561,
+        "rolling_cpu_package_max_3": -0.829423,
+        "rolling_gpu_temp_avg_3": -1.683118,
+        "rolling_gpu_temp_max_3": 1.0361,
+        "rolling_total_tracked_fan_rpm_avg_3": 3.121024,
+        "rolling_total_tracked_fan_rpm_max_3": 0.303229,
+        "rolling_cpu_total_load_avg_3": -0.560158,
+        "rolling_cpu_total_load_max_3": 0.287684,
+        "cfg_auto_idle_temp_c": 0.074101,
+        "cfg_auto_min_speed_pct": -0.074101,
+        "cfg_auto_max_speed_pct": 0.074101,
+        "cfg_auto_load_temp_c": 0.074101,
+        "cfg_auto_uses_gpu_temp": 0.0,
+        "cfg_auto1_idle_temp_c": 0.074101,
+        "cfg_auto1_min_speed_pct": -0.074101,
+        "cfg_auto1_max_speed_pct": -0.074101,
+        "cfg_auto1_load_temp_c": 0.074101,
+        "cfg_auto1_uses_gpu_temp": 0.0,
+        "cfg_auto2_idle_temp_c": 0.074101,
+        "cfg_auto2_min_speed_pct": 0.0,
+        "cfg_auto2_max_speed_pct": -0.074101,
+        "cfg_auto2_load_temp_c": -0.074101,
+        "cfg_auto2_uses_gpu_temp": 0.074101,
+        "cfg_system_fan3_start_pct": 0.0,
+        "cfg_system_fan3_stop_pct": 0.0,
+        "cfg_system_fan4_start_pct": 0.0,
+        "cfg_system_fan4_stop_pct": 0.0
+      },
+      "imputation_medians": {
+        "cpu_package_c": 67.0,
+        "core_average_c": 56.857143,
+        "min_distance_to_tjmax_c": 31.0,
+        "cpu_total_load_pct": 21.93,
+        "cpu_core_max_load_pct": 61.54,
+        "cpu_clock_avg_mhz": 4343.2,
+        "pcore_clock_avg_mhz": 5075.4,
+        "ecore_clock_avg_mhz": 3794.1,
+        "cpu_package_power_w": 73.607254,
+        "system_temp_c": 44.0,
+        "vrm_mos_temp_c": 48.5,
+        "pch_temp_c": 53.0,
+        "gpu_temp_c": 48.0,
+        "gpu_3d_util_pct": 19.5,
+        "cpu_fan_rpm": 1287.0,
+        "system_fan2_rpm": 1346.0,
+        "system_fan3_rpm": 0.0,
+        "system_fan4_rpm": 0.0,
+        "total_case_fan_rpm": 1348.0,
+        "total_tracked_fan_rpm": 2620.0,
+        "cpu_soft_margin_c": 18.0,
+        "gpu_soft_margin_c": 30.0,
+        "tjmax_soft_margin_c": 16.0,
+        "case_fan_share": 0.508517,
+        "gpu_assist_share": 0.0,
+        "fan_per_cpu_w": 31.084286,
+        "source_sample_count": 15.0,
+        "sample_progress_pct": 0.5,
+        "elapsed_seconds": 31.0,
+        "delta_seconds": 5.0,
+        "cpu_package_delta_1": 0.0,
+        "gpu_temp_delta_1": 0.0,
+        "total_tracked_fan_rpm_delta_1": 0.0,
+        "cpu_total_load_delta_1": 0.005,
+        "rolling_cpu_package_avg_3": 66.5,
+        "rolling_cpu_package_max_3": 70.0,
+        "rolling_gpu_temp_avg_3": 48.0,
+        "rolling_gpu_temp_max_3": 49.0,
+        "rolling_total_tracked_fan_rpm_avg_3": 2524.333333,
+        "rolling_total_tracked_fan_rpm_max_3": 2683.0,
+        "rolling_cpu_total_load_avg_3": 22.09,
+        "rolling_cpu_total_load_max_3": 26.56,
+        "cfg_auto_idle_temp_c": 40.0,
+        "cfg_auto_min_speed_pct": 25.0,
+        "cfg_auto_max_speed_pct": 85.0,
+        "cfg_auto_load_temp_c": 78.0,
+        "cfg_auto_uses_gpu_temp": 0.0,
+        "cfg_auto1_idle_temp_c": 48.0,
+        "cfg_auto1_min_speed_pct": 15.0,
+        "cfg_auto1_max_speed_pct": 72.0,
+        "cfg_auto1_load_temp_c": 78.0,
+        "cfg_auto1_uses_gpu_temp": 0.0,
+        "cfg_auto2_idle_temp_c": 62.0,
+        "cfg_auto2_min_speed_pct": 0.0,
+        "cfg_auto2_max_speed_pct": 55.0,
+        "cfg_auto2_load_temp_c": 74.0,
+        "cfg_auto2_uses_gpu_temp": 1.0,
+        "cfg_system_fan3_start_pct": 25.0,
+        "cfg_system_fan3_stop_pct": 16.0,
+        "cfg_system_fan4_start_pct": 22.0,
+        "cfg_system_fan4_stop_pct": 16.0
+      },
+      "scaler_means": {
+        "cpu_package_c": 65.601399,
+        "core_average_c": 56.407093,
+        "min_distance_to_tjmax_c": 33.20979,
+        "cpu_total_load_pct": 22.726364,
+        "cpu_core_max_load_pct": 62.945035,
+        "cpu_clock_avg_mhz": 4343.2,
+        "pcore_clock_avg_mhz": 5075.4,
+        "ecore_clock_avg_mhz": 3794.1,
+        "cpu_package_power_w": 73.904419,
+        "system_temp_c": 45.269231,
+        "vrm_mos_temp_c": 48.472028,
+        "pch_temp_c": 53.503497,
+        "gpu_temp_c": 50.293706,
+        "gpu_3d_util_pct": 36.326573,
+        "cpu_fan_rpm": 1181.937063,
+        "system_fan2_rpm": 1180.461538,
+        "system_fan3_rpm": 7.531469,
+        "system_fan4_rpm": 12.734266,
+        "total_case_fan_rpm": 1200.727273,
+        "total_tracked_fan_rpm": 2382.664336,
+        "cpu_soft_margin_c": 19.398601,
+        "gpu_soft_margin_c": 27.706294,
+        "tjmax_soft_margin_c": 18.20979,
+        "case_fan_share": 0.49572,
+        "gpu_assist_share": 0.010886,
+        "fan_per_cpu_w": 34.333216,
+        "source_sample_count": 14.566434,
+        "sample_progress_pct": 0.5,
+        "elapsed_seconds": 35.020979,
+        "delta_seconds": 5.132867,
+        "cpu_package_delta_1": 0.314685,
+        "gpu_temp_delta_1": 0.440559,
+        "total_tracked_fan_rpm_delta_1": 35.237762,
+        "cpu_total_load_delta_1": 0.421014,
+        "rolling_cpu_package_avg_3": 65.300699,
+        "rolling_cpu_package_max_3": 68.965035,
+        "rolling_gpu_temp_avg_3": 49.91958,
+        "rolling_gpu_temp_max_3": 50.811189,
+        "rolling_total_tracked_fan_rpm_avg_3": 2354.050117,
+        "rolling_total_tracked_fan_rpm_max_3": 2500.153846,
+        "rolling_cpu_total_load_avg_3": 22.410152,
+        "rolling_cpu_total_load_max_3": 26.072517,
+        "cfg_auto_idle_temp_c": 39.79021,
+        "cfg_auto_min_speed_pct": 25.20979,
+        "cfg_auto_max_speed_pct": 84.79021,
+        "cfg_auto_load_temp_c": 77.664336,
+        "cfg_auto_uses_gpu_temp": 0.0,
+        "cfg_auto1_idle_temp_c": 47.664336,
+        "cfg_auto1_min_speed_pct": 15.20979,
+        "cfg_auto1_max_speed_pct": 72.335664,
+        "cfg_auto1_load_temp_c": 77.664336,
+        "cfg_auto1_uses_gpu_temp": 0.0,
+        "cfg_auto2_idle_temp_c": 61.496503,
+        "cfg_auto2_min_speed_pct": 0.0,
+        "cfg_auto2_max_speed_pct": 56.048951,
+        "cfg_auto2_load_temp_c": 74.251748,
+        "cfg_auto2_uses_gpu_temp": 0.958042,
+        "cfg_system_fan3_start_pct": 25.0,
+        "cfg_system_fan3_stop_pct": 16.0,
+        "cfg_system_fan4_start_pct": 22.0,
+        "cfg_system_fan4_stop_pct": 16.0
+      },
+      "scaler_stds": {
+        "cpu_package_c": 8.974042,
+        "core_average_c": 5.47789,
+        "min_distance_to_tjmax_c": 9.294598,
+        "cpu_total_load_pct": 8.021077,
+        "cpu_core_max_load_pct": 14.943866,
+        "cpu_clock_avg_mhz": 1.0,
+        "pcore_clock_avg_mhz": 1.0,
+        "ecore_clock_avg_mhz": 1.0,
+        "cpu_package_power_w": 20.13497,
+        "system_temp_c": 3.818326,
+        "vrm_mos_temp_c": 2.809684,
+        "pch_temp_c": 2.729979,
+        "gpu_temp_c": 13.825502,
+        "gpu_3d_util_pct": 26.924203,
+        "cpu_fan_rpm": 196.304075,
+        "system_fan2_rpm": 304.012807,
+        "system_fan3_rpm": 51.621647,
+        "system_fan4_rpm": 67.656263,
+        "total_case_fan_rpm": 330.493489,
+        "total_tracked_fan_rpm": 504.718421,
+        "cpu_soft_margin_c": 8.974042,
+        "gpu_soft_margin_c": 13.825502,
+        "tjmax_soft_margin_c": 9.294598,
+        "case_fan_share": 0.051437,
+        "gpu_assist_share": 0.059319,
+        "fan_per_cpu_w": 11.972176,
+        "source_sample_count": 3.599844,
+        "sample_progress_pct": 0.312248,
+        "elapsed_seconds": 24.343828,
+        "delta_seconds": 0.430283,
+        "cpu_package_delta_1": 6.234822,
+        "gpu_temp_delta_1": 3.396054,
+        "total_tracked_fan_rpm_delta_1": 325.007433,
+        "cpu_total_load_delta_1": 7.176335,
+        "rolling_cpu_package_avg_3": 8.07803,
+        "rolling_cpu_package_max_3": 9.041793,
+        "rolling_gpu_temp_avg_3": 13.555404,
+        "rolling_gpu_temp_max_3": 13.826068,
+        "rolling_total_tracked_fan_rpm_avg_3": 478.257171,
+        "rolling_total_tracked_fan_rpm_max_3": 497.548568,
+        "rolling_cpu_total_load_avg_3": 6.917864,
+        "rolling_cpu_total_load_max_3": 7.950798,
+        "cfg_auto_idle_temp_c": 1.002467,
+        "cfg_auto_min_speed_pct": 1.002467,
+        "cfg_auto_max_speed_pct": 1.002467,
+        "cfg_auto_load_temp_c": 1.603946,
+        "cfg_auto_uses_gpu_temp": 1.0,
+        "cfg_auto1_idle_temp_c": 1.603946,
+        "cfg_auto1_min_speed_pct": 1.002467,
+        "cfg_auto1_max_speed_pct": 1.603946,
+        "cfg_auto1_load_temp_c": 1.603946,
+        "cfg_auto1_uses_gpu_temp": 1.0,
+        "cfg_auto2_idle_temp_c": 2.40592,
+        "cfg_auto2_min_speed_pct": 1.0,
+        "cfg_auto2_max_speed_pct": 5.012333,
+        "cfg_auto2_load_temp_c": 1.20296,
+        "cfg_auto2_uses_gpu_temp": 0.200493,
+        "cfg_system_fan3_start_pct": 1.0,
+        "cfg_system_fan3_stop_pct": 1.0,
+        "cfg_system_fan4_start_pct": 1.0,
+        "cfg_system_fan4_stop_pct": 1.0
+      },
+      "hyperparameters": {
+        "alpha": 1.0
+      },
+      "metrics": {
+        "training": {
+          "row_count": 143,
+          "mae": 1.963243,
+          "rmse": 3.1102,
+          "r2": 0.907598
+        },
+        "leave_one_source_out": {
+          "row_count": 143,
+          "mae": 4.00569,
+          "rmse": 6.808604,
+          "r2": 0.557187,
+          "fold_count": 11
+        }
+      },
+      "top_features": [
+        {
+          "feature": "vrm_mos_temp_c",
+          "weight": -3.463281
+        },
+        {
+          "feature": "system_fan4_rpm",
+          "weight": -3.360025
+        },
+        {
+          "feature": "rolling_total_tracked_fan_rpm_avg_3",
+          "weight": 3.121024
+        },
+        {
+          "feature": "total_case_fan_rpm",
+          "weight": -2.909689
+        },
+        {
+          "feature": "total_tracked_fan_rpm",
+          "weight": -2.62209
+        },
+        {
+          "feature": "rolling_cpu_package_avg_3",
+          "weight": 2.606561
+        },
+        {
+          "feature": "cpu_package_c",
+          "weight": -2.339147
+        },
+        {
+          "feature": "cpu_soft_margin_c",
+          "weight": 2.339147
+        },
+        {
+          "feature": "system_fan2_rpm",
+          "weight": -2.311473
+        },
+        {
+          "feature": "gpu_assist_share",
+          "weight": 2.197435
+        },
+        {
+          "feature": "core_average_c",
+          "weight": 2.185281
+        },
+        {
+          "feature": "system_temp_c",
+          "weight": -2.042946
+        }
+      ]
+    },
+    "ridge_cv": {
+      "name": "ridge_cv",
+      "model_type": "ridge",
+      "target_key": "target_score",
+      "feature_names": [
+        "cpu_package_c",
+        "core_average_c",
+        "min_distance_to_tjmax_c",
+        "cpu_total_load_pct",
+        "cpu_core_max_load_pct",
+        "cpu_clock_avg_mhz",
+        "pcore_clock_avg_mhz",
+        "ecore_clock_avg_mhz",
+        "cpu_package_power_w",
+        "system_temp_c",
+        "vrm_mos_temp_c",
+        "pch_temp_c",
+        "gpu_temp_c",
+        "gpu_3d_util_pct",
+        "cpu_fan_rpm",
+        "system_fan2_rpm",
+        "system_fan3_rpm",
+        "system_fan4_rpm",
+        "total_case_fan_rpm",
+        "total_tracked_fan_rpm",
+        "cpu_soft_margin_c",
+        "gpu_soft_margin_c",
+        "tjmax_soft_margin_c",
+        "case_fan_share",
+        "gpu_assist_share",
+        "fan_per_cpu_w",
+        "source_sample_count",
+        "sample_progress_pct",
+        "elapsed_seconds",
+        "delta_seconds",
+        "cpu_package_delta_1",
+        "gpu_temp_delta_1",
+        "total_tracked_fan_rpm_delta_1",
+        "cpu_total_load_delta_1",
+        "rolling_cpu_package_avg_3",
+        "rolling_cpu_package_max_3",
+        "rolling_gpu_temp_avg_3",
+        "rolling_gpu_temp_max_3",
+        "rolling_total_tracked_fan_rpm_avg_3",
+        "rolling_total_tracked_fan_rpm_max_3",
+        "rolling_cpu_total_load_avg_3",
+        "rolling_cpu_total_load_max_3",
+        "cfg_auto_idle_temp_c",
+        "cfg_auto_min_speed_pct",
+        "cfg_auto_max_speed_pct",
+        "cfg_auto_load_temp_c",
+        "cfg_auto_uses_gpu_temp",
+        "cfg_auto1_idle_temp_c",
+        "cfg_auto1_min_speed_pct",
+        "cfg_auto1_max_speed_pct",
+        "cfg_auto1_load_temp_c",
+        "cfg_auto1_uses_gpu_temp",
+        "cfg_auto2_idle_temp_c",
+        "cfg_auto2_min_speed_pct",
+        "cfg_auto2_max_speed_pct",
+        "cfg_auto2_load_temp_c",
+        "cfg_auto2_uses_gpu_temp",
+        "cfg_system_fan3_start_pct",
+        "cfg_system_fan3_stop_pct",
+        "cfg_system_fan4_start_pct",
+        "cfg_system_fan4_stop_pct"
+      ],
+      "intercept": 80.175776,
+      "weights": {
+        "cpu_package_c": -1.341957,
+        "core_average_c": 0.663557,
+        "min_distance_to_tjmax_c": -0.137132,
+        "cpu_total_load_pct": -0.328056,
+        "cpu_core_max_load_pct": 0.368554,
+        "cpu_clock_avg_mhz": 0.0,
+        "pcore_clock_avg_mhz": 0.0,
+        "ecore_clock_avg_mhz": -0.0,
+        "cpu_package_power_w": 0.562396,
+        "system_temp_c": -1.267035,
+        "vrm_mos_temp_c": -1.931761,
+        "pch_temp_c": -0.262154,
+        "gpu_temp_c": -0.562011,
+        "gpu_3d_util_pct": 0.697656,
+        "cpu_fan_rpm": -1.335393,
+        "system_fan2_rpm": -1.266949,
+        "system_fan3_rpm": -0.15831,
+        "system_fan4_rpm": -1.397895,
+        "total_case_fan_rpm": -1.47633,
+        "total_tracked_fan_rpm": -1.486097,
+        "cpu_soft_margin_c": 1.341957,
+        "gpu_soft_margin_c": 0.562011,
+        "tjmax_soft_margin_c": -0.137132,
+        "case_fan_share": -0.071351,
+        "gpu_assist_share": 0.276318,
+        "fan_per_cpu_w": 0.226144,
+        "source_sample_count": 0.831883,
+        "sample_progress_pct": -0.367768,
+        "elapsed_seconds": 0.262264,
+        "delta_seconds": -0.241378,
+        "cpu_package_delta_1": 0.002092,
+        "gpu_temp_delta_1": 0.219584,
+        "total_tracked_fan_rpm_delta_1": -0.620786,
+        "cpu_total_load_delta_1": 0.070599,
+        "rolling_cpu_package_avg_3": 0.069531,
+        "rolling_cpu_package_max_3": -0.566918,
+        "rolling_gpu_temp_avg_3": -0.774458,
+        "rolling_gpu_temp_max_3": -0.17642,
+        "rolling_total_tracked_fan_rpm_avg_3": 0.653752,
+        "rolling_total_tracked_fan_rpm_max_3": -0.054235,
+        "rolling_cpu_total_load_avg_3": -0.076396,
+        "rolling_cpu_total_load_max_3": 0.168432,
+        "cfg_auto_idle_temp_c": 0.041537,
+        "cfg_auto_min_speed_pct": -0.041537,
+        "cfg_auto_max_speed_pct": 0.041537,
+        "cfg_auto_load_temp_c": 0.041537,
+        "cfg_auto_uses_gpu_temp": 0.0,
+        "cfg_auto1_idle_temp_c": 0.041537,
+        "cfg_auto1_min_speed_pct": -0.041537,
+        "cfg_auto1_max_speed_pct": -0.041537,
+        "cfg_auto1_load_temp_c": 0.041537,
+        "cfg_auto1_uses_gpu_temp": 0.0,
+        "cfg_auto2_idle_temp_c": 0.041537,
+        "cfg_auto2_min_speed_pct": 0.0,
+        "cfg_auto2_max_speed_pct": -0.041537,
+        "cfg_auto2_load_temp_c": -0.041537,
+        "cfg_auto2_uses_gpu_temp": 0.041537,
+        "cfg_system_fan3_start_pct": 0.0,
+        "cfg_system_fan3_stop_pct": 0.0,
+        "cfg_system_fan4_start_pct": 0.0,
+        "cfg_system_fan4_stop_pct": 0.0
+      },
+      "imputation_medians": {
+        "cpu_package_c": 67.0,
+        "core_average_c": 56.857143,
+        "min_distance_to_tjmax_c": 31.0,
+        "cpu_total_load_pct": 21.93,
+        "cpu_core_max_load_pct": 61.54,
+        "cpu_clock_avg_mhz": 4343.2,
+        "pcore_clock_avg_mhz": 5075.4,
+        "ecore_clock_avg_mhz": 3794.1,
+        "cpu_package_power_w": 73.607254,
+        "system_temp_c": 44.0,
+        "vrm_mos_temp_c": 48.5,
+        "pch_temp_c": 53.0,
+        "gpu_temp_c": 48.0,
+        "gpu_3d_util_pct": 19.5,
+        "cpu_fan_rpm": 1287.0,
+        "system_fan2_rpm": 1346.0,
+        "system_fan3_rpm": 0.0,
+        "system_fan4_rpm": 0.0,
+        "total_case_fan_rpm": 1348.0,
+        "total_tracked_fan_rpm": 2620.0,
+        "cpu_soft_margin_c": 18.0,
+        "gpu_soft_margin_c": 30.0,
+        "tjmax_soft_margin_c": 16.0,
+        "case_fan_share": 0.508517,
+        "gpu_assist_share": 0.0,
+        "fan_per_cpu_w": 31.084286,
+        "source_sample_count": 15.0,
+        "sample_progress_pct": 0.5,
+        "elapsed_seconds": 31.0,
+        "delta_seconds": 5.0,
+        "cpu_package_delta_1": 0.0,
+        "gpu_temp_delta_1": 0.0,
+        "total_tracked_fan_rpm_delta_1": 0.0,
+        "cpu_total_load_delta_1": 0.005,
+        "rolling_cpu_package_avg_3": 66.5,
+        "rolling_cpu_package_max_3": 70.0,
+        "rolling_gpu_temp_avg_3": 48.0,
+        "rolling_gpu_temp_max_3": 49.0,
+        "rolling_total_tracked_fan_rpm_avg_3": 2524.333333,
+        "rolling_total_tracked_fan_rpm_max_3": 2683.0,
+        "rolling_cpu_total_load_avg_3": 22.09,
+        "rolling_cpu_total_load_max_3": 26.56,
+        "cfg_auto_idle_temp_c": 40.0,
+        "cfg_auto_min_speed_pct": 25.0,
+        "cfg_auto_max_speed_pct": 85.0,
+        "cfg_auto_load_temp_c": 78.0,
+        "cfg_auto_uses_gpu_temp": 0.0,
+        "cfg_auto1_idle_temp_c": 48.0,
+        "cfg_auto1_min_speed_pct": 15.0,
+        "cfg_auto1_max_speed_pct": 72.0,
+        "cfg_auto1_load_temp_c": 78.0,
+        "cfg_auto1_uses_gpu_temp": 0.0,
+        "cfg_auto2_idle_temp_c": 62.0,
+        "cfg_auto2_min_speed_pct": 0.0,
+        "cfg_auto2_max_speed_pct": 55.0,
+        "cfg_auto2_load_temp_c": 74.0,
+        "cfg_auto2_uses_gpu_temp": 1.0,
+        "cfg_system_fan3_start_pct": 25.0,
+        "cfg_system_fan3_stop_pct": 16.0,
+        "cfg_system_fan4_start_pct": 22.0,
+        "cfg_system_fan4_stop_pct": 16.0
+      },
+      "scaler_means": {
+        "cpu_package_c": 65.601399,
+        "core_average_c": 56.407093,
+        "min_distance_to_tjmax_c": 33.20979,
+        "cpu_total_load_pct": 22.726364,
+        "cpu_core_max_load_pct": 62.945035,
+        "cpu_clock_avg_mhz": 4343.2,
+        "pcore_clock_avg_mhz": 5075.4,
+        "ecore_clock_avg_mhz": 3794.1,
+        "cpu_package_power_w": 73.904419,
+        "system_temp_c": 45.269231,
+        "vrm_mos_temp_c": 48.472028,
+        "pch_temp_c": 53.503497,
+        "gpu_temp_c": 50.293706,
+        "gpu_3d_util_pct": 36.326573,
+        "cpu_fan_rpm": 1181.937063,
+        "system_fan2_rpm": 1180.461538,
+        "system_fan3_rpm": 7.531469,
+        "system_fan4_rpm": 12.734266,
+        "total_case_fan_rpm": 1200.727273,
+        "total_tracked_fan_rpm": 2382.664336,
+        "cpu_soft_margin_c": 19.398601,
+        "gpu_soft_margin_c": 27.706294,
+        "tjmax_soft_margin_c": 18.20979,
+        "case_fan_share": 0.49572,
+        "gpu_assist_share": 0.010886,
+        "fan_per_cpu_w": 34.333216,
+        "source_sample_count": 14.566434,
+        "sample_progress_pct": 0.5,
+        "elapsed_seconds": 35.020979,
+        "delta_seconds": 5.132867,
+        "cpu_package_delta_1": 0.314685,
+        "gpu_temp_delta_1": 0.440559,
+        "total_tracked_fan_rpm_delta_1": 35.237762,
+        "cpu_total_load_delta_1": 0.421014,
+        "rolling_cpu_package_avg_3": 65.300699,
+        "rolling_cpu_package_max_3": 68.965035,
+        "rolling_gpu_temp_avg_3": 49.91958,
+        "rolling_gpu_temp_max_3": 50.811189,
+        "rolling_total_tracked_fan_rpm_avg_3": 2354.050117,
+        "rolling_total_tracked_fan_rpm_max_3": 2500.153846,
+        "rolling_cpu_total_load_avg_3": 22.410152,
+        "rolling_cpu_total_load_max_3": 26.072517,
+        "cfg_auto_idle_temp_c": 39.79021,
+        "cfg_auto_min_speed_pct": 25.20979,
+        "cfg_auto_max_speed_pct": 84.79021,
+        "cfg_auto_load_temp_c": 77.664336,
+        "cfg_auto_uses_gpu_temp": 0.0,
+        "cfg_auto1_idle_temp_c": 47.664336,
+        "cfg_auto1_min_speed_pct": 15.20979,
+        "cfg_auto1_max_speed_pct": 72.335664,
+        "cfg_auto1_load_temp_c": 77.664336,
+        "cfg_auto1_uses_gpu_temp": 0.0,
+        "cfg_auto2_idle_temp_c": 61.496503,
+        "cfg_auto2_min_speed_pct": 0.0,
+        "cfg_auto2_max_speed_pct": 56.048951,
+        "cfg_auto2_load_temp_c": 74.251748,
+        "cfg_auto2_uses_gpu_temp": 0.958042,
+        "cfg_system_fan3_start_pct": 25.0,
+        "cfg_system_fan3_stop_pct": 16.0,
+        "cfg_system_fan4_start_pct": 22.0,
+        "cfg_system_fan4_stop_pct": 16.0
+      },
+      "scaler_stds": {
+        "cpu_package_c": 8.974042,
+        "core_average_c": 5.47789,
+        "min_distance_to_tjmax_c": 9.294598,
+        "cpu_total_load_pct": 8.021077,
+        "cpu_core_max_load_pct": 14.943866,
+        "cpu_clock_avg_mhz": 1.0,
+        "pcore_clock_avg_mhz": 1.0,
+        "ecore_clock_avg_mhz": 1.0,
+        "cpu_package_power_w": 20.13497,
+        "system_temp_c": 3.818326,
+        "vrm_mos_temp_c": 2.809684,
+        "pch_temp_c": 2.729979,
+        "gpu_temp_c": 13.825502,
+        "gpu_3d_util_pct": 26.924203,
+        "cpu_fan_rpm": 196.304075,
+        "system_fan2_rpm": 304.012807,
+        "system_fan3_rpm": 51.621647,
+        "system_fan4_rpm": 67.656263,
+        "total_case_fan_rpm": 330.493489,
+        "total_tracked_fan_rpm": 504.718421,
+        "cpu_soft_margin_c": 8.974042,
+        "gpu_soft_margin_c": 13.825502,
+        "tjmax_soft_margin_c": 9.294598,
+        "case_fan_share": 0.051437,
+        "gpu_assist_share": 0.059319,
+        "fan_per_cpu_w": 11.972176,
+        "source_sample_count": 3.599844,
+        "sample_progress_pct": 0.312248,
+        "elapsed_seconds": 24.343828,
+        "delta_seconds": 0.430283,
+        "cpu_package_delta_1": 6.234822,
+        "gpu_temp_delta_1": 3.396054,
+        "total_tracked_fan_rpm_delta_1": 325.007433,
+        "cpu_total_load_delta_1": 7.176335,
+        "rolling_cpu_package_avg_3": 8.07803,
+        "rolling_cpu_package_max_3": 9.041793,
+        "rolling_gpu_temp_avg_3": 13.555404,
+        "rolling_gpu_temp_max_3": 13.826068,
+        "rolling_total_tracked_fan_rpm_avg_3": 478.257171,
+        "rolling_total_tracked_fan_rpm_max_3": 497.548568,
+        "rolling_cpu_total_load_avg_3": 6.917864,
+        "rolling_cpu_total_load_max_3": 7.950798,
+        "cfg_auto_idle_temp_c": 1.002467,
+        "cfg_auto_min_speed_pct": 1.002467,
+        "cfg_auto_max_speed_pct": 1.002467,
+        "cfg_auto_load_temp_c": 1.603946,
+        "cfg_auto_uses_gpu_temp": 1.0,
+        "cfg_auto1_idle_temp_c": 1.603946,
+        "cfg_auto1_min_speed_pct": 1.002467,
+        "cfg_auto1_max_speed_pct": 1.603946,
+        "cfg_auto1_load_temp_c": 1.603946,
+        "cfg_auto1_uses_gpu_temp": 1.0,
+        "cfg_auto2_idle_temp_c": 2.40592,
+        "cfg_auto2_min_speed_pct": 1.0,
+        "cfg_auto2_max_speed_pct": 5.012333,
+        "cfg_auto2_load_temp_c": 1.20296,
+        "cfg_auto2_uses_gpu_temp": 0.200493,
+        "cfg_system_fan3_start_pct": 1.0,
+        "cfg_system_fan3_stop_pct": 1.0,
+        "cfg_system_fan4_start_pct": 1.0,
+        "cfg_system_fan4_stop_pct": 1.0
+      },
+      "hyperparameters": {
+        "alpha": 10.0,
+        "alpha_candidates": [
+          0.01,
+          0.1,
+          0.5,
+          1.0,
+          2.0,
+          5.0,
+          10.0
+        ]
+      },
+      "metrics": {
+        "training": {
+          "row_count": 143,
+          "mae": 2.054193,
+          "rmse": 3.377255,
+          "r2": 0.891049
+        },
+        "leave_one_source_out": {
+          "row_count": 143,
+          "mae": 3.403217,
+          "rmse": 6.105942,
+          "r2": 0.643869,
+          "fold_count": 11
+        }
+      },
+      "top_features": [
+        {
+          "feature": "vrm_mos_temp_c",
+          "weight": -1.931761
+        },
+        {
+          "feature": "total_tracked_fan_rpm",
+          "weight": -1.486097
+        },
+        {
+          "feature": "total_case_fan_rpm",
+          "weight": -1.47633
+        },
+        {
+          "feature": "system_fan4_rpm",
+          "weight": -1.397895
+        },
+        {
+          "feature": "cpu_package_c",
+          "weight": -1.341957
+        },
+        {
+          "feature": "cpu_soft_margin_c",
+          "weight": 1.341957
+        },
+        {
+          "feature": "cpu_fan_rpm",
+          "weight": -1.335393
+        },
+        {
+          "feature": "system_temp_c",
+          "weight": -1.267035
+        },
+        {
+          "feature": "system_fan2_rpm",
+          "weight": -1.266949
+        },
+        {
+          "feature": "source_sample_count",
+          "weight": 0.831883
+        },
+        {
+          "feature": "rolling_gpu_temp_avg_3",
+          "weight": -0.774458
+        },
+        {
+          "feature": "gpu_3d_util_pct",
+          "weight": 0.697656
+        }
+      ]
+    },
+    "random_forest": {
+      "name": "random_forest",
+      "model_type": "random_forest",
+      "target_key": "target_score",
+      "feature_names": [
+        "cpu_package_c",
+        "core_average_c",
+        "min_distance_to_tjmax_c",
+        "cpu_total_load_pct",
+        "cpu_core_max_load_pct",
+        "cpu_clock_avg_mhz",
+        "pcore_clock_avg_mhz",
+        "ecore_clock_avg_mhz",
+        "cpu_package_power_w",
+        "system_temp_c",
+        "vrm_mos_temp_c",
+        "pch_temp_c",
+        "gpu_temp_c",
+        "gpu_3d_util_pct",
+        "cpu_fan_rpm",
+        "system_fan2_rpm",
+        "system_fan3_rpm",
+        "system_fan4_rpm",
+        "total_case_fan_rpm",
+        "total_tracked_fan_rpm",
+        "cpu_soft_margin_c",
+        "gpu_soft_margin_c",
+        "tjmax_soft_margin_c",
+        "case_fan_share",
+        "gpu_assist_share",
+        "fan_per_cpu_w",
+        "source_sample_count",
+        "sample_progress_pct",
+        "elapsed_seconds",
+        "delta_seconds",
+        "cpu_package_delta_1",
+        "gpu_temp_delta_1",
+        "total_tracked_fan_rpm_delta_1",
+        "cpu_total_load_delta_1",
+        "rolling_cpu_package_avg_3",
+        "rolling_cpu_package_max_3",
+        "rolling_gpu_temp_avg_3",
+        "rolling_gpu_temp_max_3",
+        "rolling_total_tracked_fan_rpm_avg_3",
+        "rolling_total_tracked_fan_rpm_max_3",
+        "rolling_cpu_total_load_avg_3",
+        "rolling_cpu_total_load_max_3",
+        "cfg_auto_idle_temp_c",
+        "cfg_auto_min_speed_pct",
+        "cfg_auto_max_speed_pct",
+        "cfg_auto_load_temp_c",
+        "cfg_auto_uses_gpu_temp",
+        "cfg_auto1_idle_temp_c",
+        "cfg_auto1_min_speed_pct",
+        "cfg_auto1_max_speed_pct",
+        "cfg_auto1_load_temp_c",
+        "cfg_auto1_uses_gpu_temp",
+        "cfg_auto2_idle_temp_c",
+        "cfg_auto2_min_speed_pct",
+        "cfg_auto2_max_speed_pct",
+        "cfg_auto2_load_temp_c",
+        "cfg_auto2_uses_gpu_temp",
+        "cfg_system_fan3_start_pct",
+        "cfg_system_fan3_stop_pct",
+        "cfg_system_fan4_start_pct",
+        "cfg_system_fan4_stop_pct"
+      ],
+      "imputation_medians": {
+        "cpu_package_c": 67.0,
+        "core_average_c": 56.857143,
+        "min_distance_to_tjmax_c": 31.0,
+        "cpu_total_load_pct": 21.93,
+        "cpu_core_max_load_pct": 61.54,
+        "cpu_clock_avg_mhz": 4343.2,
+        "pcore_clock_avg_mhz": 5075.4,
+        "ecore_clock_avg_mhz": 3794.1,
+        "cpu_package_power_w": 73.607254,
+        "system_temp_c": 44.0,
+        "vrm_mos_temp_c": 48.5,
+        "pch_temp_c": 53.0,
+        "gpu_temp_c": 48.0,
+        "gpu_3d_util_pct": 19.5,
+        "cpu_fan_rpm": 1287.0,
+        "system_fan2_rpm": 1346.0,
+        "system_fan3_rpm": 0.0,
+        "system_fan4_rpm": 0.0,
+        "total_case_fan_rpm": 1348.0,
+        "total_tracked_fan_rpm": 2620.0,
+        "cpu_soft_margin_c": 18.0,
+        "gpu_soft_margin_c": 30.0,
+        "tjmax_soft_margin_c": 16.0,
+        "case_fan_share": 0.508517,
+        "gpu_assist_share": 0.0,
+        "fan_per_cpu_w": 31.084286,
+        "source_sample_count": 15.0,
+        "sample_progress_pct": 0.5,
+        "elapsed_seconds": 31.0,
+        "delta_seconds": 5.0,
+        "cpu_package_delta_1": 0.0,
+        "gpu_temp_delta_1": 0.0,
+        "total_tracked_fan_rpm_delta_1": 0.0,
+        "cpu_total_load_delta_1": 0.005,
+        "rolling_cpu_package_avg_3": 66.5,
+        "rolling_cpu_package_max_3": 70.0,
+        "rolling_gpu_temp_avg_3": 48.0,
+        "rolling_gpu_temp_max_3": 49.0,
+        "rolling_total_tracked_fan_rpm_avg_3": 2524.333333,
+        "rolling_total_tracked_fan_rpm_max_3": 2683.0,
+        "rolling_cpu_total_load_avg_3": 22.09,
+        "rolling_cpu_total_load_max_3": 26.56,
+        "cfg_auto_idle_temp_c": 40.0,
+        "cfg_auto_min_speed_pct": 25.0,
+        "cfg_auto_max_speed_pct": 85.0,
+        "cfg_auto_load_temp_c": 78.0,
+        "cfg_auto_uses_gpu_temp": 0.0,
+        "cfg_auto1_idle_temp_c": 48.0,
+        "cfg_auto1_min_speed_pct": 15.0,
+        "cfg_auto1_max_speed_pct": 72.0,
+        "cfg_auto1_load_temp_c": 78.0,
+        "cfg_auto1_uses_gpu_temp": 0.0,
+        "cfg_auto2_idle_temp_c": 62.0,
+        "cfg_auto2_min_speed_pct": 0.0,
+        "cfg_auto2_max_speed_pct": 55.0,
+        "cfg_auto2_load_temp_c": 74.0,
+        "cfg_auto2_uses_gpu_temp": 1.0,
+        "cfg_system_fan3_start_pct": 25.0,
+        "cfg_system_fan3_stop_pct": 16.0,
+        "cfg_system_fan4_start_pct": 22.0,
+        "cfg_system_fan4_stop_pct": 16.0
+      },
+      "trees": [
+        {
+          "type": "node",
+          "feature_index": 21,
+          "feature_name": "gpu_soft_margin_c",
+          "threshold": 0.5,
+          "left": {
+            "type": "leaf",
+            "value": 49.46528571428571
+          },
+          "right": {
+            "type": "node",
+            "feature_index": 18,
+            "feature_name": "total_case_fan_rpm",
+            "threshold": 953.5,
+            "left": {
+              "type": "node",
+              "feature_index": 1,
+              "feature_name": "core_average_c",
+              "threshold": 50.3571415,
+              "left": {
+                "type": "node",
+                "feature_index": 19,
+                "feature_name": "total_tracked_fan_rpm",
+                "threshold": 1305.0,
+                "left": {
+                  "type": "leaf",
+                  "value": 97.9135
+                },
+                "right": {
+                  "type": "leaf",
+                  "value": 95.384625
+                }
+              },
+              "right": {
+                "type": "node",
+                "feature_index": 19,
+                "feature_name": "total_tracked_fan_rpm",
+                "threshold": 1858.0,
+                "left": {
+                  "type": "node",
+                  "feature_index": 14,
+                  "feature_name": "cpu_fan_rpm",
+                  "threshold": 951.0,
+                  "left": {
+                    "type": "leaf",
+                    "value": 92.12166666666666
+                  },
+                  "right": {
+                    "type": "leaf",
+                    "value": 89.7428
+                  }
+                },
+                "right": {
+                  "type": "leaf",
+                  "value": 86.89025
+                }
+              }
+            },
+            "right": {
+              "type": "node",
+              "feature_index": 15,
+              "feature_name": "system_fan2_rpm",
+              "threshold": 1344.0,
+              "left": {
+                "type": "node",
+                "feature_index": 19,
+                "feature_name": "total_tracked_fan_rpm",
+                "threshold": 2370.0,
+                "left": {
+                  "type": "node",
+                  "feature_index": 33,
+                  "feature_name": "cpu_total_load_delta_1",
+                  "threshold": 4.49,
+                  "left": {
+                    "type": "leaf",
+                    "value": 85.21300000000001
+                  },
+                  "right": {
+                    "type": "leaf",
+                    "value": 82.13919999999999
+                  }
+                },
+                "right": {
+                  "type": "node",
+                  "feature_index": 27,
+                  "feature_name": "sample_progress_pct",
+                  "threshold": 0.664706,
+                  "left": {
+                    "type": "leaf",
+                    "value": 79.955
+                  },
+                  "right": {
+                    "type": "leaf",
+                    "value": 76.5555
+                  }
+                }
+              },
+              "right": {
+                "type": "node",
+                "feature_index": 22,
+                "feature_name": "tjmax_soft_margin_c",
+                "threshold": 7.5,
+                "left": {
+                  "type": "leaf",
+                  "value": 70.896125
+                },
+                "right": {
+                  "type": "node",
+                  "feature_index": 19,
+                  "feature_name": "total_tracked_fan_rpm",
+                  "threshold": 2528.5,
+                  "left": {
+                    "type": "leaf",
+                    "value": 81.94
+                  },
+                  "right": {
+                    "type": "leaf",
+                    "value": 76.83509374999998
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "node",
+          "feature_index": 12,
+          "feature_name": "gpu_temp_c",
+          "threshold": 77.5,
+          "left": {
+            "type": "node",
+            "feature_index": 15,
+            "feature_name": "system_fan2_rpm",
+            "threshold": 875.5,
+            "left": {
+              "type": "node",
+              "feature_index": 15,
+              "feature_name": "system_fan2_rpm",
+              "threshold": 614.0,
+              "left": {
+                "type": "node",
+                "feature_index": 22,
+                "feature_name": "tjmax_soft_margin_c",
+                "threshold": 35.5,
+                "left": {
+                  "type": "leaf",
+                  "value": 95.6384
+                },
+                "right": {
+                  "type": "leaf",
+                  "value": 98.7192
+                }
+              },
+              "right": {
+                "type": "node",
+                "feature_index": 32,
+                "feature_name": "total_tracked_fan_rpm_delta_1",
+                "threshold": 4.5,
+                "left": {
+                  "type": "leaf",
+                  "value": 91.79666666666667
+                },
+                "right": {
+                  "type": "node",
+                  "feature_index": 34,
+                  "feature_name": "rolling_cpu_package_avg_3",
+                  "threshold": 58.583333499999995,
+                  "left": {
+                    "type": "leaf",
+                    "value": 90.9995
+                  },
+                  "right": {
+                    "type": "leaf",
+                    "value": 89.091
+                  }
+                }
+              }
+            },
+            "right": {
+              "type": "node",
+              "feature_index": 15,
+              "feature_name": "system_fan2_rpm",
+              "threshold": 1363.0,
+              "left": {
+                "type": "node",
+                "feature_index": 14,
+                "feature_name": "cpu_fan_rpm",
+                "threshold": 1281.0,
+                "left": {
+                  "type": "node",
+                  "feature_index": 15,
+                  "feature_name": "system_fan2_rpm",
+                  "threshold": 1045.0,
+                  "left": {
+                    "type": "leaf",
+                    "value": 88.066
+                  },
+                  "right": {
+                    "type": "leaf",
+                    "value": 82.55904761904762
+                  }
+                },
+                "right": {
+                  "type": "node",
+                  "feature_index": 35,
+                  "feature_name": "rolling_cpu_package_max_3",
+                  "threshold": 78.0,
+                  "left": {
+                    "type": "leaf",
+                    "value": 78.55428571428573
+                  },
+                  "right": {
+                    "type": "leaf",
+                    "value": 76.45
+                  }
+                }
+              },
+              "right": {
+                "type": "node",
+                "feature_index": 0,
+                "feature_name": "cpu_package_c",
+                "threshold": 75.5,
+                "left": {
+                  "type": "node",
+                  "feature_index": 12,
+                  "feature_name": "gpu_temp_c",
+                  "threshold": 37.5,
+                  "left": {
+                    "type": "leaf",
+                    "value": 81.80825
+                  },
+                  "right": {
+                    "type": "leaf",
+                    "value": 76.63057142857143
+                  }
+                },
+                "right": {
+                  "type": "node",
+                  "feature_index": 35,
+                  "feature_name": "rolling_cpu_package_max_3",
+                  "threshold": 80.5,
+                  "left": {
+                    "type": "leaf",
+                    "value": 74.38783333333332
+                  },
+                  "right": {
+                    "type": "leaf",
+                    "value": 67.73625
+                  }
+                }
+              }
+            }
+          },
+          "right": {
+            "type": "node",
+            "feature_index": 2,
+            "feature_name": "min_distance_to_tjmax_c",
+            "threshold": 23.5,
+            "left": {
+              "type": "leaf",
+              "value": 52.950250000000004
+            },
+            "right": {
+              "type": "leaf",
+              "value": 49.87166666666667
+            }
+          }
+        },
+        {
+          "type": "node",
+          "feature_index": 12,
+          "feature_name": "gpu_temp_c",
+          "threshold": 77.5,
+          "left": {
+            "type": "node",
+            "feature_index": 15,
+            "feature_name": "system_fan2_rpm",
+            "threshold": 1145.0,
+            "left": {
+              "type": "node",
+              "feature_index": 19,
+              "feature_name": "total_tracked_fan_rpm",
+              "threshold": 1841.5,
+              "left": {
+                "type": "node",
+                "feature_index": 18,
+                "feature_name": "total_case_fan_rpm",
+                "threshold": 602.5,
+                "left": {
+                  "type": "node",
+                  "feature_index": 19,
+                  "feature_name": "total_tracked_fan_rpm",
+                  "threshold": 1306.0,
+                  "left": {
+                    "type": "leaf",
+                    "value": 98.38549999999998
+                  },
+                  "right": {
+                    "type": "leaf",
+                    "value": 95.7189
+                  }
+                },
+                "right": {
+                  "type": "node",
+                  "feature_index": 14,
+                  "feature_name": "cpu_fan_rpm",
+                  "threshold": 919.5,
+                  "left": {
+                    "type": "leaf",
+                    "value": 92.64377777777776
+                  },
+                  "right": {
+                    "type": "leaf",
+                    "value": 90.66675
+                  }
+                }
+              },
+              "right": {
+                "type": "node",
+                "feature_index": 18,
+                "feature_name": "total_case_fan_rpm",
+                "threshold": 1093.0,
+                "left": {
+                  "type": "leaf",
+                  "value": 86.91437499999999
+                },
+                "right": {
+                  "type": "leaf",
+                  "value": 78.76625000000001
+                }
+              }
+            },
+            "right": {
+              "type": "node",
+              "feature_index": 39,
+              "feature_name": "rolling_total_tracked_fan_rpm_max_3",
+              "threshold": 2669.0,
+              "left": {
+                "type": "node",
+                "feature_index": 25,
+                "feature_name": "fan_per_cpu_w",
+                "threshold": 26.005493,
+                "left": {
+                  "type": "leaf",
+                  "value": 83.10625
+                },
+                "right": {
+                  "type": "node",
+                  "feature_index": 30,
+                  "feature_name": "cpu_package_delta_1",
+                  "threshold": -5.5,
+                  "left": {
+                    "type": "leaf",
+                    "value": 82.0325
+                  },
+                  "right": {
+                    "type": "leaf",
+                    "value": 80.65885714285716
+                  }
+                }
+              },
+              "right": {
+                "type": "node",
+                "feature_index": 9,
+                "feature_name": "system_temp_c",
+                "threshold": 51.0,
+                "left": {
+                  "type": "node",
+                  "feature_index": 15,
+                  "feature_name": "system_fan2_rpm",
+                  "threshold": 1387.5,
+                  "left": {
+                    "type": "leaf",
+                    "value": 78.52714999999998
+                  },
+                  "right": {
+                    "type": "leaf",
+                    "value": 76.11580000000001
+                  }
+                },
+                "right": {
+                  "type": "leaf",
+                  "value": 70.17125
+                }
+              }
+            }
+          },
+          "right": {
+            "type": "node",
+            "feature_index": 20,
+            "feature_name": "cpu_soft_margin_c",
+            "threshold": 10.5,
+            "left": {
+              "type": "leaf",
+              "value": 46.246
+            },
+            "right": {
+              "type": "leaf",
+              "value": 54.6308
+            }
+          }
+        },
+        {
+          "type": "node",
+          "feature_index": 12,
+          "feature_name": "gpu_temp_c",
+          "threshold": 77.5,
+          "left": {
+            "type": "node",
+            "feature_index": 19,
+            "feature_name": "total_tracked_fan_rpm",
+            "threshold": 1910.0,
+            "left": {
+              "type": "node",
+              "feature_index": 38,
+              "feature_name": "rolling_total_tracked_fan_rpm_avg_3",
+              "threshold": 1481.6666665,
+              "left": {
+                "type": "node",
+                "feature_index": 1,
+                "feature_name": "core_average_c",
+                "threshold": 47.0357135,
+                "left": {
+                  "type": "leaf",
+                  "value": 98.399
+                },
+                "right": {
+                  "type": "leaf",
+                  "value": 96.168
+                }
+              },
+              "right": {
+                "type": "node",
+                "feature_index": 34,
+                "feature_name": "rolling_cpu_package_avg_3",
+                "threshold": 57.0,
+                "left": {
+                  "type": "leaf",
+                  "value": 92.45842857142858
+                },
+                "right": {
+                  "type": "node",
+                  "feature_index": 19,
+                  "feature_name": "total_tracked_fan_rpm",
+                  "threshold": 1745.5,
+                  "left": {
+                    "type": "leaf",
+                    "value": 91.5952
+                  },
+                  "right": {
+                    "type": "leaf",
+                    "value": 89.58180000000002
+                  }
+                }
+              }
+            },
+            "right": {
+              "type": "node",
+              "feature_index": 14,
+              "feature_name": "cpu_fan_rpm",
+              "threshold": 1285.5,
+              "left": {
+                "type": "node",
+                "feature_index": 14,
+                "feature_name": "cpu_fan_rpm",
+                "threshold": 1017.0,
+                "left": {
+                  "type": "leaf",
+                  "value": 85.702
+                },
+                "right": {
+                  "type": "node",
+                  "feature_index": 19,
+                  "feature_name": "total_tracked_fan_rpm",
+                  "threshold": 2452.0,
+                  "left": {
+                    "type": "leaf",
+                    "value": 82.0892857142857
+                  },
+                  "right": {
+                    "type": "leaf",
+                    "value": 79.5975
+                  }
+                }
+              },
+              "right": {
+                "type": "node",
+                "feature_index": 0,
+                "feature_name": "cpu_package_c",
+                "threshold": 75.5,
+                "left": {
+                  "type": "node",
+                  "feature_index": 19,
+                  "feature_name": "total_tracked_fan_rpm",
+                  "threshold": 2669.0,
+                  "left": {
+                    "type": "leaf",
+                    "value": 78.92311111111111
+                  },
+                  "right": {
+                    "type": "leaf",
+                    "value": 76.87407999999999
+                  }
+                },
+                "right": {
+                  "type": "node",
+                  "feature_index": 30,
+                  "feature_name": "cpu_package_delta_1",
+                  "threshold": 4.5,
+                  "left": {
+                    "type": "leaf",
+                    "value": 74.41383333333333
+                  },
+                  "right": {
+                    "type": "leaf",
+                    "value": 71.92460000000001
+                  }
+                }
+              }
+            }
+          },
+          "right": {
+            "type": "leaf",
+            "value": 43.67975
+          }
+        },
+        {
+          "type": "node",
+          "feature_index": 18,
+          "feature_name": "total_case_fan_rpm",
+          "threshold": 1018.5,
+          "left": {
+            "type": "node",
+            "feature_index": 10,
+            "feature_name": "vrm_mos_temp_c",
+            "threshold": 44.75,
+            "left": {
+              "type": "node",
+              "feature_index": 19,
+              "feature_name": "total_tracked_fan_rpm",
+              "threshold": 1306.0,
+              "left": {
+                "type": "node",
+                "feature_index": 33,
+                "feature_name": "cpu_total_load_delta_1",
+                "threshold": -0.7725000000000001,
+                "left": {
+                  "type": "leaf",
+                  "value": 99.53199999999998
+                },
+                "right": {
+                  "type": "leaf",
+                  "value": 97.15079999999999
+                }
+              },
+              "right": {
+                "type": "leaf",
+                "value": 93.273
+              }
+            },
+            "right": {
+              "type": "node",
+              "feature_index": 15,
+              "feature_name": "system_fan2_rpm",
+              "threshold": 798.5,
+              "left": {
+                "type": "leaf",
+                "value": 91.944
+              },
+              "right": {
+                "type": "node",
+                "feature_index": 2,
+                "feature_name": "min_distance_to_tjmax_c",
+                "threshold": 37.5,
+                "left": {
+                  "type": "leaf",
+                  "value": 86.83725000000001
+                },
+                "right": {
+                  "type": "leaf",
+                  "value": 89.04939999999999
+                }
+              }
+            }
+          },
+          "right": {
+            "type": "node",
+            "feature_index": 21,
+            "feature_name": "gpu_soft_margin_c",
+            "threshold": 0.5,
+            "left": {
+              "type": "leaf",
+              "value": 51.6678
+            },
+            "right": {
+              "type": "node",
+              "feature_index": 14,
+              "feature_name": "cpu_fan_rpm",
+              "threshold": 1278.0,
+              "left": {
+                "type": "node",
+                "feature_index": 19,
+                "feature_name": "total_tracked_fan_rpm",
+                "threshold": 2456.0,
+                "left": {
+                  "type": "node",
+                  "feature_index": 19,
+                  "feature_name": "total_tracked_fan_rpm",
+                  "threshold": 2252.0,
+                  "left": {
+                    "type": "leaf",
+                    "value": 84.85199999999999
+                  },
+                  "right": {
+                    "type": "leaf",
+                    "value": 81.7714
+                  }
+                },
+                "right": {
+                  "type": "node",
+                  "feature_index": 9,
+                  "feature_name": "system_temp_c",
+                  "threshold": 46.75,
+                  "left": {
+                    "type": "leaf",
+                    "value": 78.54983333333332
+                  },
+                  "right": {
+                    "type": "leaf",
+                    "value": 80.14783333333334
+                  }
+                }
+              },
+              "right": {
+                "type": "node",
+                "feature_index": 35,
+                "feature_name": "rolling_cpu_package_max_3",
+                "threshold": 79.5,
+                "left": {
+                  "type": "node",
+                  "feature_index": 18,
+                  "feature_name": "total_case_fan_rpm",
+                  "threshold": 1353.0,
+                  "left": {
+                    "type": "leaf",
+                    "value": 78.622375
+                  },
+                  "right": {
+                    "type": "leaf",
+                    "value": 76.7528611111111
+                  }
+                },
+                "right": {
+                  "type": "node",
+                  "feature_index": 0,
+                  "feature_name": "cpu_package_c",
+                  "threshold": 78.0,
+                  "left": {
+                    "type": "leaf",
+                    "value": 73.19624999999999
+                  },
+                  "right": {
+                    "type": "leaf",
+                    "value": 68.06033333333333
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "node",
+          "feature_index": 18,
+          "feature_name": "total_case_fan_rpm",
+          "threshold": 983.0,
+          "left": {
+            "type": "node",
+            "feature_index": 15,
+            "feature_name": "system_fan2_rpm",
+            "threshold": 679.5,
+            "left": {
+              "type": "node",
+              "feature_index": 19,
+              "feature_name": "total_tracked_fan_rpm",
+              "threshold": 1318.0,
+              "left": {
+                "type": "leaf",
+                "value": 97.88014285714287
+              },
+              "right": {
+                "type": "leaf",
+                "value": 94.45049999999999
+              }
+            },
+            "right": {
+              "type": "node",
+              "feature_index": 27,
+              "feature_name": "sample_progress_pct",
+              "threshold": 0.4666665,
+              "left": {
+                "type": "node",
+                "feature_index": 27,
+                "feature_name": "sample_progress_pct",
+                "threshold": 0.1333335,
+                "left": {
+                  "type": "leaf",
+                  "value": 90.06412500000002
+                },
+                "right": {
+                  "type": "leaf",
+                  "value": 87.96525
+                }
+              },
+              "right": {
+                "type": "leaf",
+                "value": 92.0034
+              }
+            }
+          },
+          "right": {
+            "type": "node",
+            "feature_index": 12,
+            "feature_name": "gpu_temp_c",
+            "threshold": 77.5,
+            "left": {
+              "type": "node",
+              "feature_index": 20,
+              "feature_name": "cpu_soft_margin_c",
+              "threshold": 7.5,
+              "left": {
+                "type": "leaf",
+                "value": 69.67271428571428
+              },
+              "right": {
+                "type": "node",
+                "feature_index": 18,
+                "feature_name": "total_case_fan_rpm",
+                "threshold": 1339.0,
+                "left": {
+                  "type": "node",
+                  "feature_index": 19,
+                  "feature_name": "total_tracked_fan_rpm",
+                  "threshold": 2252.0,
+                  "left": {
+                    "type": "leaf",
+                    "value": 85.46228571428571
+                  },
+                  "right": {
+                    "type": "leaf",
+                    "value": 80.3826
+                  }
+                },
+                "right": {
+                  "type": "node",
+                  "feature_index": 12,
+                  "feature_name": "gpu_temp_c",
+                  "threshold": 37.5,
+                  "left": {
+                    "type": "leaf",
+                    "value": 81.96325
+                  },
+                  "right": {
+                    "type": "leaf",
+                    "value": 76.74770454545454
+                  }
+                }
+              }
+            },
+            "right": {
+              "type": "leaf",
+              "value": 52.74583333333334
+            }
+          }
+        },
+        {
+          "type": "node",
+          "feature_index": 19,
+          "feature_name": "total_tracked_fan_rpm",
+          "threshold": 2071.5,
+          "left": {
+            "type": "node",
+            "feature_index": 18,
+            "feature_name": "total_case_fan_rpm",
+            "threshold": 614.0,
+            "left": {
+              "type": "node",
+              "feature_index": 18,
+              "feature_name": "total_case_fan_rpm",
+              "threshold": 453.0,
+              "left": {
+                "type": "leaf",
+                "value": 99.03774999999999
+              },
+              "right": {
+                "type": "leaf",
+                "value": 95.596
+              }
+            },
+            "right": {
+              "type": "node",
+              "feature_index": 15,
+              "feature_name": "system_fan2_rpm",
+              "threshold": 740.5,
+              "left": {
+                "type": "node",
+                "feature_index": 14,
+                "feature_name": "cpu_fan_rpm",
+                "threshold": 867.0,
+                "left": {
+                  "type": "leaf",
+                  "value": 93.2688
+                },
+                "right": {
+                  "type": "leaf",
+                  "value": 92.6105
+                }
+              },
+              "right": {
+                "type": "node",
+                "feature_index": 18,
+                "feature_name": "total_case_fan_rpm",
+                "threshold": 852.0,
+                "left": {
+                  "type": "node",
+                  "feature_index": 41,
+                  "feature_name": "rolling_cpu_total_load_max_3",
+                  "threshold": 20.045,
+                  "left": {
+                    "type": "leaf",
+                    "value": 89.54025
+                  },
+                  "right": {
+                    "type": "leaf",
+                    "value": 90.60242857142858
+                  }
+                },
+                "right": {
+                  "type": "leaf",
+                  "value": 87.84333333333332
+                }
+              }
+            }
+          },
+          "right": {
+            "type": "node",
+            "feature_index": 10,
+            "feature_name": "vrm_mos_temp_c",
+            "threshold": 53.25,
+            "left": {
+              "type": "node",
+              "feature_index": 14,
+              "feature_name": "cpu_fan_rpm",
+              "threshold": 1285.5,
+              "left": {
+                "type": "node",
+                "feature_index": 19,
+                "feature_name": "total_tracked_fan_rpm",
+                "threshold": 2431.0,
+                "left": {
+                  "type": "node",
+                  "feature_index": 32,
+                  "feature_name": "total_tracked_fan_rpm_delta_1",
+                  "threshold": -127.5,
+                  "left": {
+                    "type": "leaf",
+                    "value": 83.50066666666667
+                  },
+                  "right": {
+                    "type": "leaf",
+                    "value": 82.17219999999999
+                  }
+                },
+                "right": {
+                  "type": "node",
+                  "feature_index": 27,
+                  "feature_name": "sample_progress_pct",
+                  "threshold": 0.330769,
+                  "left": {
+                    "type": "leaf",
+                    "value": 78.706
+                  },
+                  "right": {
+                    "type": "leaf",
+                    "value": 80.6104
+                  }
+                }
+              },
+              "right": {
+                "type": "node",
+                "feature_index": 0,
+                "feature_name": "cpu_package_c",
+                "threshold": 76.5,
+                "left": {
+                  "type": "node",
+                  "feature_index": 18,
+                  "feature_name": "total_case_fan_rpm",
+                  "threshold": 1397.0,
+                  "left": {
+                    "type": "leaf",
+                    "value": 78.50366666666667
+                  },
+                  "right": {
+                    "type": "leaf",
+                    "value": 76.50469565217392
+                  }
+                },
+                "right": {
+                  "type": "leaf",
+                  "value": 72.99428571428571
+                }
+              }
+            },
+            "right": {
+              "type": "node",
+              "feature_index": 21,
+              "feature_name": "gpu_soft_margin_c",
+              "threshold": 0.5,
+              "left": {
+                "type": "leaf",
+                "value": 52.4898
+              },
+              "right": {
+                "type": "leaf",
+                "value": 71.642
+              }
+            }
+          }
+        },
+        {
+          "type": "node",
+          "feature_index": 37,
+          "feature_name": "rolling_gpu_temp_max_3",
+          "threshold": 77.5,
+          "left": {
+            "type": "node",
+            "feature_index": 18,
+            "feature_name": "total_case_fan_rpm",
+            "threshold": 1113.5,
+            "left": {
+              "type": "node",
+              "feature_index": 18,
+              "feature_name": "total_case_fan_rpm",
+              "threshold": 744.5,
+              "left": {
+                "type": "node",
+                "feature_index": 38,
+                "feature_name": "rolling_total_tracked_fan_rpm_avg_3",
+                "threshold": 1410.0,
+                "left": {
+                  "type": "leaf",
+                  "value": 96.49937499999999
+                },
+                "right": {
+                  "type": "leaf",
+                  "value": 93.02725000000001
+                }
+              },
+              "right": {
+                "type": "node",
+                "feature_index": 18,
+                "feature_name": "total_case_fan_rpm",
+                "threshold": 918.5,
+                "left": {
+                  "type": "node",
+                  "feature_index": 39,
+                  "feature_name": "rolling_total_tracked_fan_rpm_max_3",
+                  "threshold": 1846.0,
+                  "left": {
+                    "type": "leaf",
+                    "value": 90.488
+                  },
+                  "right": {
+                    "type": "leaf",
+                    "value": 88.74985714285715
+                  }
+                },
+                "right": {
+                  "type": "node",
+                  "feature_index": 9,
+                  "feature_name": "system_temp_c",
+                  "threshold": 44.5,
+                  "left": {
+                    "type": "leaf",
+                    "value": 85.8524
+                  },
+                  "right": {
+                    "type": "leaf",
+                    "value": 83.32675
+                  }
+                }
+              }
+            },
+            "right": {
+              "type": "node",
+              "feature_index": 15,
+              "feature_name": "system_fan2_rpm",
+              "threshold": 1386.0,
+              "left": {
+                "type": "node",
+                "feature_index": 19,
+                "feature_name": "total_tracked_fan_rpm",
+                "threshold": 2567.5,
+                "left": {
+                  "type": "node",
+                  "feature_index": 14,
+                  "feature_name": "cpu_fan_rpm",
+                  "threshold": 1151.0,
+                  "left": {
+                    "type": "leaf",
+                    "value": 82.3355
+                  },
+                  "right": {
+                    "type": "leaf",
+                    "value": 80.761
+                  }
+                },
+                "right": {
+                  "type": "node",
+                  "feature_index": 32,
+                  "feature_name": "total_tracked_fan_rpm_delta_1",
+                  "threshold": 125.0,
+                  "left": {
+                    "type": "leaf",
+                    "value": 78.88950000000001
+                  },
+                  "right": {
+                    "type": "leaf",
+                    "value": 76.4072
+                  }
+                }
+              },
+              "right": {
+                "type": "node",
+                "feature_index": 34,
+                "feature_name": "rolling_cpu_package_avg_3",
+                "threshold": 76.33333350000001,
+                "left": {
+                  "type": "node",
+                  "feature_index": 1,
+                  "feature_name": "core_average_c",
+                  "threshold": 61.642857,
+                  "left": {
+                    "type": "leaf",
+                    "value": 76.73928571428571
+                  },
+                  "right": {
+                    "type": "leaf",
+                    "value": 75.6398
+                  }
+                },
+                "right": {
+                  "type": "leaf",
+                  "value": 73.8248
+                }
+              }
+            }
+          },
+          "right": {
+            "type": "node",
+            "feature_index": 33,
+            "feature_name": "cpu_total_load_delta_1",
+            "threshold": -0.71,
+            "left": {
+              "type": "leaf",
+              "value": 40.002
+            },
+            "right": {
+              "type": "node",
+              "feature_index": 12,
+              "feature_name": "gpu_temp_c",
+              "threshold": 77.5,
+              "left": {
+                "type": "leaf",
+                "value": 66.5144
+              },
+              "right": {
+                "type": "leaf",
+                "value": 53.9096
+              }
+            }
+          }
+        },
+        {
+          "type": "node",
+          "feature_index": 18,
+          "feature_name": "total_case_fan_rpm",
+          "threshold": 983.0,
+          "left": {
+            "type": "node",
+            "feature_index": 15,
+            "feature_name": "system_fan2_rpm",
+            "threshold": 814.5,
+            "left": {
+              "type": "node",
+              "feature_index": 15,
+              "feature_name": "system_fan2_rpm",
+              "threshold": 635.5,
+              "left": {
+                "type": "leaf",
+                "value": 95.99028571428572
+              },
+              "right": {
+                "type": "node",
+                "feature_index": 14,
+                "feature_name": "cpu_fan_rpm",
+                "threshold": 933.5,
+                "left": {
+                  "type": "node",
+                  "feature_index": 32,
+                  "feature_name": "total_tracked_fan_rpm_delta_1",
+                  "threshold": -170.5,
+                  "left": {
+                    "type": "leaf",
+                    "value": 92.41460000000001
+                  },
+                  "right": {
+                    "type": "leaf",
+                    "value": 91.86250000000001
+                  }
+                },
+                "right": {
+                  "type": "leaf",
+                  "value": 90.19800000000002
+                }
+              }
+            },
+            "right": {
+              "type": "node",
+              "feature_index": 14,
+              "feature_name": "cpu_fan_rpm",
+              "threshold": 1050.0,
+              "left": {
+                "type": "leaf",
+                "value": 88.94659999999999
+              },
+              "right": {
+                "type": "leaf",
+                "value": 84.34899999999999
+              }
+            }
+          },
+          "right": {
+            "type": "node",
+            "feature_index": 37,
+            "feature_name": "rolling_gpu_temp_max_3",
+            "threshold": 77.5,
+            "left": {
+              "type": "node",
+              "feature_index": 18,
+              "feature_name": "total_case_fan_rpm",
+              "threshold": 1359.5,
+              "left": {
+                "type": "node",
+                "feature_index": 19,
+                "feature_name": "total_tracked_fan_rpm",
+                "threshold": 2470.0,
+                "left": {
+                  "type": "node",
+                  "feature_index": 19,
+                  "feature_name": "total_tracked_fan_rpm",
+                  "threshold": 2267.0,
+                  "left": {
+                    "type": "leaf",
+                    "value": 85.58125000000001
+                  },
+                  "right": {
+                    "type": "leaf",
+                    "value": 82.35333333333332
+                  }
+                },
+                "right": {
+                  "type": "node",
+                  "feature_index": 14,
+                  "feature_name": "cpu_fan_rpm",
+                  "threshold": 1322.5,
+                  "left": {
+                    "type": "leaf",
+                    "value": 78.901625
+                  },
+                  "right": {
+                    "type": "leaf",
+                    "value": 77.8345
+                  }
+                }
+              },
+              "right": {
+                "type": "node",
+                "feature_index": 0,
+                "feature_name": "cpu_package_c",
+                "threshold": 76.5,
+                "left": {
+                  "type": "node",
+                  "feature_index": 37,
+                  "feature_name": "rolling_gpu_temp_max_3",
+                  "threshold": 72.5,
+                  "left": {
+                    "type": "leaf",
+                    "value": 77.28582142857144
+                  },
+                  "right": {
+                    "type": "leaf",
+                    "value": 74.47375
+                  }
+                },
+                "right": {
+                  "type": "leaf",
+                  "value": 71.5298
+                }
+              }
+            },
+            "right": {
+              "type": "leaf",
+              "value": 61.668
+            }
+          }
+        },
+        {
+          "type": "node",
+          "feature_index": 21,
+          "feature_name": "gpu_soft_margin_c",
+          "threshold": 0.5,
+          "left": {
+            "type": "leaf",
+            "value": 51.486999999999995
+          },
+          "right": {
+            "type": "node",
+            "feature_index": 15,
+            "feature_name": "system_fan2_rpm",
+            "threshold": 999.5,
+            "left": {
+              "type": "node",
+              "feature_index": 18,
+              "feature_name": "total_case_fan_rpm",
+              "threshold": 720.0,
+              "left": {
+                "type": "node",
+                "feature_index": 19,
+                "feature_name": "total_tracked_fan_rpm",
+                "threshold": 1371.0,
+                "left": {
+                  "type": "node",
+                  "feature_index": 1,
+                  "feature_name": "core_average_c",
+                  "threshold": 48.8928585,
+                  "left": {
+                    "type": "leaf",
+                    "value": 98.23724999999999
+                  },
+                  "right": {
+                    "type": "leaf",
+                    "value": 96.08
+                  }
+                },
+                "right": {
+                  "type": "leaf",
+                  "value": 93.91166666666668
+                }
+              },
+              "right": {
+                "type": "node",
+                "feature_index": 15,
+                "feature_name": "system_fan2_rpm",
+                "threshold": 885.5,
+                "left": {
+                  "type": "node",
+                  "feature_index": 15,
+                  "feature_name": "system_fan2_rpm",
+                  "threshold": 794.0,
+                  "left": {
+                    "type": "leaf",
+                    "value": 91.54220000000001
+                  },
+                  "right": {
+                    "type": "leaf",
+                    "value": 89.9136
+                  }
+                },
+                "right": {
+                  "type": "leaf",
+                  "value": 85.68140000000001
+                }
+              }
+            },
+            "right": {
+              "type": "node",
+              "feature_index": 18,
+              "feature_name": "total_case_fan_rpm",
+              "threshold": 1378.5,
+              "left": {
+                "type": "node",
+                "feature_index": 19,
+                "feature_name": "total_tracked_fan_rpm",
+                "threshold": 2346.5,
+                "left": {
+                  "type": "node",
+                  "feature_index": 27,
+                  "feature_name": "sample_progress_pct",
+                  "threshold": 0.6583330000000001,
+                  "left": {
+                    "type": "leaf",
+                    "value": 86.63766666666668
+                  },
+                  "right": {
+                    "type": "leaf",
+                    "value": 83.68583333333332
+                  }
+                },
+                "right": {
+                  "type": "node",
+                  "feature_index": 19,
+                  "feature_name": "total_tracked_fan_rpm",
+                  "threshold": 2509.5,
+                  "left": {
+                    "type": "leaf",
+                    "value": 81.6685
+                  },
+                  "right": {
+                    "type": "leaf",
+                    "value": 79.23299999999999
+                  }
+                }
+              },
+              "right": {
+                "type": "node",
+                "feature_index": 11,
+                "feature_name": "pch_temp_c",
+                "threshold": 55.5,
+                "left": {
+                  "type": "node",
+                  "feature_index": 0,
+                  "feature_name": "cpu_package_c",
+                  "threshold": 76.5,
+                  "left": {
+                    "type": "leaf",
+                    "value": 77.06966666666662
+                  },
+                  "right": {
+                    "type": "leaf",
+                    "value": 73.36659999999999
+                  }
+                },
+                "right": {
+                  "type": "leaf",
+                  "value": 72.9188
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "node",
+          "feature_index": 37,
+          "feature_name": "rolling_gpu_temp_max_3",
+          "threshold": 77.5,
+          "left": {
+            "type": "node",
+            "feature_index": 18,
+            "feature_name": "total_case_fan_rpm",
+            "threshold": 1038.5,
+            "left": {
+              "type": "node",
+              "feature_index": 19,
+              "feature_name": "total_tracked_fan_rpm",
+              "threshold": 1639.5,
+              "left": {
+                "type": "leaf",
+                "value": 95.476375
+              },
+              "right": {
+                "type": "node",
+                "feature_index": 15,
+                "feature_name": "system_fan2_rpm",
+                "threshold": 832.5,
+                "left": {
+                  "type": "node",
+                  "feature_index": 19,
+                  "feature_name": "total_tracked_fan_rpm",
+                  "threshold": 1708.5,
+                  "left": {
+                    "type": "leaf",
+                    "value": 91.60300000000001
+                  },
+                  "right": {
+                    "type": "leaf",
+                    "value": 90.06400000000001
+                  }
+                },
+                "right": {
+                  "type": "leaf",
+                  "value": 87.756125
+                }
+              }
+            },
+            "right": {
+              "type": "node",
+              "feature_index": 14,
+              "feature_name": "cpu_fan_rpm",
+              "threshold": 1280.0,
+              "left": {
+                "type": "node",
+                "feature_index": 27,
+                "feature_name": "sample_progress_pct",
+                "threshold": 0.5269604999999999,
+                "left": {
+                  "type": "node",
+                  "feature_index": 19,
+                  "feature_name": "total_tracked_fan_rpm",
+                  "threshold": 2456.0,
+                  "left": {
+                    "type": "leaf",
+                    "value": 81.42824999999999
+                  },
+                  "right": {
+                    "type": "leaf",
+                    "value": 79.02925
+                  }
+                },
+                "right": {
+                  "type": "node",
+                  "feature_index": 13,
+                  "feature_name": "gpu_3d_util_pct",
+                  "threshold": 17.1,
+                  "left": {
+                    "type": "leaf",
+                    "value": 85.399
+                  },
+                  "right": {
+                    "type": "leaf",
+                    "value": 82.45166666666665
+                  }
+                }
+              },
+              "right": {
+                "type": "node",
+                "feature_index": 35,
+                "feature_name": "rolling_cpu_package_max_3",
+                "threshold": 78.0,
+                "left": {
+                  "type": "node",
+                  "feature_index": 19,
+                  "feature_name": "total_tracked_fan_rpm",
+                  "threshold": 2737.0,
+                  "left": {
+                    "type": "leaf",
+                    "value": 78.31400000000001
+                  },
+                  "right": {
+                    "type": "leaf",
+                    "value": 76.61519047619046
+                  }
+                },
+                "right": {
+                  "type": "node",
+                  "feature_index": 27,
+                  "feature_name": "sample_progress_pct",
+                  "threshold": 0.8214285,
+                  "left": {
+                    "type": "leaf",
+                    "value": 71.3288
+                  },
+                  "right": {
+                    "type": "leaf",
+                    "value": 75.77671428571429
+                  }
+                }
+              }
+            }
+          },
+          "right": {
+            "type": "node",
+            "feature_index": 23,
+            "feature_name": "case_fan_share",
+            "threshold": 0.515962,
+            "left": {
+              "type": "leaf",
+              "value": 61.8796
+            },
+            "right": {
+              "type": "leaf",
+              "value": 52.950250000000004
+            }
+          }
+        },
+        {
+          "type": "node",
+          "feature_index": 39,
+          "feature_name": "rolling_total_tracked_fan_rpm_max_3",
+          "threshold": 2123.0,
+          "left": {
+            "type": "node",
+            "feature_index": 38,
+            "feature_name": "rolling_total_tracked_fan_rpm_avg_3",
+            "threshold": 1594.8333335,
+            "left": {
+              "type": "node",
+              "feature_index": 14,
+              "feature_name": "cpu_fan_rpm",
+              "threshold": 791.0,
+              "left": {
+                "type": "leaf",
+                "value": 97.84525
+              },
+              "right": {
+                "type": "leaf",
+                "value": 93.7404
+              }
+            },
+            "right": {
+              "type": "node",
+              "feature_index": 18,
+              "feature_name": "total_case_fan_rpm",
+              "threshold": 791.5,
+              "left": {
+                "type": "node",
+                "feature_index": 14,
+                "feature_name": "cpu_fan_rpm",
+                "threshold": 922.5,
+                "left": {
+                  "type": "leaf",
+                  "value": 92.0986
+                },
+                "right": {
+                  "type": "leaf",
+                  "value": 91.0336
+                }
+              },
+              "right": {
+                "type": "node",
+                "feature_index": 38,
+                "feature_name": "rolling_total_tracked_fan_rpm_avg_3",
+                "threshold": 1839.6666665,
+                "left": {
+                  "type": "leaf",
+                  "value": 89.97862500000001
+                },
+                "right": {
+                  "type": "leaf",
+                  "value": 88.34400000000001
+                }
+              }
+            }
+          },
+          "right": {
+            "type": "node",
+            "feature_index": 37,
+            "feature_name": "rolling_gpu_temp_max_3",
+            "threshold": 77.5,
+            "left": {
+              "type": "node",
+              "feature_index": 18,
+              "feature_name": "total_case_fan_rpm",
+              "threshold": 1333.5,
+              "left": {
+                "type": "node",
+                "feature_index": 14,
+                "feature_name": "cpu_fan_rpm",
+                "threshold": 1105.0,
+                "left": {
+                  "type": "node",
+                  "feature_index": 15,
+                  "feature_name": "system_fan2_rpm",
+                  "threshold": 1040.0,
+                  "left": {
+                    "type": "leaf",
+                    "value": 87.01525
+                  },
+                  "right": {
+                    "type": "leaf",
+                    "value": 84.1031111111111
+                  }
+                },
+                "right": {
+                  "type": "node",
+                  "feature_index": 19,
+                  "feature_name": "total_tracked_fan_rpm",
+                  "threshold": 2470.0,
+                  "left": {
+                    "type": "leaf",
+                    "value": 81.82373333333334
+                  },
+                  "right": {
+                    "type": "leaf",
+                    "value": 78.67557142857143
+                  }
+                }
+              },
+              "right": {
+                "type": "node",
+                "feature_index": 19,
+                "feature_name": "total_tracked_fan_rpm",
+                "threshold": 2567.5,
+                "left": {
+                  "type": "leaf",
+                  "value": 81.7226
+                },
+                "right": {
+                  "type": "node",
+                  "feature_index": 20,
+                  "feature_name": "cpu_soft_margin_c",
+                  "threshold": 10.0,
+                  "left": {
+                    "type": "leaf",
+                    "value": 72.4854
+                  },
+                  "right": {
+                    "type": "leaf",
+                    "value": 76.91467647058823
+                  }
+                }
+              }
+            },
+            "right": {
+              "type": "leaf",
+              "value": 48.003400000000006
+            }
+          }
+        }
+      ],
+      "hyperparameters": {
+        "tree_count": 12,
+        "max_depth": 5,
+        "min_leaf_size": 4,
+        "feature_fraction": 0.35,
+        "row_fraction": 0.8,
+        "random_seed": 42
+      },
+      "metrics": {
+        "training": {
+          "row_count": 143,
+          "mae": 0.948275,
+          "rmse": 2.095602,
+          "r2": 0.958051
+        },
+        "leave_one_source_out": {
+          "row_count": 143,
+          "mae": 2.761453,
+          "rmse": 6.453033,
+          "r2": 0.60223,
+          "fold_count": 11
+        }
+      },
+      "top_features": [
+        {
+          "feature": "total_tracked_fan_rpm",
+          "weight": 29
+        },
+        {
+          "feature": "total_case_fan_rpm",
+          "weight": 21
+        },
+        {
+          "feature": "system_fan2_rpm",
+          "weight": 18
+        },
+        {
+          "feature": "cpu_fan_rpm",
+          "weight": 16
+        },
+        {
+          "feature": "sample_progress_pct",
+          "weight": 7
+        },
+        {
+          "feature": "gpu_temp_c",
+          "weight": 7
+        },
+        {
+          "feature": "cpu_package_c",
+          "weight": 6
+        },
+        {
+          "feature": "rolling_gpu_temp_max_3",
+          "weight": 5
+        },
+        {
+          "feature": "gpu_soft_margin_c",
+          "weight": 4
+        },
+        {
+          "feature": "core_average_c",
+          "weight": 4
+        },
+        {
+          "feature": "total_tracked_fan_rpm_delta_1",
+          "weight": 4
+        },
+        {
+          "feature": "rolling_cpu_package_max_3",
+          "weight": 4
+        }
+      ]
+    }
+  },
+  "selected_model": {
+    "name": "ridge_cv",
+    "model_type": "ridge",
+    "target_key": "target_score",
+    "feature_names": [
+      "cpu_package_c",
+      "core_average_c",
+      "min_distance_to_tjmax_c",
+      "cpu_total_load_pct",
+      "cpu_core_max_load_pct",
+      "cpu_clock_avg_mhz",
+      "pcore_clock_avg_mhz",
+      "ecore_clock_avg_mhz",
+      "cpu_package_power_w",
+      "system_temp_c",
+      "vrm_mos_temp_c",
+      "pch_temp_c",
+      "gpu_temp_c",
+      "gpu_3d_util_pct",
+      "cpu_fan_rpm",
+      "system_fan2_rpm",
+      "system_fan3_rpm",
+      "system_fan4_rpm",
+      "total_case_fan_rpm",
+      "total_tracked_fan_rpm",
+      "cpu_soft_margin_c",
+      "gpu_soft_margin_c",
+      "tjmax_soft_margin_c",
+      "case_fan_share",
+      "gpu_assist_share",
+      "fan_per_cpu_w",
+      "source_sample_count",
+      "sample_progress_pct",
+      "elapsed_seconds",
+      "delta_seconds",
+      "cpu_package_delta_1",
+      "gpu_temp_delta_1",
+      "total_tracked_fan_rpm_delta_1",
+      "cpu_total_load_delta_1",
+      "rolling_cpu_package_avg_3",
+      "rolling_cpu_package_max_3",
+      "rolling_gpu_temp_avg_3",
+      "rolling_gpu_temp_max_3",
+      "rolling_total_tracked_fan_rpm_avg_3",
+      "rolling_total_tracked_fan_rpm_max_3",
+      "rolling_cpu_total_load_avg_3",
+      "rolling_cpu_total_load_max_3",
+      "cfg_auto_idle_temp_c",
+      "cfg_auto_min_speed_pct",
+      "cfg_auto_max_speed_pct",
+      "cfg_auto_load_temp_c",
+      "cfg_auto_uses_gpu_temp",
+      "cfg_auto1_idle_temp_c",
+      "cfg_auto1_min_speed_pct",
+      "cfg_auto1_max_speed_pct",
+      "cfg_auto1_load_temp_c",
+      "cfg_auto1_uses_gpu_temp",
+      "cfg_auto2_idle_temp_c",
+      "cfg_auto2_min_speed_pct",
+      "cfg_auto2_max_speed_pct",
+      "cfg_auto2_load_temp_c",
+      "cfg_auto2_uses_gpu_temp",
+      "cfg_system_fan3_start_pct",
+      "cfg_system_fan3_stop_pct",
+      "cfg_system_fan4_start_pct",
+      "cfg_system_fan4_stop_pct"
+    ],
+    "intercept": 80.175776,
+    "weights": {
+      "cpu_package_c": -1.341957,
+      "core_average_c": 0.663557,
+      "min_distance_to_tjmax_c": -0.137132,
+      "cpu_total_load_pct": -0.328056,
+      "cpu_core_max_load_pct": 0.368554,
+      "cpu_clock_avg_mhz": 0.0,
+      "pcore_clock_avg_mhz": 0.0,
+      "ecore_clock_avg_mhz": -0.0,
+      "cpu_package_power_w": 0.562396,
+      "system_temp_c": -1.267035,
+      "vrm_mos_temp_c": -1.931761,
+      "pch_temp_c": -0.262154,
+      "gpu_temp_c": -0.562011,
+      "gpu_3d_util_pct": 0.697656,
+      "cpu_fan_rpm": -1.335393,
+      "system_fan2_rpm": -1.266949,
+      "system_fan3_rpm": -0.15831,
+      "system_fan4_rpm": -1.397895,
+      "total_case_fan_rpm": -1.47633,
+      "total_tracked_fan_rpm": -1.486097,
+      "cpu_soft_margin_c": 1.341957,
+      "gpu_soft_margin_c": 0.562011,
+      "tjmax_soft_margin_c": -0.137132,
+      "case_fan_share": -0.071351,
+      "gpu_assist_share": 0.276318,
+      "fan_per_cpu_w": 0.226144,
+      "source_sample_count": 0.831883,
+      "sample_progress_pct": -0.367768,
+      "elapsed_seconds": 0.262264,
+      "delta_seconds": -0.241378,
+      "cpu_package_delta_1": 0.002092,
+      "gpu_temp_delta_1": 0.219584,
+      "total_tracked_fan_rpm_delta_1": -0.620786,
+      "cpu_total_load_delta_1": 0.070599,
+      "rolling_cpu_package_avg_3": 0.069531,
+      "rolling_cpu_package_max_3": -0.566918,
+      "rolling_gpu_temp_avg_3": -0.774458,
+      "rolling_gpu_temp_max_3": -0.17642,
+      "rolling_total_tracked_fan_rpm_avg_3": 0.653752,
+      "rolling_total_tracked_fan_rpm_max_3": -0.054235,
+      "rolling_cpu_total_load_avg_3": -0.076396,
+      "rolling_cpu_total_load_max_3": 0.168432,
+      "cfg_auto_idle_temp_c": 0.041537,
+      "cfg_auto_min_speed_pct": -0.041537,
+      "cfg_auto_max_speed_pct": 0.041537,
+      "cfg_auto_load_temp_c": 0.041537,
+      "cfg_auto_uses_gpu_temp": 0.0,
+      "cfg_auto1_idle_temp_c": 0.041537,
+      "cfg_auto1_min_speed_pct": -0.041537,
+      "cfg_auto1_max_speed_pct": -0.041537,
+      "cfg_auto1_load_temp_c": 0.041537,
+      "cfg_auto1_uses_gpu_temp": 0.0,
+      "cfg_auto2_idle_temp_c": 0.041537,
+      "cfg_auto2_min_speed_pct": 0.0,
+      "cfg_auto2_max_speed_pct": -0.041537,
+      "cfg_auto2_load_temp_c": -0.041537,
+      "cfg_auto2_uses_gpu_temp": 0.041537,
+      "cfg_system_fan3_start_pct": 0.0,
+      "cfg_system_fan3_stop_pct": 0.0,
+      "cfg_system_fan4_start_pct": 0.0,
+      "cfg_system_fan4_stop_pct": 0.0
+    },
+    "imputation_medians": {
+      "cpu_package_c": 67.0,
+      "core_average_c": 56.857143,
+      "min_distance_to_tjmax_c": 31.0,
+      "cpu_total_load_pct": 21.93,
+      "cpu_core_max_load_pct": 61.54,
+      "cpu_clock_avg_mhz": 4343.2,
+      "pcore_clock_avg_mhz": 5075.4,
+      "ecore_clock_avg_mhz": 3794.1,
+      "cpu_package_power_w": 73.607254,
+      "system_temp_c": 44.0,
+      "vrm_mos_temp_c": 48.5,
+      "pch_temp_c": 53.0,
+      "gpu_temp_c": 48.0,
+      "gpu_3d_util_pct": 19.5,
+      "cpu_fan_rpm": 1287.0,
+      "system_fan2_rpm": 1346.0,
+      "system_fan3_rpm": 0.0,
+      "system_fan4_rpm": 0.0,
+      "total_case_fan_rpm": 1348.0,
+      "total_tracked_fan_rpm": 2620.0,
+      "cpu_soft_margin_c": 18.0,
+      "gpu_soft_margin_c": 30.0,
+      "tjmax_soft_margin_c": 16.0,
+      "case_fan_share": 0.508517,
+      "gpu_assist_share": 0.0,
+      "fan_per_cpu_w": 31.084286,
+      "source_sample_count": 15.0,
+      "sample_progress_pct": 0.5,
+      "elapsed_seconds": 31.0,
+      "delta_seconds": 5.0,
+      "cpu_package_delta_1": 0.0,
+      "gpu_temp_delta_1": 0.0,
+      "total_tracked_fan_rpm_delta_1": 0.0,
+      "cpu_total_load_delta_1": 0.005,
+      "rolling_cpu_package_avg_3": 66.5,
+      "rolling_cpu_package_max_3": 70.0,
+      "rolling_gpu_temp_avg_3": 48.0,
+      "rolling_gpu_temp_max_3": 49.0,
+      "rolling_total_tracked_fan_rpm_avg_3": 2524.333333,
+      "rolling_total_tracked_fan_rpm_max_3": 2683.0,
+      "rolling_cpu_total_load_avg_3": 22.09,
+      "rolling_cpu_total_load_max_3": 26.56,
+      "cfg_auto_idle_temp_c": 40.0,
+      "cfg_auto_min_speed_pct": 25.0,
+      "cfg_auto_max_speed_pct": 85.0,
+      "cfg_auto_load_temp_c": 78.0,
+      "cfg_auto_uses_gpu_temp": 0.0,
+      "cfg_auto1_idle_temp_c": 48.0,
+      "cfg_auto1_min_speed_pct": 15.0,
+      "cfg_auto1_max_speed_pct": 72.0,
+      "cfg_auto1_load_temp_c": 78.0,
+      "cfg_auto1_uses_gpu_temp": 0.0,
+      "cfg_auto2_idle_temp_c": 62.0,
+      "cfg_auto2_min_speed_pct": 0.0,
+      "cfg_auto2_max_speed_pct": 55.0,
+      "cfg_auto2_load_temp_c": 74.0,
+      "cfg_auto2_uses_gpu_temp": 1.0,
+      "cfg_system_fan3_start_pct": 25.0,
+      "cfg_system_fan3_stop_pct": 16.0,
+      "cfg_system_fan4_start_pct": 22.0,
+      "cfg_system_fan4_stop_pct": 16.0
+    },
+    "scaler_means": {
+      "cpu_package_c": 65.601399,
+      "core_average_c": 56.407093,
+      "min_distance_to_tjmax_c": 33.20979,
+      "cpu_total_load_pct": 22.726364,
+      "cpu_core_max_load_pct": 62.945035,
+      "cpu_clock_avg_mhz": 4343.2,
+      "pcore_clock_avg_mhz": 5075.4,
+      "ecore_clock_avg_mhz": 3794.1,
+      "cpu_package_power_w": 73.904419,
+      "system_temp_c": 45.269231,
+      "vrm_mos_temp_c": 48.472028,
+      "pch_temp_c": 53.503497,
+      "gpu_temp_c": 50.293706,
+      "gpu_3d_util_pct": 36.326573,
+      "cpu_fan_rpm": 1181.937063,
+      "system_fan2_rpm": 1180.461538,
+      "system_fan3_rpm": 7.531469,
+      "system_fan4_rpm": 12.734266,
+      "total_case_fan_rpm": 1200.727273,
+      "total_tracked_fan_rpm": 2382.664336,
+      "cpu_soft_margin_c": 19.398601,
+      "gpu_soft_margin_c": 27.706294,
+      "tjmax_soft_margin_c": 18.20979,
+      "case_fan_share": 0.49572,
+      "gpu_assist_share": 0.010886,
+      "fan_per_cpu_w": 34.333216,
+      "source_sample_count": 14.566434,
+      "sample_progress_pct": 0.5,
+      "elapsed_seconds": 35.020979,
+      "delta_seconds": 5.132867,
+      "cpu_package_delta_1": 0.314685,
+      "gpu_temp_delta_1": 0.440559,
+      "total_tracked_fan_rpm_delta_1": 35.237762,
+      "cpu_total_load_delta_1": 0.421014,
+      "rolling_cpu_package_avg_3": 65.300699,
+      "rolling_cpu_package_max_3": 68.965035,
+      "rolling_gpu_temp_avg_3": 49.91958,
+      "rolling_gpu_temp_max_3": 50.811189,
+      "rolling_total_tracked_fan_rpm_avg_3": 2354.050117,
+      "rolling_total_tracked_fan_rpm_max_3": 2500.153846,
+      "rolling_cpu_total_load_avg_3": 22.410152,
+      "rolling_cpu_total_load_max_3": 26.072517,
+      "cfg_auto_idle_temp_c": 39.79021,
+      "cfg_auto_min_speed_pct": 25.20979,
+      "cfg_auto_max_speed_pct": 84.79021,
+      "cfg_auto_load_temp_c": 77.664336,
+      "cfg_auto_uses_gpu_temp": 0.0,
+      "cfg_auto1_idle_temp_c": 47.664336,
+      "cfg_auto1_min_speed_pct": 15.20979,
+      "cfg_auto1_max_speed_pct": 72.335664,
+      "cfg_auto1_load_temp_c": 77.664336,
+      "cfg_auto1_uses_gpu_temp": 0.0,
+      "cfg_auto2_idle_temp_c": 61.496503,
+      "cfg_auto2_min_speed_pct": 0.0,
+      "cfg_auto2_max_speed_pct": 56.048951,
+      "cfg_auto2_load_temp_c": 74.251748,
+      "cfg_auto2_uses_gpu_temp": 0.958042,
+      "cfg_system_fan3_start_pct": 25.0,
+      "cfg_system_fan3_stop_pct": 16.0,
+      "cfg_system_fan4_start_pct": 22.0,
+      "cfg_system_fan4_stop_pct": 16.0
+    },
+    "scaler_stds": {
+      "cpu_package_c": 8.974042,
+      "core_average_c": 5.47789,
+      "min_distance_to_tjmax_c": 9.294598,
+      "cpu_total_load_pct": 8.021077,
+      "cpu_core_max_load_pct": 14.943866,
+      "cpu_clock_avg_mhz": 1.0,
+      "pcore_clock_avg_mhz": 1.0,
+      "ecore_clock_avg_mhz": 1.0,
+      "cpu_package_power_w": 20.13497,
+      "system_temp_c": 3.818326,
+      "vrm_mos_temp_c": 2.809684,
+      "pch_temp_c": 2.729979,
+      "gpu_temp_c": 13.825502,
+      "gpu_3d_util_pct": 26.924203,
+      "cpu_fan_rpm": 196.304075,
+      "system_fan2_rpm": 304.012807,
+      "system_fan3_rpm": 51.621647,
+      "system_fan4_rpm": 67.656263,
+      "total_case_fan_rpm": 330.493489,
+      "total_tracked_fan_rpm": 504.718421,
+      "cpu_soft_margin_c": 8.974042,
+      "gpu_soft_margin_c": 13.825502,
+      "tjmax_soft_margin_c": 9.294598,
+      "case_fan_share": 0.051437,
+      "gpu_assist_share": 0.059319,
+      "fan_per_cpu_w": 11.972176,
+      "source_sample_count": 3.599844,
+      "sample_progress_pct": 0.312248,
+      "elapsed_seconds": 24.343828,
+      "delta_seconds": 0.430283,
+      "cpu_package_delta_1": 6.234822,
+      "gpu_temp_delta_1": 3.396054,
+      "total_tracked_fan_rpm_delta_1": 325.007433,
+      "cpu_total_load_delta_1": 7.176335,
+      "rolling_cpu_package_avg_3": 8.07803,
+      "rolling_cpu_package_max_3": 9.041793,
+      "rolling_gpu_temp_avg_3": 13.555404,
+      "rolling_gpu_temp_max_3": 13.826068,
+      "rolling_total_tracked_fan_rpm_avg_3": 478.257171,
+      "rolling_total_tracked_fan_rpm_max_3": 497.548568,
+      "rolling_cpu_total_load_avg_3": 6.917864,
+      "rolling_cpu_total_load_max_3": 7.950798,
+      "cfg_auto_idle_temp_c": 1.002467,
+      "cfg_auto_min_speed_pct": 1.002467,
+      "cfg_auto_max_speed_pct": 1.002467,
+      "cfg_auto_load_temp_c": 1.603946,
+      "cfg_auto_uses_gpu_temp": 1.0,
+      "cfg_auto1_idle_temp_c": 1.603946,
+      "cfg_auto1_min_speed_pct": 1.002467,
+      "cfg_auto1_max_speed_pct": 1.603946,
+      "cfg_auto1_load_temp_c": 1.603946,
+      "cfg_auto1_uses_gpu_temp": 1.0,
+      "cfg_auto2_idle_temp_c": 2.40592,
+      "cfg_auto2_min_speed_pct": 1.0,
+      "cfg_auto2_max_speed_pct": 5.012333,
+      "cfg_auto2_load_temp_c": 1.20296,
+      "cfg_auto2_uses_gpu_temp": 0.200493,
+      "cfg_system_fan3_start_pct": 1.0,
+      "cfg_system_fan3_stop_pct": 1.0,
+      "cfg_system_fan4_start_pct": 1.0,
+      "cfg_system_fan4_stop_pct": 1.0
+    },
+    "hyperparameters": {
+      "alpha": 10.0,
+      "alpha_candidates": [
+        0.01,
+        0.1,
+        0.5,
+        1.0,
+        2.0,
+        5.0,
+        10.0
+      ]
+    },
+    "metrics": {
+      "training": {
+        "row_count": 143,
+        "mae": 2.054193,
+        "rmse": 3.377255,
+        "r2": 0.891049
+      },
+      "leave_one_source_out": {
+        "row_count": 143,
+        "mae": 3.403217,
+        "rmse": 6.105942,
+        "r2": 0.643869,
+        "fold_count": 11
+      }
+    },
+    "top_features": [
+      {
+        "feature": "vrm_mos_temp_c",
+        "weight": -1.931761
+      },
+      {
+        "feature": "total_tracked_fan_rpm",
+        "weight": -1.486097
+      },
+      {
+        "feature": "total_case_fan_rpm",
+        "weight": -1.47633
+      },
+      {
+        "feature": "system_fan4_rpm",
+        "weight": -1.397895
+      },
+      {
+        "feature": "cpu_package_c",
+        "weight": -1.341957
+      },
+      {
+        "feature": "cpu_soft_margin_c",
+        "weight": 1.341957
+      },
+      {
+        "feature": "cpu_fan_rpm",
+        "weight": -1.335393
+      },
+      {
+        "feature": "system_temp_c",
+        "weight": -1.267035
+      },
+      {
+        "feature": "system_fan2_rpm",
+        "weight": -1.266949
+      },
+      {
+        "feature": "source_sample_count",
+        "weight": 0.831883
+      },
+      {
+        "feature": "rolling_gpu_temp_avg_3",
+        "weight": -0.774458
+      },
+      {
+        "feature": "gpu_3d_util_pct",
+        "weight": 0.697656
+      }
+    ]
+  }
+}

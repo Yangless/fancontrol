@@ -1,0 +1,477 @@
+{
+  "report_version": "fancontrol.candidate-search.v1",
+  "created_at": "2026-04-30T03:42:54Z",
+  "dataset_path": "./artifacts/modeling/training_rows.jsonl",
+  "model_path": "./artifacts/modeling/baseline_model.json",
+  "model_name": "ridge_cv",
+  "model_type": "ridge",
+  "seed_config": "Game_vNext_stage1_low-rpm.json",
+  "baseline_config": "Game.json",
+  "search_dimensions": [
+    {
+      "path": "Auto.IdleTemperature",
+      "curve_name": "Auto",
+      "field_name": "IdleTemperature",
+      "seed_value": 40,
+      "values": [
+        38,
+        40,
+        42
+      ]
+    },
+    {
+      "path": "Auto.MinFanSpeed",
+      "curve_name": "Auto",
+      "field_name": "MinFanSpeed",
+      "seed_value": 25,
+      "values": [
+        20,
+        25,
+        30
+      ]
+    },
+    {
+      "path": "Auto.LoadTemperature",
+      "curve_name": "Auto",
+      "field_name": "LoadTemperature",
+      "seed_value": 78,
+      "values": [
+        76,
+        78,
+        80
+      ]
+    },
+    {
+      "path": "Auto 1.IdleTemperature",
+      "curve_name": "Auto 1",
+      "field_name": "IdleTemperature",
+      "seed_value": 48,
+      "values": [
+        46,
+        48,
+        50
+      ]
+    },
+    {
+      "path": "Auto 1.MinFanSpeed",
+      "curve_name": "Auto 1",
+      "field_name": "MinFanSpeed",
+      "seed_value": 15,
+      "values": [
+        10,
+        15,
+        20
+      ]
+    },
+    {
+      "path": "Auto 2.IdleTemperature",
+      "curve_name": "Auto 2",
+      "field_name": "IdleTemperature",
+      "seed_value": 62,
+      "values": [
+        60,
+        62,
+        64
+      ]
+    },
+    {
+      "path": "Auto 2.MinFanSpeed",
+      "curve_name": "Auto 2",
+      "field_name": "MinFanSpeed",
+      "seed_value": 0,
+      "values": [
+        0,
+        5,
+        10
+      ]
+    },
+    {
+      "path": "Auto 2.LoadTemperature",
+      "curve_name": "Auto 2",
+      "field_name": "LoadTemperature",
+      "seed_value": 74,
+      "values": [
+        72,
+        74,
+        76
+      ]
+    }
+  ],
+  "evaluated_candidate_count": 6561,
+  "invalid_candidate_count": 0,
+  "top_k": 12,
+  "score_dedup_decimals": 6,
+  "selected_candidate_count": 12,
+  "seed_summary": {
+    "row_count": 143,
+    "avg_predicted_score": 80.280087,
+    "avg_cpu_package_c": 65.601399,
+    "avg_gpu_temp_c": 50.293706,
+    "avg_total_tracked_fan_rpm": 2382.664336,
+    "safety_label_counts": {
+      "safe": 136,
+      "warn": 7
+    }
+  },
+  "baseline_summary": {
+    "row_count": 143,
+    "avg_predicted_score": 77.793998,
+    "avg_cpu_package_c": 65.601399,
+    "avg_gpu_temp_c": 50.293706,
+    "avg_total_tracked_fan_rpm": 2382.664336,
+    "safety_label_counts": {
+      "safe": 136,
+      "warn": 7
+    }
+  },
+  "top_candidates": [
+    {
+      "rank": 1,
+      "file_name": "candidate_rank01_score80.984.json",
+      "file_path": "./artifacts/modeling/candidates/candidate_rank01_score80.984.json",
+      "avg_predicted_score": 80.984478,
+      "delta_vs_seed": 0.704391,
+      "delta_vs_baseline": 3.19048,
+      "parameter_values": {
+        "Auto.IdleTemperature": 42,
+        "Auto.MinFanSpeed": 20,
+        "Auto.LoadTemperature": 80,
+        "Auto 1.IdleTemperature": 50,
+        "Auto 1.MinFanSpeed": 10,
+        "Auto 2.IdleTemperature": 64,
+        "Auto 2.MinFanSpeed": 0,
+        "Auto 2.LoadTemperature": 72
+      },
+      "summary": {
+        "row_count": 143,
+        "avg_predicted_score": 80.984478,
+        "avg_cpu_package_c": 65.601399,
+        "avg_gpu_temp_c": 50.293706,
+        "avg_total_tracked_fan_rpm": 2382.664336,
+        "safety_label_counts": {
+          "safe": 136,
+          "warn": 7
+        }
+      }
+    },
+    {
+      "rank": 2,
+      "file_name": "candidate_rank02_score80.950.json",
+      "file_path": "./artifacts/modeling/candidates/candidate_rank02_score80.950.json",
+      "avg_predicted_score": 80.949949,
+      "delta_vs_seed": 0.669862,
+      "delta_vs_baseline": 3.155951,
+      "parameter_values": {
+        "Auto.IdleTemperature": 42,
+        "Auto.MinFanSpeed": 20,
+        "Auto.LoadTemperature": 80,
+        "Auto 1.IdleTemperature": 50,
+        "Auto 1.MinFanSpeed": 10,
+        "Auto 2.IdleTemperature": 62,
+        "Auto 2.MinFanSpeed": 0,
+        "Auto 2.LoadTemperature": 72
+      },
+      "summary": {
+        "row_count": 143,
+        "avg_predicted_score": 80.949949,
+        "avg_cpu_package_c": 65.601399,
+        "avg_gpu_temp_c": 50.293706,
+        "avg_total_tracked_fan_rpm": 2382.664336,
+        "safety_label_counts": {
+          "safe": 136,
+          "warn": 7
+        }
+      }
+    },
+    {
+      "rank": 3,
+      "file_name": "candidate_rank03_score80.933.json",
+      "file_path": "./artifacts/modeling/candidates/candidate_rank03_score80.933.json",
+      "avg_predicted_score": 80.932684,
+      "delta_vs_seed": 0.652597,
+      "delta_vs_baseline": 3.138686,
+      "parameter_values": {
+        "Auto.IdleTemperature": 42,
+        "Auto.MinFanSpeed": 20,
+        "Auto.LoadTemperature": 78,
+        "Auto 1.IdleTemperature": 50,
+        "Auto 1.MinFanSpeed": 10,
+        "Auto 2.IdleTemperature": 64,
+        "Auto 2.MinFanSpeed": 0,
+        "Auto 2.LoadTemperature": 72
+      },
+      "summary": {
+        "row_count": 143,
+        "avg_predicted_score": 80.932684,
+        "avg_cpu_package_c": 65.601399,
+        "avg_gpu_temp_c": 50.293706,
+        "avg_total_tracked_fan_rpm": 2382.664336,
+        "safety_label_counts": {
+          "safe": 136,
+          "warn": 7
+        }
+      }
+    },
+    {
+      "rank": 4,
+      "file_name": "candidate_rank04_score80.915.json",
+      "file_path": "./artifacts/modeling/candidates/candidate_rank04_score80.915.json",
+      "avg_predicted_score": 80.91542,
+      "delta_vs_seed": 0.635333,
+      "delta_vs_baseline": 3.121422,
+      "parameter_values": {
+        "Auto.IdleTemperature": 42,
+        "Auto.MinFanSpeed": 20,
+        "Auto.LoadTemperature": 80,
+        "Auto 1.IdleTemperature": 50,
+        "Auto 1.MinFanSpeed": 10,
+        "Auto 2.IdleTemperature": 64,
+        "Auto 2.MinFanSpeed": 0,
+        "Auto 2.LoadTemperature": 74
+      },
+      "summary": {
+        "row_count": 143,
+        "avg_predicted_score": 80.91542,
+        "avg_cpu_package_c": 65.601399,
+        "avg_gpu_temp_c": 50.293706,
+        "avg_total_tracked_fan_rpm": 2382.664336,
+        "safety_label_counts": {
+          "safe": 136,
+          "warn": 7
+        }
+      }
+    },
+    {
+      "rank": 5,
+      "file_name": "candidate_rank05_score80.902.json",
+      "file_path": "./artifacts/modeling/candidates/candidate_rank05_score80.902.json",
+      "avg_predicted_score": 80.901608,
+      "delta_vs_seed": 0.621521,
+      "delta_vs_baseline": 3.10761,
+      "parameter_values": {
+        "Auto.IdleTemperature": 40,
+        "Auto.MinFanSpeed": 20,
+        "Auto.LoadTemperature": 80,
+        "Auto 1.IdleTemperature": 50,
+        "Auto 1.MinFanSpeed": 10,
+        "Auto 2.IdleTemperature": 64,
+        "Auto 2.MinFanSpeed": 0,
+        "Auto 2.LoadTemperature": 72
+      },
+      "summary": {
+        "row_count": 143,
+        "avg_predicted_score": 80.901608,
+        "avg_cpu_package_c": 65.601399,
+        "avg_gpu_temp_c": 50.293706,
+        "avg_total_tracked_fan_rpm": 2382.664336,
+        "safety_label_counts": {
+          "safe": 136,
+          "warn": 7
+        }
+      }
+    },
+    {
+      "rank": 6,
+      "file_name": "candidate_rank06_score80.898.json",
+      "file_path": "./artifacts/modeling/candidates/candidate_rank06_score80.898.json",
+      "avg_predicted_score": 80.898155,
+      "delta_vs_seed": 0.618068,
+      "delta_vs_baseline": 3.104157,
+      "parameter_values": {
+        "Auto.IdleTemperature": 42,
+        "Auto.MinFanSpeed": 20,
+        "Auto.LoadTemperature": 78,
+        "Auto 1.IdleTemperature": 50,
+        "Auto 1.MinFanSpeed": 10,
+        "Auto 2.IdleTemperature": 62,
+        "Auto 2.MinFanSpeed": 0,
+        "Auto 2.LoadTemperature": 72
+      },
+      "summary": {
+        "row_count": 143,
+        "avg_predicted_score": 80.898155,
+        "avg_cpu_package_c": 65.601399,
+        "avg_gpu_temp_c": 50.293706,
+        "avg_total_tracked_fan_rpm": 2382.664336,
+        "safety_label_counts": {
+          "safe": 136,
+          "warn": 7
+        }
+      }
+    },
+    {
+      "rank": 7,
+      "file_name": "candidate_rank07_score80.881.json",
+      "file_path": "./artifacts/modeling/candidates/candidate_rank07_score80.881.json",
+      "avg_predicted_score": 80.880891,
+      "delta_vs_seed": 0.600804,
+      "delta_vs_baseline": 3.086893,
+      "parameter_values": {
+        "Auto.IdleTemperature": 42,
+        "Auto.MinFanSpeed": 20,
+        "Auto.LoadTemperature": 78,
+        "Auto 1.IdleTemperature": 48,
+        "Auto 1.MinFanSpeed": 10,
+        "Auto 2.IdleTemperature": 64,
+        "Auto 2.MinFanSpeed": 0,
+        "Auto 2.LoadTemperature": 72
+      },
+      "summary": {
+        "row_count": 143,
+        "avg_predicted_score": 80.880891,
+        "avg_cpu_package_c": 65.601399,
+        "avg_gpu_temp_c": 50.293706,
+        "avg_total_tracked_fan_rpm": 2382.664336,
+        "safety_label_counts": {
+          "safe": 136,
+          "warn": 7
+        }
+      }
+    },
+    {
+      "rank": 8,
+      "file_name": "candidate_rank08_score80.867.json",
+      "file_path": "./artifacts/modeling/candidates/candidate_rank08_score80.867.json",
+      "avg_predicted_score": 80.867079,
+      "delta_vs_seed": 0.586992,
+      "delta_vs_baseline": 3.073081,
+      "parameter_values": {
+        "Auto.IdleTemperature": 40,
+        "Auto.MinFanSpeed": 20,
+        "Auto.LoadTemperature": 80,
+        "Auto 1.IdleTemperature": 50,
+        "Auto 1.MinFanSpeed": 10,
+        "Auto 2.IdleTemperature": 62,
+        "Auto 2.MinFanSpeed": 0,
+        "Auto 2.LoadTemperature": 72
+      },
+      "summary": {
+        "row_count": 143,
+        "avg_predicted_score": 80.867079,
+        "avg_cpu_package_c": 65.601399,
+        "avg_gpu_temp_c": 50.293706,
+        "avg_total_tracked_fan_rpm": 2382.664336,
+        "safety_label_counts": {
+          "safe": 136,
+          "warn": 7
+        }
+      }
+    },
+    {
+      "rank": 9,
+      "file_name": "candidate_rank09_score80.864.json",
+      "file_path": "./artifacts/modeling/candidates/candidate_rank09_score80.864.json",
+      "avg_predicted_score": 80.863626,
+      "delta_vs_seed": 0.583539,
+      "delta_vs_baseline": 3.069628,
+      "parameter_values": {
+        "Auto.IdleTemperature": 42,
+        "Auto.MinFanSpeed": 20,
+        "Auto.LoadTemperature": 78,
+        "Auto 1.IdleTemperature": 50,
+        "Auto 1.MinFanSpeed": 10,
+        "Auto 2.IdleTemperature": 64,
+        "Auto 2.MinFanSpeed": 0,
+        "Auto 2.LoadTemperature": 74
+      },
+      "summary": {
+        "row_count": 143,
+        "avg_predicted_score": 80.863626,
+        "avg_cpu_package_c": 65.601399,
+        "avg_gpu_temp_c": 50.293706,
+        "avg_total_tracked_fan_rpm": 2382.664336,
+        "safety_label_counts": {
+          "safe": 136,
+          "warn": 7
+        }
+      }
+    },
+    {
+      "rank": 10,
+      "file_name": "candidate_rank10_score80.850.json",
+      "file_path": "./artifacts/modeling/candidates/candidate_rank10_score80.850.json",
+      "avg_predicted_score": 80.849815,
+      "delta_vs_seed": 0.569728,
+      "delta_vs_baseline": 3.055817,
+      "parameter_values": {
+        "Auto.IdleTemperature": 40,
+        "Auto.MinFanSpeed": 20,
+        "Auto.LoadTemperature": 78,
+        "Auto 1.IdleTemperature": 50,
+        "Auto 1.MinFanSpeed": 10,
+        "Auto 2.IdleTemperature": 64,
+        "Auto 2.MinFanSpeed": 0,
+        "Auto 2.LoadTemperature": 72
+      },
+      "summary": {
+        "row_count": 143,
+        "avg_predicted_score": 80.849815,
+        "avg_cpu_package_c": 65.601399,
+        "avg_gpu_temp_c": 50.293706,
+        "avg_total_tracked_fan_rpm": 2382.664336,
+        "safety_label_counts": {
+          "safe": 136,
+          "warn": 7
+        }
+      }
+    },
+    {
+      "rank": 11,
+      "file_name": "candidate_rank11_score80.846.json",
+      "file_path": "./artifacts/modeling/candidates/candidate_rank11_score80.846.json",
+      "avg_predicted_score": 80.846362,
+      "delta_vs_seed": 0.566275,
+      "delta_vs_baseline": 3.052364,
+      "parameter_values": {
+        "Auto.IdleTemperature": 42,
+        "Auto.MinFanSpeed": 20,
+        "Auto.LoadTemperature": 78,
+        "Auto 1.IdleTemperature": 48,
+        "Auto 1.MinFanSpeed": 10,
+        "Auto 2.IdleTemperature": 62,
+        "Auto 2.MinFanSpeed": 0,
+        "Auto 2.LoadTemperature": 72
+      },
+      "summary": {
+        "row_count": 143,
+        "avg_predicted_score": 80.846362,
+        "avg_cpu_package_c": 65.601399,
+        "avg_gpu_temp_c": 50.293706,
+        "avg_total_tracked_fan_rpm": 2382.664336,
+        "safety_label_counts": {
+          "safe": 136,
+          "warn": 7
+        }
+      }
+    },
+    {
+      "rank": 12,
+      "file_name": "candidate_rank12_score80.833.json",
+      "file_path": "./artifacts/modeling/candidates/candidate_rank12_score80.833.json",
+      "avg_predicted_score": 80.83255,
+      "delta_vs_seed": 0.552463,
+      "delta_vs_baseline": 3.038552,
+      "parameter_values": {
+        "Auto.IdleTemperature": 40,
+        "Auto.MinFanSpeed": 20,
+        "Auto.LoadTemperature": 80,
+        "Auto 1.IdleTemperature": 50,
+        "Auto 1.MinFanSpeed": 10,
+        "Auto 2.IdleTemperature": 64,
+        "Auto 2.MinFanSpeed": 0,
+        "Auto 2.LoadTemperature": 74
+      },
+      "summary": {
+        "row_count": 143,
+        "avg_predicted_score": 80.83255,
+        "avg_cpu_package_c": 65.601399,
+        "avg_gpu_temp_c": 50.293706,
+        "avg_total_tracked_fan_rpm": 2382.664336,
+        "safety_label_counts": {
+          "safe": 136,
+          "warn": 7
+        }
+      }
+    }
+  ]
+}

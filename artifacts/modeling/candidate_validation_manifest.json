@@ -1,0 +1,164 @@
+{
+  "report_version": "fancontrol.candidate-validation-pack.v1",
+  "created_at": "2026-04-30T03:41:43Z",
+  "validation_id": "2026-04-30_candidate-validation",
+  "validation_date": "2026-04-30",
+  "seed_config": "Game_vNext_stage1_low-rpm.json",
+  "baseline_config": "Game.json",
+  "source_search_summary": "./artifacts/modeling/candidate_search_summary.json",
+  "candidate_count": 3,
+  "scenarios": [
+    {
+      "name": "GPU-biased-real-game",
+      "duration_minutes": 15,
+      "sample_interval_seconds": 5,
+      "goal": "确认 Auto 2 在真实 GPU 升温下是否介入及时且不过吵",
+      "watch_metrics": [
+        "GpuTemp",
+        "Gpu3DUtil",
+        "SystemTemp",
+        "SystemFan3Rpm",
+        "SystemFan4Rpm",
+        "TotalTrackedFanRpm"
+      ],
+      "stop_conditions": [
+        "GpuTemp >= 83C",
+        "CpuPackage >= 88C",
+        "MinDistanceToTjMax <= 12C"
+      ]
+    },
+    {
+      "name": "CPU-plus-GPU-transition",
+      "duration_minutes": 10,
+      "sample_interval_seconds": 2,
+      "goal": "观察切场景、加载、回桌面等过渡段时风扇响应是否平滑",
+      "watch_metrics": [
+        "CpuPackage",
+        "CoreAverage",
+        "MinDistanceToTjMax",
+        "GpuTemp",
+        "TotalTrackedFanRpm",
+        "SystemFan3Rpm",
+        "SystemFan4Rpm"
+      ],
+      "stop_conditions": [
+        "CpuPackage >= 88C",
+        "MinDistanceToTjMax <= 12C"
+      ]
+    },
+    {
+      "name": "Quiet-recovery-idle",
+      "duration_minutes": 10,
+      "sample_interval_seconds": 5,
+      "goal": "确认高负载结束回到桌面后，温度恢复和总转速回落是否稳定",
+      "watch_metrics": [
+        "CpuPackage",
+        "GpuTemp",
+        "CpuFanRpm",
+        "SystemFan2Rpm",
+        "SystemFan3Rpm",
+        "SystemFan4Rpm",
+        "TotalTrackedFanRpm"
+      ],
+      "stop_conditions": []
+    }
+  ],
+  "candidates": [
+    {
+      "rank": 1,
+      "file_name": "candidate_rank01_score80.984.json",
+      "file_path": "./artifacts/modeling/candidates/candidate_rank01_score80.984.json",
+      "avg_predicted_score": 80.984478,
+      "delta_vs_seed": 0.704391,
+      "delta_vs_baseline": 3.19048,
+      "parameter_values": {
+        "Auto.IdleTemperature": 42,
+        "Auto.MinFanSpeed": 20,
+        "Auto.LoadTemperature": 80,
+        "Auto 1.IdleTemperature": 50,
+        "Auto 1.MinFanSpeed": 10,
+        "Auto 2.IdleTemperature": 64,
+        "Auto 2.MinFanSpeed": 0,
+        "Auto 2.LoadTemperature": 72
+      },
+      "sample_directories": [
+        {
+          "scenario": "GPU-biased-real-game",
+          "path": "docs/experiments/data/2026-04-30_candidate-rank01_GPU-biased-real-game"
+        },
+        {
+          "scenario": "CPU-plus-GPU-transition",
+          "path": "docs/experiments/data/2026-04-30_candidate-rank01_CPU-plus-GPU-transition"
+        },
+        {
+          "scenario": "Quiet-recovery-idle",
+          "path": "docs/experiments/data/2026-04-30_candidate-rank01_Quiet-recovery-idle"
+        }
+      ]
+    },
+    {
+      "rank": 2,
+      "file_name": "candidate_rank02_score80.950.json",
+      "file_path": "./artifacts/modeling/candidates/candidate_rank02_score80.950.json",
+      "avg_predicted_score": 80.949949,
+      "delta_vs_seed": 0.669862,
+      "delta_vs_baseline": 3.155951,
+      "parameter_values": {
+        "Auto.IdleTemperature": 42,
+        "Auto.MinFanSpeed": 20,
+        "Auto.LoadTemperature": 80,
+        "Auto 1.IdleTemperature": 50,
+        "Auto 1.MinFanSpeed": 10,
+        "Auto 2.IdleTemperature": 62,
+        "Auto 2.MinFanSpeed": 0,
+        "Auto 2.LoadTemperature": 72
+      },
+      "sample_directories": [
+        {
+          "scenario": "GPU-biased-real-game",
+          "path": "docs/experiments/data/2026-04-30_candidate-rank02_GPU-biased-real-game"
+        },
+        {
+          "scenario": "CPU-plus-GPU-transition",
+          "path": "docs/experiments/data/2026-04-30_candidate-rank02_CPU-plus-GPU-transition"
+        },
+        {
+          "scenario": "Quiet-recovery-idle",
+          "path": "docs/experiments/data/2026-04-30_candidate-rank02_Quiet-recovery-idle"
+        }
+      ]
+    },
+    {
+      "rank": 3,
+      "file_name": "candidate_rank03_score80.933.json",
+      "file_path": "./artifacts/modeling/candidates/candidate_rank03_score80.933.json",
+      "avg_predicted_score": 80.932684,
+      "delta_vs_seed": 0.652597,
+      "delta_vs_baseline": 3.138686,
+      "parameter_values": {
+        "Auto.IdleTemperature": 42,
+        "Auto.MinFanSpeed": 20,
+        "Auto.LoadTemperature": 78,
+        "Auto 1.IdleTemperature": 50,
+        "Auto 1.MinFanSpeed": 10,
+        "Auto 2.IdleTemperature": 64,
+        "Auto 2.MinFanSpeed": 0,
+        "Auto 2.LoadTemperature": 72
+      },
+      "sample_directories": [
+        {
+          "scenario": "GPU-biased-real-game",
+          "path": "docs/experiments/data/2026-04-30_candidate-rank03_GPU-biased-real-game"
+        },
+        {
+          "scenario": "CPU-plus-GPU-transition",
+          "path": "docs/experiments/data/2026-04-30_candidate-rank03_CPU-plus-GPU-transition"
+        },
+        {
+          "scenario": "Quiet-recovery-idle",
+          "path": "docs/experiments/data/2026-04-30_candidate-rank03_Quiet-recovery-idle"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "schema_version": "fancontrol.training-row.v1",
+  "created_at": "2026-04-30T03:41:26Z",
+  "input_root": "./docs/experiments/data",
+  "config_root": "./configs",
+  "row_count": 143,
+  "source_file_count": 11,
+  "workload_counts": {
+    "cpu-biased": 16,
+    "gpu-biased": 77,
+    "idle": 18,
+    "mixed": 14,
+    "unknown": 18
+  },
+  "safety_label_counts": {
+    "safe": 136,
+    "warn": 7
+  },
+  "config_profile_counts": {
+    "Game_vNext_stage1_low-rpm.json": 137,
+    "Game.json": 6
+  },
+  "total_tracked_rpm_range": {
+    "min": 1030.0,
+    "max": 3686.0
+  }
+}

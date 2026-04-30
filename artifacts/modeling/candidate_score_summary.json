@@ -1,0 +1,396 @@
+{
+  "report_version": "fancontrol.candidate-score.v1",
+  "created_at": "2026-04-30T03:41:43Z",
+  "dataset_path": "./artifacts/modeling/training_rows.jsonl",
+  "model_path": "./artifacts/modeling/baseline_model.json",
+  "model_name": "ridge_cv",
+  "model_type": "ridge",
+  "candidate_config": "Game_vNext_stage1_low-rpm.json",
+  "baseline_config": "Game.json",
+  "candidate_summary": {
+    "row_count": 143,
+    "avg_predicted_score": 80.280087,
+    "avg_cpu_package_c": 65.601399,
+    "avg_gpu_temp_c": 50.293706,
+    "avg_total_tracked_fan_rpm": 2382.664336,
+    "safety_label_counts": {
+      "safe": 136,
+      "warn": 7
+    }
+  },
+  "candidate_by_workload_class": [
+    {
+      "workload_class": "idle",
+      "row_count": 18,
+      "avg_predicted_score": 92.508517,
+      "avg_cpu_package_c": 51.777778,
+      "avg_gpu_temp_c": 48.722222,
+      "avg_total_tracked_fan_rpm": 1672.388889,
+      "safety_label_counts": {
+        "safe": 18
+      }
+    },
+    {
+      "workload_class": "cpu-biased",
+      "row_count": 16,
+      "avg_predicted_score": 80.094273,
+      "avg_cpu_package_c": 63.0,
+      "avg_gpu_temp_c": 41.25,
+      "avg_total_tracked_fan_rpm": 2501.625,
+      "safety_label_counts": {
+        "safe": 16
+      }
+    },
+    {
+      "workload_class": "unknown",
+      "row_count": 18,
+      "avg_predicted_score": 80.084122,
+      "avg_cpu_package_c": 62.055556,
+      "avg_gpu_temp_c": 68.166667,
+      "avg_total_tracked_fan_rpm": 2510.666667,
+      "safety_label_counts": {
+        "safe": 18
+      }
+    },
+    {
+      "workload_class": "gpu-biased",
+      "row_count": 77,
+      "avg_predicted_score": 78.099319,
+      "avg_cpu_package_c": 69.233766,
+      "avg_gpu_temp_c": 48.714286,
+      "avg_total_tracked_fan_rpm": 2448.376623,
+      "safety_label_counts": {
+        "safe": 70,
+        "warn": 7
+      }
+    },
+    {
+      "workload_class": "mixed",
+      "row_count": 14,
+      "avg_predicted_score": 77.016354,
+      "avg_cpu_package_c": 70.928571,
+      "avg_gpu_temp_c": 48.357143,
+      "avg_total_tracked_fan_rpm": 2633.928571,
+      "safety_label_counts": {
+        "safe": 14
+      }
+    }
+  ],
+  "candidate_by_source_file": [
+    {
+      "source_file": "2026-04-29_stage1_idle/idle_batch2.json",
+      "row_count": 6,
+      "avg_predicted_score": 96.766906,
+      "avg_cpu_package_c": 53.333333,
+      "avg_gpu_temp_c": 49.0,
+      "avg_total_tracked_fan_rpm": 1255.333333,
+      "safety_label_counts": {
+        "safe": 6
+      }
+    },
+    {
+      "source_file": "2026-04-29_stage1_idle/idle_batch1.json",
+      "row_count": 6,
+      "avg_predicted_score": 93.489867,
+      "avg_cpu_package_c": 53.333333,
+      "avg_gpu_temp_c": 48.166667,
+      "avg_total_tracked_fan_rpm": 1576.0,
+      "safety_label_counts": {
+        "safe": 6
+      }
+    },
+    {
+      "source_file": "2026-04-29_stage1_idle/front_webgl_aquarium_10000.json",
+      "row_count": 16,
+      "avg_predicted_score": 90.487642,
+      "avg_cpu_package_c": 58.5625,
+      "avg_gpu_temp_c": 37.3125,
+      "avg_total_tracked_fan_rpm": 1784.3125,
+      "safety_label_counts": {
+        "safe": 16
+      }
+    },
+    {
+      "source_file": "2026-04-29_stage1_idle/idle_game_baseline.json",
+      "row_count": 6,
+      "avg_predicted_score": 87.268779,
+      "avg_cpu_package_c": 48.666667,
+      "avg_gpu_temp_c": 49.0,
+      "avg_total_tracked_fan_rpm": 2185.833333,
+      "safety_label_counts": {
+        "safe": 6
+      }
+    },
+    {
+      "source_file": "2026-04-29_stage1_idle/front_volume_shader_default.json",
+      "row_count": 13,
+      "avg_predicted_score": 82.909865,
+      "avg_cpu_package_c": 67.307692,
+      "avg_gpu_temp_c": 37.0,
+      "avg_total_tracked_fan_rpm": 2286.615385,
+      "safety_label_counts": {
+        "safe": 13
+      }
+    },
+    {
+      "source_file": "2026-04-29_stage1_idle/cpu_heavy_powershell.json",
+      "row_count": 16,
+      "avg_predicted_score": 80.094273,
+      "avg_cpu_package_c": 63.0,
+      "avg_gpu_temp_c": 41.25,
+      "avg_total_tracked_fan_rpm": 2501.625,
+      "safety_label_counts": {
+        "safe": 16
+      }
+    },
+    {
+      "source_file": "2026-04-29_stage1_idle/user_stress_session_1.json",
+      "row_count": 18,
+      "avg_predicted_score": 80.084122,
+      "avg_cpu_package_c": 62.055556,
+      "avg_gpu_temp_c": 68.166667,
+      "avg_total_tracked_fan_rpm": 2510.666667,
+      "safety_label_counts": {
+        "safe": 18
+      }
+    },
+    {
+      "source_file": "2026-04-29_stage1_idle/light_graphics_proxy_winsat_dwm.json",
+      "row_count": 18,
+      "avg_predicted_score": 78.780185,
+      "avg_cpu_package_c": 69.666667,
+      "avg_gpu_temp_c": 52.277778,
+      "avg_total_tracked_fan_rpm": 2571.611111,
+      "safety_label_counts": {
+        "safe": 18
+      }
+    },
+    {
+      "source_file": "2026-04-29_stage1_idle/mixed_cpu_gpu_proxy.json",
+      "row_count": 14,
+      "avg_predicted_score": 77.016354,
+      "avg_cpu_package_c": 70.928571,
+      "avg_gpu_temp_c": 48.357143,
+      "avg_total_tracked_fan_rpm": 2633.928571,
+      "safety_label_counts": {
+        "safe": 14
+      }
+    },
+    {
+      "source_file": "2026-04-29_stage1_idle/front_webgl_aquarium_30000.json",
+      "row_count": 15,
+      "avg_predicted_score": 76.203227,
+      "avg_cpu_package_c": 75.266667,
+      "avg_gpu_temp_c": 38.0,
+      "avg_total_tracked_fan_rpm": 2747.4,
+      "safety_label_counts": {
+        "safe": 15
+      }
+    },
+    {
+      "source_file": "2026-04-29_stage1_idle/user_stress_session_2_gpuaware.json",
+      "row_count": 15,
+      "avg_predicted_score": 61.795019,
+      "avg_cpu_package_c": 75.733333,
+      "avg_gpu_temp_c": 77.466667,
+      "avg_total_tracked_fan_rpm": 2850.0,
+      "safety_label_counts": {
+        "safe": 8,
+        "warn": 7
+      }
+    }
+  ],
+  "baseline_summary": {
+    "row_count": 143,
+    "avg_predicted_score": 77.793998,
+    "avg_cpu_package_c": 65.601399,
+    "avg_gpu_temp_c": 50.293706,
+    "avg_total_tracked_fan_rpm": 2382.664336,
+    "safety_label_counts": {
+      "safe": 136,
+      "warn": 7
+    }
+  },
+  "baseline_by_workload_class": [
+    {
+      "workload_class": "idle",
+      "row_count": 18,
+      "avg_predicted_score": 90.022429,
+      "avg_cpu_package_c": 51.777778,
+      "avg_gpu_temp_c": 48.722222,
+      "avg_total_tracked_fan_rpm": 1672.388889,
+      "safety_label_counts": {
+        "safe": 18
+      }
+    },
+    {
+      "workload_class": "cpu-biased",
+      "row_count": 16,
+      "avg_predicted_score": 77.608185,
+      "avg_cpu_package_c": 63.0,
+      "avg_gpu_temp_c": 41.25,
+      "avg_total_tracked_fan_rpm": 2501.625,
+      "safety_label_counts": {
+        "safe": 16
+      }
+    },
+    {
+      "workload_class": "unknown",
+      "row_count": 18,
+      "avg_predicted_score": 77.598034,
+      "avg_cpu_package_c": 62.055556,
+      "avg_gpu_temp_c": 68.166667,
+      "avg_total_tracked_fan_rpm": 2510.666667,
+      "safety_label_counts": {
+        "safe": 18
+      }
+    },
+    {
+      "workload_class": "gpu-biased",
+      "row_count": 77,
+      "avg_predicted_score": 75.613231,
+      "avg_cpu_package_c": 69.233766,
+      "avg_gpu_temp_c": 48.714286,
+      "avg_total_tracked_fan_rpm": 2448.376623,
+      "safety_label_counts": {
+        "safe": 70,
+        "warn": 7
+      }
+    },
+    {
+      "workload_class": "mixed",
+      "row_count": 14,
+      "avg_predicted_score": 74.530266,
+      "avg_cpu_package_c": 70.928571,
+      "avg_gpu_temp_c": 48.357143,
+      "avg_total_tracked_fan_rpm": 2633.928571,
+      "safety_label_counts": {
+        "safe": 14
+      }
+    }
+  ],
+  "baseline_by_source_file": [
+    {
+      "source_file": "2026-04-29_stage1_idle/idle_batch2.json",
+      "row_count": 6,
+      "avg_predicted_score": 94.280818,
+      "avg_cpu_package_c": 53.333333,
+      "avg_gpu_temp_c": 49.0,
+      "avg_total_tracked_fan_rpm": 1255.333333,
+      "safety_label_counts": {
+        "safe": 6
+      }
+    },
+    {
+      "source_file": "2026-04-29_stage1_idle/idle_batch1.json",
+      "row_count": 6,
+      "avg_predicted_score": 91.003779,
+      "avg_cpu_package_c": 53.333333,
+      "avg_gpu_temp_c": 48.166667,
+      "avg_total_tracked_fan_rpm": 1576.0,
+      "safety_label_counts": {
+        "safe": 6
+      }
+    },
+    {
+      "source_file": "2026-04-29_stage1_idle/front_webgl_aquarium_10000.json",
+      "row_count": 16,
+      "avg_predicted_score": 88.001554,
+      "avg_cpu_package_c": 58.5625,
+      "avg_gpu_temp_c": 37.3125,
+      "avg_total_tracked_fan_rpm": 1784.3125,
+      "safety_label_counts": {
+        "safe": 16
+      }
+    },
+    {
+      "source_file": "2026-04-29_stage1_idle/idle_game_baseline.json",
+      "row_count": 6,
+      "avg_predicted_score": 84.782691,
+      "avg_cpu_package_c": 48.666667,
+      "avg_gpu_temp_c": 49.0,
+      "avg_total_tracked_fan_rpm": 2185.833333,
+      "safety_label_counts": {
+        "safe": 6
+      }
+    },
+    {
+      "source_file": "2026-04-29_stage1_idle/front_volume_shader_default.json",
+      "row_count": 13,
+      "avg_predicted_score": 80.423777,
+      "avg_cpu_package_c": 67.307692,
+      "avg_gpu_temp_c": 37.0,
+      "avg_total_tracked_fan_rpm": 2286.615385,
+      "safety_label_counts": {
+        "safe": 13
+      }
+    },
+    {
+      "source_file": "2026-04-29_stage1_idle/cpu_heavy_powershell.json",
+      "row_count": 16,
+      "avg_predicted_score": 77.608185,
+      "avg_cpu_package_c": 63.0,
+      "avg_gpu_temp_c": 41.25,
+      "avg_total_tracked_fan_rpm": 2501.625,
+      "safety_label_counts": {
+        "safe": 16
+      }
+    },
+    {
+      "source_file": "2026-04-29_stage1_idle/user_stress_session_1.json",
+      "row_count": 18,
+      "avg_predicted_score": 77.598034,
+      "avg_cpu_package_c": 62.055556,
+      "avg_gpu_temp_c": 68.166667,
+      "avg_total_tracked_fan_rpm": 2510.666667,
+      "safety_label_counts": {
+        "safe": 18
+      }
+    },
+    {
+      "source_file": "2026-04-29_stage1_idle/light_graphics_proxy_winsat_dwm.json",
+      "row_count": 18,
+      "avg_predicted_score": 76.294097,
+      "avg_cpu_package_c": 69.666667,
+      "avg_gpu_temp_c": 52.277778,
+      "avg_total_tracked_fan_rpm": 2571.611111,
+      "safety_label_counts": {
+        "safe": 18
+      }
+    },
+    {
+      "source_file": "2026-04-29_stage1_idle/mixed_cpu_gpu_proxy.json",
+      "row_count": 14,
+      "avg_predicted_score": 74.530266,
+      "avg_cpu_package_c": 70.928571,
+      "avg_gpu_temp_c": 48.357143,
+      "avg_total_tracked_fan_rpm": 2633.928571,
+      "safety_label_counts": {
+        "safe": 14
+      }
+    },
+    {
+      "source_file": "2026-04-29_stage1_idle/front_webgl_aquarium_30000.json",
+      "row_count": 15,
+      "avg_predicted_score": 73.717139,
+      "avg_cpu_package_c": 75.266667,
+      "avg_gpu_temp_c": 38.0,
+      "avg_total_tracked_fan_rpm": 2747.4,
+      "safety_label_counts": {
+        "safe": 15
+      }
+    },
+    {
+      "source_file": "2026-04-29_stage1_idle/user_stress_session_2_gpuaware.json",
+      "row_count": 15,
+      "avg_predicted_score": 59.308931,
+      "avg_cpu_package_c": 75.733333,
+      "avg_gpu_temp_c": 77.466667,
+      "avg_total_tracked_fan_rpm": 2850.0,
+      "safety_label_counts": {
+        "safe": 8,
+        "warn": 7
+      }
+    }
+  ]
+}
