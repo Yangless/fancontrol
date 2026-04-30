@@ -16,6 +16,7 @@ experiments/
 │   └── 2026-04-29_stage1_idle\
 ├── 2026-04-29_stage1-low-rpm.md
 ├── 2026-04-30_candidate-validation-runbook.md
+├── 2026-04-30_candidate-rank01-validation.md
 ├── 2026-04-29_stage1-test-matrix.md
 └── ...
 ```
@@ -121,3 +122,7 @@ python .\scripts\modeling\prepare_candidate_validation.py `
 当前 candidate 实机验证执行稿见：
 
 - [`2026-04-30_candidate-validation-runbook.md`](./2026-04-30_candidate-validation-runbook.md)
+
+rank 1 实测结果记录页见：
+
+- [`2026-04-30_candidate-rank01-validation.md`](./2026-04-30_candidate-rank01-validation.md)
