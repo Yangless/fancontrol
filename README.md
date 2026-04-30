@@ -162,12 +162,66 @@ xychart-beta
 - 让参数优化具备可观察、可回退、可比较的基础
 - 逐步从人工经验调参过渡到模型辅助参数建议
 
+## 建模工作流
+
+当前第一版建模基础已经接通，目标不是直接让模型在线控风扇，而是先把“采样 -> 数据集 -> baseline 评分 -> 候选配置对比”做成可复用流水线。
+
+当前已具备：
+
+- `scripts/current/monitor_simple.ps1`：统一采集运行状态和硬件指标
+- `scripts/current/hardware_metrics.ps1`：补充 CPU / GPU / 风扇 / 频率 / 功耗等硬件观测
+- `scripts/modeling/build_training_dataset.py`：把 `docs/experiments/data/` 原始样本整理成训练集
+- `scripts/modeling/train_baseline_model.py`：训练当前默认 `ridge_cv` baseline，并同时输出 `ridge` / `random_forest` 对照结果
+- `scripts/modeling/score_candidate_config.py`：基于历史样本回放给候选配置打分
+- `scripts/modeling/search_candidate_configs.py`：围绕 seed config 做受约束网格搜索并输出候选配置与排序报告
+- `scripts/modeling/prepare_candidate_validation.py`：把搜索结果整理成实机验证包，输出候选 manifest 和 checklist
+
+当前文档与交接入口：
+
+- 训练数据 schema：[`docs/modeling/TRAINING_DATA_SCHEMA.md`](./docs/modeling/TRAINING_DATA_SCHEMA.md)
+- 新会话交接与待做：[`docs/modeling/NEXT_SESSION_HANDOFF_2026-04-29.md`](./docs/modeling/NEXT_SESSION_HANDOFF_2026-04-29.md)
+
+常用命令：
+
+```powershell
+python .\scripts\modeling\build_training_dataset.py `
+  --input-root .\docs\experiments\data `
+  --config-root .\configs `
+  --output-dir .\artifacts\modeling
+
+python .\scripts\modeling\train_baseline_model.py `
+  --dataset .\artifacts\modeling\training_rows.jsonl `
+  --output-dir .\artifacts\modeling
+
+python .\scripts\modeling\score_candidate_config.py `
+  --dataset .\artifacts\modeling\training_rows.jsonl `
+  --model .\artifacts\modeling\baseline_model.json `
+  --candidate-config .\configs\Game_vNext_stage1_low-rpm.json `
+  --baseline-config .\configs\Game.json `
+  --output-dir .\artifacts\modeling
+
+python .\scripts\modeling\search_candidate_configs.py `
+  --dataset .\artifacts\modeling\training_rows.jsonl `
+  --model .\artifacts\modeling\baseline_model.json `
+  --seed-config .\configs\Game_vNext_stage1_low-rpm.json `
+  --baseline-config .\configs\Game.json `
+  --output-dir .\artifacts\modeling
+
+python .\scripts\modeling\prepare_candidate_validation.py `
+  --search-summary .\artifacts\modeling\candidate_search_summary.json `
+  --output-dir .\artifacts\modeling `
+  --top-n 3 `
+  --validation-date 2026-04-30
+```
+
 ## 下一步
 
 - 在当前 `accepted-baseline` 上继续做小步微调，而不是大改整套曲线
 - 优先观察 `Auto 2` 是否需要更平滑的 GPU 高温段介入
 - 后续如需继续压噪，再回头审视 `Auto` / `Auto 1`
 - 继续积累真实负载采样，为半自动、可审查的参数优化提供数据
+- 先用受约束搜索器筛出候选，再回到真实负载验证，不直接写回 live config
+- 当前默认评分模型是 `ridge_cv`，`random_forest` 只作为非线性对照，不直接替代实机验证
 
 ## 文档导航
 
@@ -177,6 +231,8 @@ xychart-beta
 | 脚本说明 | [`scripts/README.md`](./scripts/README.md) |
 | 配置分析 | [`docs/CONFIG_ANALYSIS.md`](./docs/CONFIG_ANALYSIS.md) |
 | 配置迭代指南 | [`docs/CONFIG_ITERATION_GUIDE.md`](./docs/CONFIG_ITERATION_GUIDE.md) |
+| 建模数据 schema | [`docs/modeling/TRAINING_DATA_SCHEMA.md`](./docs/modeling/TRAINING_DATA_SCHEMA.md) |
+| 新会话交接 / 待做 | [`docs/modeling/NEXT_SESSION_HANDOFF_2026-04-29.md`](./docs/modeling/NEXT_SESSION_HANDOFF_2026-04-29.md) |
 | 文档索引 | [`docs/README_CONSOLIDATED.md`](./docs/README_CONSOLIDATED.md) |
 | 历史报告 | [`archive/README.md`](./archive/README.md) |
 

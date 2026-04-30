@@ -1,6 +1,6 @@
 # FanControl 文档导航与历史索引
 
-> 更新日期：2026-04-14
+> 更新日期：2026-04-29
 >
 > 本文档只做导航和历史索引。当前真实目录结构只以 [PROJECT_STRUCTURE.md](./PROJECT_STRUCTURE.md) 为准。
 
@@ -15,6 +15,9 @@
 
 - [CONFIG_ANALYSIS.md](./CONFIG_ANALYSIS.md)
 - [CONFIG_ITERATION_GUIDE.md](./CONFIG_ITERATION_GUIDE.md)
+- [experiments/README.md](./experiments/README.md)
+- [modeling/TRAINING_DATA_SCHEMA.md](./modeling/TRAINING_DATA_SCHEMA.md)
+- [modeling/NEXT_SESSION_HANDOFF_2026-04-29.md](./modeling/NEXT_SESSION_HANDOFF_2026-04-29.md)
 
 如果需要回看历史问题与修复过程，再看：
 
@@ -28,6 +31,9 @@
 | `docs/PROJECT_STRUCTURE.md` | 当前仓库结构权威说明 | 是 |
 | `scripts/README.md` | 脚本目录职责与同步规则 | 否 |
 | `SYNC_MEMO.md` | repo source / runtime mirror 同步备忘录 | 否 |
+| `docs/experiments/README.md` | 采样数据与实验记录入口 | 否 |
+| `docs/modeling/TRAINING_DATA_SCHEMA.md` | 建模训练集字段约定 | 否 |
+| `docs/modeling/NEXT_SESSION_HANDOFF_2026-04-29.md` | 建模阶段交接与待做清单 | 否 |
 | `docs/README_CONSOLIDATED.md` | 文档导航、历史索引、时间线 | 否 |
 
 ## 3. 历史文档索引
@@ -68,17 +74,26 @@
 
 - 把开机启动从 `BootTrigger` 调整为 `LogonTrigger`，并增加延迟。
 
+### v3.3 (2026-04-29)
+
+- 接受一版低转速 GPU-aware 基线配置。
+- `monitor_simple.ps1` 合并硬件指标采样输出。
+- 引入第一版建模流水线：训练集构建、baseline 训练、候选配置评分、受约束候选搜索；当前默认评分模型为 `ridge_cv`，并保留 `random_forest` 对照。
+
 ## 5. 当前背景摘要
 
 这个仓库当前处于“从个人自动化脚本向正式代码库治理过渡”的阶段，主要背景如下：
 
 - 核心自动切换功能已经可用。
 - 测试已经覆盖核心切换路径。
-- 文档、结构治理、状态统一和 runtime 边界还在补齐。
+- 文档、结构治理、状态统一和 runtime 边界已经基本明确。
+- 当前新重点是把真实负载采样沉淀成可复用建模数据，并把搜索器筛出的候选配置带回真实负载验证。
 
 ## 6. 使用本索引时的规则
 
 - 想知道“仓库现在长什么样”，看 [PROJECT_STRUCTURE.md](./PROJECT_STRUCTURE.md)。
 - 想知道“现在怎么运行、怎么部署、怎么维护”，看 [README.md](../README.md)。
+- 想知道“实验数据怎么组织、建模怎么接”，看 [experiments/README.md](./experiments/README.md) 和 [modeling/TRAINING_DATA_SCHEMA.md](./modeling/TRAINING_DATA_SCHEMA.md)。
+- 想知道“下个会话应该先做什么”，看 [modeling/NEXT_SESSION_HANDOFF_2026-04-29.md](./modeling/NEXT_SESSION_HANDOFF_2026-04-29.md)。
 - 想知道“为什么会演进成现在这样”，看 `archive/` 中的历史文档。
 - 如果在仓库外看到旧同步报告或整理稿，不要把它们当作当前事实来源。

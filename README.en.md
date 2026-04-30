@@ -158,12 +158,33 @@ That means building a safer workflow around:
 - keeping tuning observable, reviewable, and reversible
 - moving gradually from manual tuning to model-assisted parameter suggestions
 
+## Modeling workflow
+
+The first modeling layer is now in place. The goal is not to let a model directly control fans online, but to turn `sampling -> dataset -> baseline scoring -> candidate config comparison` into a reusable workflow.
+
+Current pieces:
+
+- `scripts/current/monitor_simple.ps1` for unified runtime and hardware sampling
+- `scripts/current/hardware_metrics.ps1` for CPU / GPU / fan / clock / power observations
+- `scripts/modeling/build_training_dataset.py` for flattening raw samples under `docs/experiments/data/`
+- `scripts/modeling/train_baseline_model.py` for the default `ridge_cv` baseline plus `ridge` / `random_forest` comparison outputs
+- `scripts/modeling/score_candidate_config.py` for replay-based candidate scoring on historical rows
+- `scripts/modeling/search_candidate_configs.py` for constrained grid search around a seed config with candidate file outputs and a ranking report
+- `scripts/modeling/prepare_candidate_validation.py` for turning search results into a validation manifest and manual checklist
+
+Current entry documents:
+
+- Dataset schema: [`docs/modeling/TRAINING_DATA_SCHEMA.md`](./docs/modeling/TRAINING_DATA_SCHEMA.md)
+- Session handoff and pending work: [`docs/modeling/NEXT_SESSION_HANDOFF_2026-04-29.md`](./docs/modeling/NEXT_SESSION_HANDOFF_2026-04-29.md)
+
 ## Next
 
 - continue with small adjustments on top of the current `accepted-baseline`, not large curve rewrites
 - prioritize observing whether `Auto 2` needs smoother high-GPU-temperature engagement
 - revisit `Auto` / `Auto 1` later if more noise reduction is still worth pursuing
 - keep collecting real-load samples for a semi-automated, reviewable tuning workflow
+- use the constrained searcher to rank candidates first, then bring the top few back to real-world validation before any live config change
+- keep `ridge_cv` as the default ranking model for now; treat `random_forest` as a non-linear comparison, not a live decision-maker
 
 ## Documentation
 
@@ -173,6 +194,8 @@ That means building a safer workflow around:
 | Script guide | [`scripts/README.md`](./scripts/README.md) (Chinese) |
 | Config analysis | [`docs/CONFIG_ANALYSIS.md`](./docs/CONFIG_ANALYSIS.md) (Chinese) |
 | Config iteration guide | [`docs/CONFIG_ITERATION_GUIDE.md`](./docs/CONFIG_ITERATION_GUIDE.md) (Chinese) |
+| Modeling dataset schema | [`docs/modeling/TRAINING_DATA_SCHEMA.md`](./docs/modeling/TRAINING_DATA_SCHEMA.md) (Chinese) |
+| Session handoff / pending work | [`docs/modeling/NEXT_SESSION_HANDOFF_2026-04-29.md`](./docs/modeling/NEXT_SESSION_HANDOFF_2026-04-29.md) (Chinese) |
 | Document index | [`docs/README_CONSOLIDATED.md`](./docs/README_CONSOLIDATED.md) (Chinese) |
 | Historical reports | [`archive/README.md`](./archive/README.md) (Chinese) |
 

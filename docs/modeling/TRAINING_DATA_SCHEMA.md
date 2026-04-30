@@ -185,6 +185,7 @@ target_score = (0.65 * thermal_score + 0.35 * noise_efficiency_score) * safety_m
 训练脚本当前会输出：
 
 - `baseline_model.json`
+- `baseline_model_bundle.json`
 - `baseline_model_report.md`
 
 候选配置评分脚本当前会输出：
@@ -192,13 +193,23 @@ target_score = (0.65 * thermal_score + 0.35 * noise_efficiency_score) * safety_m
 - `candidate_score_summary.json`
 - `candidate_score_report.md`
 
-它训练的是一个 **带 L2 正则的线性回归 baseline**，目标是预测 `target_score`。
+当前训练流程会比较三类候选评分模型，目标都是预测 `target_score`：
+
+- `ridge`：固定 alpha 的带 L2 正则线性回归 baseline
+- `ridge_cv`：按 leave-one-source-out 风格验证挑选 alpha 的线性回归，当前默认模型
+- `random_forest`：纯 Python 的轻量非线性对照模型，用来观察交互项收益
+
+`baseline_model.json` 会写出当前首选模型；`baseline_model_bundle.json` 会保留全部模型及其验证结果，方便后续回看和比较。
 
 这不是最终模型，只是：
 
 - 验证 schema 是否足够支持训练
 - 验证样本是否能稳定落到同一套特征空间
-- 给后续更复杂模型一个对照基线
+- 给后续更复杂模型一个可比较的起点
+
+当前阶段交接与待做见：
+
+- [`NEXT_SESSION_HANDOFF_2026-04-29.md`](./NEXT_SESSION_HANDOFF_2026-04-29.md)
 
 ## 使用方式
 
@@ -211,12 +222,22 @@ python .\scripts\modeling\build_training_dataset.py `
   --output-dir .\artifacts\modeling
 ```
 
-训练 baseline：
+训练并比较 baseline 模型：
 
 ```powershell
 python .\scripts\modeling\train_baseline_model.py `
   --dataset .\artifacts\modeling\training_rows.jsonl `
   --output-dir .\artifacts\modeling
+```
+
+如需显式指定首选模型或 alpha 搜索范围，可追加：
+
+```powershell
+python .\scripts\modeling\train_baseline_model.py `
+  --dataset .\artifacts\modeling\training_rows.jsonl `
+  --output-dir .\artifacts\modeling `
+  --preferred-model ridge_cv `
+  --ridge-cv-alphas 0.1,0.3,1,3,10
 ```
 
 给候选配置打分：
@@ -230,11 +251,29 @@ python .\scripts\modeling\score_candidate_config.py `
   --output-dir .\artifacts\modeling
 ```
 
+搜索受约束候选并生成验证清单：
+
+```powershell
+python .\scripts\modeling\search_candidate_configs.py `
+  --dataset .\artifacts\modeling\training_rows.jsonl `
+  --model .\artifacts\modeling\baseline_model.json `
+  --seed-config .\configs\Game_vNext_stage1_low-rpm.json `
+  --baseline-config .\configs\Game.json `
+  --output-dir .\artifacts\modeling
+
+python .\scripts\modeling\prepare_candidate_validation.py `
+  --search-summary .\artifacts\modeling\candidate_search_summary.json `
+  --output-dir .\artifacts\modeling `
+  --top-n 3 `
+  --validation-date 2026-04-30
+```
+
 ## 当前边界
 
 - 当前只包含轻量滚动窗口特征，不是完整序列模型。
 - 第一版标签是规则生成，不是人工听感标签。
-- 第一版模型主要用于“评分”和“建议”，不直接写回 live config。
+- 当前默认评分器是 `ridge_cv`，但仍然只用于“评分”和“建议”，不直接写回 live config。
+- `random_forest` 目前只作离线对照，不能替代实机验证。
 
 后续如果要进入更强的模型阶段，建议追加：
 

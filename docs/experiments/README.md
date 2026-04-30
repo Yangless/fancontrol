@@ -1,72 +1,118 @@
-# 实验记录目录
+# 实验与采样目录
 
-本目录用于记录配置文件优化实验的结果。
+本目录现在同时承担两类内容：
 
----
+- `*.md`：人工整理的实验记录、结论和决策
+- `data/`：供后续建模复用的原始采样 JSON
 
-## 目录结构
+也就是说，这里不再只是“写实验报告”，而是当前整条调优链路的数据入口。
 
-```
+## 当前目录结构
+
+```text
 experiments/
-├── README.md                    # 本文件
-├── 2026-04-13_quiet-test.md     # 示例实验记录
+├── README.md
+├── data/
+│   └── 2026-04-29_stage1_idle\
+├── 2026-04-29_stage1-low-rpm.md
+├── 2026-04-29_stage1-test-matrix.md
 └── ...
 ```
 
----
+## 采样数据约定
 
-## 实验记录模板
+原始采样建议使用 `scripts/current/monitor_simple.ps1` 生成，并保留统一字段结构。当前脚本已经整合：
 
-每次实验请使用以下模板:
+- 运行期状态
+- 实际生效配置
+- CPU / GPU 温度
+- CPU 负载、频率、功耗
+- 主板温度
+- 风扇转速
+
+建议命名方式：
+
+- 目录：`YYYY-MM-DD_<stage>_<theme>`
+- 文件：`<scenario>.json`
+
+例如：
+
+- `docs/experiments/data/2026-04-29_stage1_idle/idle_batch1.json`
+- `docs/experiments/data/2026-04-29_stage1_idle/mixed_cpu_gpu_proxy.json`
+
+## 推荐实验记录结构
+
+每次形成阶段性结论时，仍然建议补一份 `md` 记录，不要求逐采样点都单独写报告，但至少应说明：
 
 ```markdown
-# 实验: <配置名称>
+# 实验: <阶段名称>
 
-**开始时间**: YYYY-MM-DD HH:MM
-**结束时间**: YYYY-MM-DD HH:MM
+## 目标
 
-## 修改参数
+- 本轮想解决什么问题
 
-| 参数 | 原值 | 新值 | 变化幅度 |
-|------|------|------|---------|
-| IdleTemperature | 35 | 40 | +14% |
-| MinFanSpeed | 30 | 25 | -17% |
+## 配置变更
 
-## 测试条件
+| 参数 | 原值 | 新值 | 说明 |
+|---|---|---|---|
+| Auto.MinFanSpeed | 30 | 25 | 降低 idle 噪音 |
 
-- **负载场景**: 空载 / 游戏 / 压力测试
-- **环境温度**: XX°C
-- **测试时长**: XX 分钟
+## 采样范围
 
-## 测试结果
+- 使用的配置文件
+- 采样目录
+- 典型场景
+- 关键观察指标
 
-| 指标 | 基准 | 实验 | 变化 |
-|------|------|------|------|
-| 平均温度 | XX°C | XX°C | +/-X.X°C |
-| 峰值温度 | XX°C | XX°C | +/-X.X°C |
-| 平均转速 | XXXX RPM | XXXX RPM | +/-XXX RPM |
-| 噪音评分 | X/10 | X/10 | +/-X |
+## 结果摘要
+
+- 温度变化
+- 风扇转速变化
+- 是否出现 `warn` / `unsafe`
+- 主观噪音变化
 
 ## 决策
 
-- [ ] ✅ 接受
-- [ ] ❌ 拒绝
-- [ ] ⚠️ 需进一步测试
+- `accepted-baseline`
+- `rejected`
+- `needs-more-data`
 
-**理由**: <填写决策依据>
+## 下一步
 
-## 后续行动
-
-- <如果接受: 合并到主配置>
-- <如果拒绝: 尝试其他参数组合>
+- 下一轮重点观察什么
 ```
 
----
+## 与建模流程的关系
 
-## 实验历史
+当前 `docs/experiments/data/` 是以下脚本的输入：
 
-| 日期 | 实验名称 | 目标 | 结果 |
-|------|---------|------|------|
-| - | - | - | - |
+- `scripts/modeling/build_training_dataset.py`
+- `scripts/modeling/train_baseline_model.py`
+- `scripts/modeling/score_candidate_config.py`
+- `scripts/modeling/search_candidate_configs.py`
+- `scripts/modeling/prepare_candidate_validation.py`
 
-（待补充）
+如果已经有搜索结果，建议再生成一份实机验证包：
+
+```powershell
+python .\scripts\modeling\prepare_candidate_validation.py `
+  --search-summary .\artifacts\modeling\candidate_search_summary.json `
+  --output-dir .\artifacts\modeling `
+  --top-n 3 `
+  --validation-date 2026-04-30
+```
+
+它会输出：
+
+- `artifacts/modeling/candidate_validation_manifest.json`
+- `artifacts/modeling/candidate_validation_checklist.md`
+
+其中 manifest 负责给脚本和后续会话读，checklist 负责给人工按顺序执行验证。
+
+训练集字段定义见：
+
+- [`../modeling/TRAINING_DATA_SCHEMA.md`](../modeling/TRAINING_DATA_SCHEMA.md)
+
+新会话交接和待做见：
+
+- [`../modeling/NEXT_SESSION_HANDOFF_2026-04-29.md`](../modeling/NEXT_SESSION_HANDOFF_2026-04-29.md)

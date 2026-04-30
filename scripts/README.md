@@ -36,6 +36,7 @@ scripts/
 - `check_status.ps1`
 - `config_switch_core.ps1`
 - `fix_startup_logon.ps1`
+- `hardware_metrics.ps1`
 - `monitor_simple.ps1`
 - `runtime_paths.ps1`
 - `runtime_state.ps1`
@@ -49,8 +50,34 @@ scripts/
 - `runtime_state.ps1`：统一运行时事实读取。
 - `config_switch_core.ps1`：统一切换与验证核心。
 - `time_policy.ps1`：统一时段窗口和强制点规则。
+- `hardware_metrics.ps1`：统一硬件指标采样与字段映射，供观察和建模复用。
+- `monitor_simple.ps1`：输出统一采样记录，连接实验数据与后续建模。
 
 这些文件在验证通过后，会部署到 `C:\FanControl_Auto\` 供任务计划和快捷方式调用。
+
+## 建模脚本
+
+当前 `scripts/modeling/` 用于把实验采样推进到可重复评分流程：
+
+- `build_training_dataset.py`：从 `docs/experiments/data/` 生成扁平训练集
+- `train_baseline_model.py`：训练当前默认 `ridge_cv` baseline，并输出 `ridge` / `random_forest` 对比
+- `score_candidate_config.py`：基于历史样本回放对候选配置打分
+- `search_candidate_configs.py`：围绕 seed config 做受约束网格搜索，输出候选配置和排序报告
+- `prepare_candidate_validation.py`：把搜索结果整理成实机验证包，输出候选 manifest 和 checklist
+
+典型流程：
+
+1. 用 `monitor_simple.ps1` 采样并把 JSON 放入 `docs/experiments/data/`
+2. 运行 `build_training_dataset.py` 生成 `artifacts/modeling/` 数据集
+3. 运行 `train_baseline_model.py` 训练默认 baseline，并查看模型比较报告
+4. 运行 `score_candidate_config.py` 比较候选配置与基线配置
+5. 运行 `search_candidate_configs.py` 在受约束参数范围内批量生成候选配置供人工复核
+6. 运行 `prepare_candidate_validation.py` 生成实机验证顺序和采样目录清单
+
+相关文档：
+
+- [`docs/modeling/TRAINING_DATA_SCHEMA.md`](../docs/modeling/TRAINING_DATA_SCHEMA.md)
+- [`docs/modeling/NEXT_SESSION_HANDOFF_2026-04-29.md`](../docs/modeling/NEXT_SESSION_HANDOFF_2026-04-29.md)
 
 ## runtime mirror 说明
 
