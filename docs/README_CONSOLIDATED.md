@@ -16,6 +16,7 @@
 - [CONFIG_ANALYSIS.md](./CONFIG_ANALYSIS.md)
 - [CONFIG_ITERATION_GUIDE.md](./CONFIG_ITERATION_GUIDE.md)
 - [experiments/README.md](./experiments/README.md)
+- [experiments/2026-04-30_candidate-validation-runbook.md](./experiments/2026-04-30_candidate-validation-runbook.md)
 - [modeling/TRAINING_DATA_SCHEMA.md](./modeling/TRAINING_DATA_SCHEMA.md)
 - [modeling/NEXT_SESSION_HANDOFF_2026-04-29.md](./modeling/NEXT_SESSION_HANDOFF_2026-04-29.md)
 
@@ -32,6 +33,7 @@
 | `scripts/README.md` | 脚本目录职责与同步规则 | 否 |
 | `SYNC_MEMO.md` | repo source / runtime mirror 同步备忘录 | 否 |
 | `docs/experiments/README.md` | 采样数据与实验记录入口 | 否 |
+| `docs/experiments/2026-04-30_candidate-validation-runbook.md` | top candidates 实机验证执行稿 | 否 |
 | `docs/modeling/TRAINING_DATA_SCHEMA.md` | 建模训练集字段约定 | 否 |
 | `docs/modeling/NEXT_SESSION_HANDOFF_2026-04-29.md` | 建模阶段交接与待做清单 | 否 |
 | `docs/README_CONSOLIDATED.md` | 文档导航、历史索引、时间线 | 否 |
