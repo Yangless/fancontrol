@@ -39,14 +39,7 @@ def write_json(path, payload):
 
 def load_model(path):
     payload = read_json(path)
-    return {
-        "intercept": float(payload["intercept"]),
-        "weights": OrderedDict((key, float(value)) for key, value in payload["weights"].items()),
-        "medians": OrderedDict((key, float(value)) for key, value in payload["imputation_medians"].items()),
-        "means": OrderedDict((key, float(value)) for key, value in payload["scaler_means"].items()),
-        "stds": OrderedDict((key, float(value)) for key, value in payload["scaler_stds"].items()),
-        "feature_names": list(payload["feature_names"]),
-    }
+    return payload
 
 
 def load_rows(path):
@@ -104,6 +97,8 @@ def build_report_text(summary):
     lines.append("- Report version: `{0}`".format(summary["report_version"]))
     lines.append("- Candidate config: `{0}`".format(summary["candidate_config"]))
     lines.append("- Model: `{0}`".format(summary["model_path"]))
+    lines.append("- Model name: `{0}`".format(summary["model_name"]))
+    lines.append("- Model type: `{0}`".format(summary["model_type"]))
     lines.append("- Dataset: `{0}`".format(summary["dataset_path"]))
     if summary.get("baseline_config"):
         lines.append("- Baseline config: `{0}`".format(summary["baseline_config"]))
@@ -189,14 +184,14 @@ def main():
     scored_candidate = []
     for row in rows:
         scored_row = apply_config_features(row, candidate_features)
-        score = baseline_model.predict_row(model, scored_row, model["feature_names"])
+        score = baseline_model.predict_model(model, scored_row)
         scored_candidate.append({"row": scored_row, "score": score})
 
     scored_baseline = []
     if baseline_features:
         for row in rows:
             scored_row = apply_config_features(row, baseline_features)
-            score = baseline_model.predict_row(model, scored_row, model["feature_names"])
+            score = baseline_model.predict_model(model, scored_row)
             scored_baseline.append({"row": scored_row, "score": score})
 
     summary = OrderedDict()
@@ -204,6 +199,8 @@ def main():
     summary["created_at"] = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
     summary["dataset_path"] = args.dataset.replace("\\", "/")
     summary["model_path"] = args.model.replace("\\", "/")
+    summary["model_name"] = model.get("name")
+    summary["model_type"] = model.get("model_type")
     summary["candidate_config"] = os.path.basename(args.candidate_config)
     summary["baseline_config"] = os.path.basename(args.baseline_config) if args.baseline_config else None
     summary["candidate_summary"] = summarize_rows([item["row"] for item in scored_candidate], [item["score"] for item in scored_candidate])

@@ -52,12 +52,19 @@ Describe 'FanControl modeling scripts' {
             $LASTEXITCODE | Should -Be 0
 
             $modelPath = Join-Path $outputDir 'baseline_model.json'
+            $bundlePath = Join-Path $outputDir 'baseline_model_bundle.json'
             $reportPath = Join-Path $outputDir 'baseline_model_report.md'
             (Test-Path $modelPath) | Should -BeTrue
+            (Test-Path $bundlePath) | Should -BeTrue
             (Test-Path $reportPath) | Should -BeTrue
 
             $model = Get-Content -Path $modelPath -Raw | ConvertFrom-Json
-            $model.model_version | Should -Be 'fancontrol.baseline-model.v1'
+            $bundle = Get-Content -Path $bundlePath -Raw | ConvertFrom-Json
+            $bundle.model_version | Should -Be 'fancontrol.baseline-model.v2'
+            $bundle.preferred_model | Should -Be 'ridge_cv'
+            $bundle.models.ridge_cv | Should -Not -BeNullOrEmpty
+            $bundle.models.random_forest | Should -Not -BeNullOrEmpty
+            $model.model_type | Should -Be 'ridge'
             @($model.feature_names).Count | Should -BeGreaterThan 5
             $model.metrics.training.row_count | Should -BeGreaterThan 0
             $model.metrics.leave_one_source_out.fold_count | Should -BeGreaterThan 0
@@ -97,9 +104,112 @@ Describe 'FanControl modeling scripts' {
 
             $summary = Get-Content -Path $summaryPath -Raw | ConvertFrom-Json
             $summary.report_version | Should -Be 'fancontrol.candidate-score.v1'
+            $summary.model_name | Should -Be 'ridge_cv'
+            $summary.model_type | Should -Be 'ridge'
             $summary.candidate_summary.row_count | Should -BeGreaterThan 0
             @($summary.candidate_by_workload_class).Count | Should -BeGreaterThan 0
             $summary.baseline_summary.avg_predicted_score | Should -Not -BeNullOrEmpty
+        } finally {
+            Remove-Item -Path $outputDir -Recurse -Force -ErrorAction SilentlyContinue
+        }
+    }
+
+    It 'searches constrained candidate configs around the seed config' {
+        $outputDir = Join-Path $env:TEMP ("fancontrol-modeling-search-" + [guid]::NewGuid().ToString("N"))
+        $repoRoot = Split-Path -Parent $PSScriptRoot
+
+        try {
+            $buildScript = Join-Path $repoRoot 'scripts\modeling\build_training_dataset.py'
+            $trainScript = Join-Path $repoRoot 'scripts\modeling\train_baseline_model.py'
+            $searchScript = Join-Path $repoRoot 'scripts\modeling\search_candidate_configs.py'
+            $inputRoot = Join-Path $repoRoot 'docs\experiments\data'
+            $configRoot = Join-Path $repoRoot 'configs'
+            $seedConfig = Join-Path $repoRoot 'configs\Game_vNext_stage1_low-rpm.json'
+            $baselineConfig = Join-Path $repoRoot 'configs\Game.json'
+
+            & python $buildScript --input-root $inputRoot --config-root $configRoot --output-dir $outputDir
+            $LASTEXITCODE | Should -Be 0
+
+            $datasetPath = Join-Path $outputDir 'training_rows.jsonl'
+            & python $trainScript --dataset $datasetPath --output-dir $outputDir
+            $LASTEXITCODE | Should -Be 0
+
+            $modelPath = Join-Path $outputDir 'baseline_model.json'
+            & python $searchScript --dataset $datasetPath --model $modelPath --seed-config $seedConfig --baseline-config $baselineConfig --output-dir $outputDir --top-k 5
+            $LASTEXITCODE | Should -Be 0
+
+            $summaryPath = Join-Path $outputDir 'candidate_search_summary.json'
+            $reportPath = Join-Path $outputDir 'candidate_search_report.md'
+            $candidateDir = Join-Path $outputDir 'candidates'
+
+            (Test-Path $summaryPath) | Should -BeTrue
+            (Test-Path $reportPath) | Should -BeTrue
+            (Test-Path $candidateDir) | Should -BeTrue
+
+            $summary = Get-Content -Path $summaryPath -Raw | ConvertFrom-Json
+            $summary.report_version | Should -Be 'fancontrol.candidate-search.v1'
+            $summary.model_name | Should -Be 'ridge_cv'
+            $summary.model_type | Should -Be 'ridge'
+            $summary.evaluated_candidate_count | Should -BeGreaterThan 0
+            $summary.top_candidates.Count | Should -BeGreaterThan 0
+            $summary.selected_candidate_count | Should -Be $summary.top_candidates.Count
+            $summary.seed_summary.avg_predicted_score | Should -Not -BeNullOrEmpty
+
+            $candidateFiles = @(Get-ChildItem -Path $candidateDir -Filter '*.json')
+            $candidateFiles.Count | Should -Be $summary.top_candidates.Count
+            ($candidateFiles.Name | Select-Object -Unique).Count | Should -Be $candidateFiles.Count
+
+            $roundedScores = @($summary.top_candidates | ForEach-Object { [math]::Round([double]$_.avg_predicted_score, [int]$summary.score_dedup_decimals) })
+            ($roundedScores | Select-Object -Unique).Count | Should -Be $roundedScores.Count
+        } finally {
+            Remove-Item -Path $outputDir -Recurse -Force -ErrorAction SilentlyContinue
+        }
+    }
+
+    It 'prepares a candidate validation pack from search results' {
+        $outputDir = Join-Path $env:TEMP ("fancontrol-modeling-validate-pack-" + [guid]::NewGuid().ToString("N"))
+        $repoRoot = Split-Path -Parent $PSScriptRoot
+
+        try {
+            $buildScript = Join-Path $repoRoot 'scripts\modeling\build_training_dataset.py'
+            $trainScript = Join-Path $repoRoot 'scripts\modeling\train_baseline_model.py'
+            $searchScript = Join-Path $repoRoot 'scripts\modeling\search_candidate_configs.py'
+            $prepareScript = Join-Path $repoRoot 'scripts\modeling\prepare_candidate_validation.py'
+            $inputRoot = Join-Path $repoRoot 'docs\experiments\data'
+            $configRoot = Join-Path $repoRoot 'configs'
+            $seedConfig = Join-Path $repoRoot 'configs\Game_vNext_stage1_low-rpm.json'
+            $baselineConfig = Join-Path $repoRoot 'configs\Game.json'
+
+            & python $buildScript --input-root $inputRoot --config-root $configRoot --output-dir $outputDir
+            $LASTEXITCODE | Should -Be 0
+
+            $datasetPath = Join-Path $outputDir 'training_rows.jsonl'
+            & python $trainScript --dataset $datasetPath --output-dir $outputDir
+            $LASTEXITCODE | Should -Be 0
+
+            $modelPath = Join-Path $outputDir 'baseline_model.json'
+            & python $searchScript --dataset $datasetPath --model $modelPath --seed-config $seedConfig --baseline-config $baselineConfig --output-dir $outputDir --top-k 5
+            $LASTEXITCODE | Should -Be 0
+
+            $searchSummaryPath = Join-Path $outputDir 'candidate_search_summary.json'
+            & python $prepareScript --search-summary $searchSummaryPath --output-dir $outputDir --top-n 3 --validation-date '2026-04-30'
+            $LASTEXITCODE | Should -Be 0
+
+            $manifestPath = Join-Path $outputDir 'candidate_validation_manifest.json'
+            $checklistPath = Join-Path $outputDir 'candidate_validation_checklist.md'
+            (Test-Path $manifestPath) | Should -BeTrue
+            (Test-Path $checklistPath) | Should -BeTrue
+
+            $manifest = Get-Content -Path $manifestPath -Raw | ConvertFrom-Json
+            $manifest.report_version | Should -Be 'fancontrol.candidate-validation-pack.v1'
+            $manifest.candidate_count | Should -Be 3
+            $manifest.candidates.Count | Should -Be 3
+            $manifest.scenarios.Count | Should -BeGreaterThan 0
+            $manifest.source_search_summary | Should -Match 'candidate_search_summary.json'
+
+            $checklist = Get-Content -Path $checklistPath -Raw
+            $checklist | Should -Match 'Candidate Validation Pack'
+            $checklist | Should -Match 'monitor_simple\.ps1 -Mode Sample'
         } finally {
             Remove-Item -Path $outputDir -Recurse -Force -ErrorAction SilentlyContinue
         }
